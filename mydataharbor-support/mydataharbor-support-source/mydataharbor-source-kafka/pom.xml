@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-support-source</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
   </parent>
   <artifactId>mydataharbor-source-kafka</artifactId>
   <description>kafka数据源实现</description>

@@ -12,7 +12,7 @@
 
   <artifactId>mydataharbor-console</artifactId>
 
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-RELEASE</version>
 
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
 
@@ -57,12 +57,12 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-RELEASE</version>
     </dependency>
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.apache.curator</groupId>
@@ -88,7 +88,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-rpc</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-RELEASE</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
