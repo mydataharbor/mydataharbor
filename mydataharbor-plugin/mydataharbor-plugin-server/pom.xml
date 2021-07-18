@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <artifactId>mydataharbor-plugin</artifactId>
+    <groupId>com.mydataharbor</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mydataharbor-plugin-server</artifactId>
+  <packaging>jar</packaging>
+  <name>mydataharbor-plugin-server</name>
+
+  <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
+  <dependencies>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-plugin-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.pf4j</groupId>
+      <artifactId>pf4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-recipes</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.netty</groupId>
+          <artifactId>netty</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml</groupId>
+      <artifactId>classmate</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-rpc</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>

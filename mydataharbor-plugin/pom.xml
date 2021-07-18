@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>mydataharbor</artifactId>
+    <groupId>com.mydataharbor</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+  <artifactId>mydataharbor-plugin</artifactId>
+  <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
+
+  <properties>
+
+    <slf4j.version>${slf4j-api.version}</slf4j.version>
+    <log4j.version>2.13.1</log4j.version>
+    <asm.version>9.1</asm.version>
+
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/java</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+  </build>
+
+  <modules>
+    <module>mydataharbor-plugin-api</module>
+    <module>mydataharbor-plugin-server</module>
+    <module>mydataharbor-plugin-plugins</module>
+    <module>mydataharbor-plugin-base</module>
+  </modules>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+
+</project>

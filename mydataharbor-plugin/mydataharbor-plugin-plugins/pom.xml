@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <artifactId>mydataharbor-plugin</artifactId>
+    <groupId>com.mydataharbor</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mydataharbor-plugin-plugins</artifactId>
+  <packaging>pom</packaging>
+  <name>mydataharbor-plugin-plugins</name>
+  <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Override below properties in each plugin's pom.xml -->
+    <plugin.id/>
+    <plugin.class/>
+    <plugin.version/>
+    <plugin.provider/>
+    <plugin.pluginDescription/>
+    <plugin.dependencies/>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <finalName>${plugin.id}-${plugin.version}-plugin</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <attach>false</attach>
+          <archive>
+
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+            <manifestEntries>
+              <Plugin-Id>${plugin.id}</Plugin-Id>
+              <Plugin-Version>${plugin.version}</Plugin-Version>
+              <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+              <Plugin-Class>${plugin.class}</Plugin-Class>
+              <Plugin-Description>${plugin.pluginDescription}</Plugin-Description>
+              <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+            </manifestEntries>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <version>2.8.2</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>mydataharbor-kafka2redis-plugin</module>
+    <module>mydataharbor-system-plugin</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.pf4j</groupId>
+      <artifactId>pf4j</artifactId>
+      <version>${pf4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-plugin-api</artifactId>
+      <version>${project.version}</version>
+      <!-- !!! VERY IMPORTANT -->
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+</project>
