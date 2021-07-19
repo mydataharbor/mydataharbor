@@ -65,7 +65,7 @@ MyDataHar的安装非常简单：
 
 - 启动mydataharbor-server
 
-  - 配置config目标下的system.yml
+  - 配置config目录下的system.yml
     ```yaml
     zk: ["127.0.0.1:2181"] #zk地址
     port: 1299 #启动端口
