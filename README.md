@@ -52,7 +52,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
   该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
 
-## 安装使用
+## 安装
 
 MyDataHar的安装非常简单：
 
@@ -82,3 +82,5 @@ MyDataHar的安装非常简单：
   访问：mydataharbor-console  http://127.0.0.1:8080
 
   是否可以看到刚刚启动的节点
+## 使用
+
