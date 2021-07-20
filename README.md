@@ -56,7 +56,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 MyDataHar的安装非常简单：
 
-- 下载zookeeper、mydataharbor-console、mydataharbor-server
+- 下载zookeeper、mydataharbor-console（直接在release中选择版本下载）、mydataharbor-server（直接在release中选择版本下载）
 
 - 启动zookeeper，参考网络教程
 
