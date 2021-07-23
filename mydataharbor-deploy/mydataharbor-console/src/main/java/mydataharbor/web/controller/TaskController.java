@@ -30,6 +30,7 @@ public class TaskController {
   @ApiOperation("向集群提交任务")
   @ResponseBody
   public BaseResponse<TaskAssignedInfo> submitTask(@ApiParam("任务信息") @RequestBody DistributedTask distributedTask) {
+    distributedTask.setTaskState(TaskState.created);
     return BaseResponse.success(taskService.submitTask(distributedTask));
   }
 
