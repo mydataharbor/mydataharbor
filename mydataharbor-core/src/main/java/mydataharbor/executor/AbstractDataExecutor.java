@@ -139,6 +139,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       end = true;
       if (run)
         safeListenerRun(this::close);
+      if(forkJoinPool!=null){
+        forkJoinPool.shutdown();
+      }
       log.info("该线程结束！");
     }
 
