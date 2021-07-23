@@ -52,8 +52,7 @@ public class CommonRebalance implements IRebalance {
     //机器加入
     TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
     Integer totalNumberOfPipline = distributedTask.getTotalNumberOfPipline();
-    if (totalNumberOfPipline > 2 * liveNodes.size() || liveNodes.size() == 1) {
-      TaskAssignedInfo taskAssignedInfo1 = distributedTask.getTaskAssignedInfo();
+    if (totalNumberOfPipline > 2 * distributedTask.getTaskAssignedInfo().getAssignedInfoMap().keySet().size() || liveNodes.size() == 1) {
       //任务数是目前机器数的2倍再转移
       List<NodeInfo> newLiveNodes = new ArrayList<>(liveNodes);
       //到排序
