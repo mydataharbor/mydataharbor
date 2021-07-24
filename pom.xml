@@ -6,7 +6,7 @@
 
   <groupId>com.mydataharbor</groupId>
   <artifactId>mydataharbor</artifactId>
-  <version>1.0.0-RELEASE</version>
+  <version>1.0.1-SNAPSHOT</version>
   <modules>
     <module>mydataharbor-deploy</module>
     <module>mydataharbor-core</module>
