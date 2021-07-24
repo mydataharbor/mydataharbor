@@ -28,7 +28,7 @@ public class Kafka2Redis {
     BaseSettingContext baseSettingContext = BaseSettingContext.builder()
       .parallel(false)
       .threadNum(10)
-      .batch(false)
+      .batchWrite(false)
       .sleepTime(1000)
       .build();
     Properties kafkaProperties = new Properties();

@@ -135,11 +135,11 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     } catch (Throwable e) {
       log.error("发生未知异常任务线程异常退出", e);
       safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onExceptionEnd(this, dataPipline, e, writeCount.longValue())));
-    }  finally {
+    } finally {
       end = true;
       if (run)
         safeListenerRun(this::close);
-      if(forkJoinPool!=null){
+      if (forkJoinPool != null) {
         forkJoinPool.shutdown();
       }
       log.info("该线程结束！");
@@ -224,8 +224,11 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       dataProvider.commit(tRecordsIterable, settingContext);
     } else {
       //批量数据写入
-      if (settingContext.isBatch()) {
+      if (settingContext.isBatchWrite()) {
         batchWrite(dataProvider, writer, dataConventSuccess, writeSuccess, writeError, tRecordConventSucces);
+      } else if (settingContext.isBatchCommit()) {
+        //单条写入，批量提交
+        dataProvider.commit(tRecordConventSucces, settingContext);
       }
     }
     log.info("写入成功记录:{}", writeSuccess);
@@ -309,7 +312,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     }
     tRecordConventSucces.add(tRecord);
     //单条数据写入
-    if (!settingContext.isBatch()) {
+    if (!settingContext.isBatchWrite()) {
       singleRecordWrite(dataProvider, writer, writeSuccess, writeError, tRecord, records);
     }
     return;
@@ -402,7 +405,8 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
         //数据提交
         try {
           //防止commit异常
-          dataSource.commit(tRecord, settingContext);
+          if (!settingContext.isBatchCommit())
+            dataSource.commit(tRecord, settingContext);
         } catch (Exception e) {
           throw new ResetException("commit异常", e);
         }
@@ -417,7 +421,8 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       log.error("单条写入异常", e);
       if (!(e instanceof ResetException)) {
         //提交数据
-        dataSource.commit(tRecord, settingContext);
+        if (!settingContext.isBatchCommit())
+          dataSource.commit(tRecord, settingContext);
       } else {
         //回滚数据
         rollbackUnit.put(dataSource.rollbackTransactionUnit(tRecord), true);

@@ -31,10 +31,15 @@ public class BaseSettingContext {
   private int threadNum = 0;
 
   /**
-   * 是否批量，写入/提交
-   * 如果是非批量提交，需要数据源支持单条提交
+   * 是否批量写入
+   * 批量写入的前提下肯定是批量提交
    */
-  private boolean batch;
+  private boolean batchWrite;
+
+  /**
+   * 在单条写入的情况下，是否需要批量提交
+   */
+  private boolean batchCommit;
 
   /**
    * 每次poll的休息时间
