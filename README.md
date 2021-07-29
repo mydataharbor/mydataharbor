@@ -27,7 +27,7 @@ MyDataHarbor在这种场景需求下应用而生！
 
 2. ### 插件式设计
 
-   高度合理的抽象、插件化的设计似的MyDataHarbor拥有很高扩展性，任何数据迁移的需求都可以通过开发插件完成。
+   高度合理的抽象、插件化的设计使得MyDataHarbor拥有很高扩展性，任何数据迁移的需求都可以通过开发插件完成。
 
 3. ### 事务支持
 
@@ -55,7 +55,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 ## 安装使用
 
-MyDataHar的安装非常简单：
+MyDataHarbor的安装非常简单：
 
 - 下载zookeeper、mydataharbor-console、mydataharbor-server
 
