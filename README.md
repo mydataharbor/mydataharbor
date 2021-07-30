@@ -87,3 +87,5 @@ MyDataHarbor的安装非常简单：
   访问：mydataharbor-console  http://127.0.0.1:8080
 
   是否可以看到刚刚启动的节点
+## DEMO
+http://118.25.5.236:8083/
