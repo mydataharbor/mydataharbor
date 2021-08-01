@@ -29,6 +29,16 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
   IDataPipline createPipline(C config, S settingContext) throws Exception;
 
   /**
+   * 是否可以创建pipline，有些creator只提供可用的资源
+   *
+   * @return
+   */
+  default boolean canCreatePipline() {
+    return true;
+  }
+
+
+  /**
    * 获得config类型
    *
    * @return

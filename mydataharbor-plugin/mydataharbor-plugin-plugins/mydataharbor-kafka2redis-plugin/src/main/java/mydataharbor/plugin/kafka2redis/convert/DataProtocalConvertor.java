@@ -1,10 +1,10 @@
-package mydataharbor.pipline.kafka2redis.convert;
+package mydataharbor.plugin.kafka2redis.convert;
 
-import mydataharbor.pipline.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
+import mydataharbor.plugin.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
+import lombok.extern.slf4j.Slf4j;
 import mydataharbor.IDataProtocalConvertor;
 import mydataharbor.exception.ResetException;
 import mydataharbor.setting.BaseSettingContext;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 /**

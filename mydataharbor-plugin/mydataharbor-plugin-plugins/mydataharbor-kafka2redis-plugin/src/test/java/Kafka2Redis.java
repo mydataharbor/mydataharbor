@@ -1,11 +1,11 @@
 import mydataharbor.IDataConvertor;
 import mydataharbor.IDataProtocalConvertor;
 import mydataharbor.executor.CommonDataExecutor;
-import mydataharbor.pipline.kafka2redis.checker.KeyNotEmptyChecker;
-import mydataharbor.pipline.kafka2redis.checker.ValueNotEmptyChecker;
-import mydataharbor.pipline.kafka2redis.convert.DataConvertor;
-import mydataharbor.pipline.kafka2redis.convert.DataProtocalConvertor;
-import mydataharbor.pipline.kafka2redis.pipline.Kafka2RedisPipline;
+import mydataharbor.pipline.CommonDataPipline;
+import mydataharbor.plugin.kafka2redis.checker.KeyNotEmptyChecker;
+import mydataharbor.plugin.kafka2redis.checker.ValueNotEmptyChecker;
+import mydataharbor.plugin.kafka2redis.convert.DataConvertor;
+import mydataharbor.plugin.kafka2redis.convert.DataProtocalConvertor;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.sink.redis.SingleStringKeyValueRedisSink;
 import mydataharbor.sink.redis.config.SingleRedisConfig;
@@ -49,11 +49,11 @@ public class Kafka2Redis {
     ValueNotEmptyChecker valueChecker = new ValueNotEmptyChecker(null);
     KeyNotEmptyChecker keyChecker = new KeyNotEmptyChecker(valueChecker);
 
-    IDataProtocalConvertor dataProtocalConventor = new  DataProtocalConvertor();
+    IDataProtocalConvertor dataProtocalConventor = new DataProtocalConvertor();
     IDataConvertor dataConventor = new DataConvertor();
 
-    Kafka2RedisPipline kafkaRedisPipline =
-      Kafka2RedisPipline.builder()
+    CommonDataPipline kafkaRedisPipline =
+      CommonDataPipline.builder()
         .dataSource(simpleKafkaDataSource)
         .dataProtocalConventor(dataProtocalConventor)
         .checker(keyChecker)

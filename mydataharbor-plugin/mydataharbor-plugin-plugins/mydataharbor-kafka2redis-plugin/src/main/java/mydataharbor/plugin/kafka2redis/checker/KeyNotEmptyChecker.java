@@ -1,7 +1,7 @@
-package mydataharbor.pipline.kafka2redis.checker;
+package mydataharbor.plugin.kafka2redis.checker;
 
-import mydataharbor.pipline.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
 import mydataharbor.AbstractDataChecker;
+import mydataharbor.plugin.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
 import mydataharbor.setting.BaseSettingContext;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 public class KeyNotEmptyChecker extends AbstractDataChecker<StringKeyValueKafkaRedisProtocal, BaseSettingContext> {
 
   public KeyNotEmptyChecker() {
+
   }
 
   public KeyNotEmptyChecker(AbstractDataChecker next) {

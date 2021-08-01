@@ -19,8 +19,6 @@
   <modules>
     <module>mydataharbor-support-source</module>
     <module>mydataharbor-support-sink</module>
-    <module>mydataharbor-support-pipline</module>
-    <module>mydataharbor-support-sink/mydataharbor-sink-http</module>
   </modules>
 
   <dependencies>

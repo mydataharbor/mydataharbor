@@ -1,10 +1,10 @@
-package mydataharbor.pipline.kafka2redis.convert;
+package mydataharbor.plugin.kafka2redis.convert;
 
-import mydataharbor.pipline.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
-import mydataharbor.sink.redis.entity.StringKeyValue;
+import mydataharbor.plugin.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
 import mydataharbor.IDataConvertor;
 import mydataharbor.exception.ResetException;
 import mydataharbor.setting.BaseSettingContext;
+import mydataharbor.sink.redis.entity.StringKeyValue;
 
 /**
  * @auth xulang

@@ -95,6 +95,7 @@ public class PluginInfoManager implements IPluginInfoManager {
     DataSinkCreatorInfo dataSinkCreatorInfo = new DataSinkCreatorInfo();
     dataSinkCreatorInfo.setClazz(generateClazzInfo(aClass, pluginInfo));
     dataSinkCreatorInfo.setType(dataSinkCreator.type());
+    dataSinkCreatorInfo.setCanCreatePipline(dataSinkCreator.canCreatePipline());
     ResolvedType resolvedType = typeResolver.resolve(dataSinkCreator.getClass());
     List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataSinkCreator.class);
     ResolvedType configResolveType = resolvedTypes.get(0);

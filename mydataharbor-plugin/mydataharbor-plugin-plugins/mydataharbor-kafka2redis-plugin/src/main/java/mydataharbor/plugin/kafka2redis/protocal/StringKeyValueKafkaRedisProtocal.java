@@ -1,10 +1,10 @@
-package mydataharbor.pipline.kafka2redis.protocal;
+package mydataharbor.plugin.kafka2redis.protocal;
 
-import mydataharbor.IProtocalData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mydataharbor.IProtocalData;
 
 /**
  * kafka-redis

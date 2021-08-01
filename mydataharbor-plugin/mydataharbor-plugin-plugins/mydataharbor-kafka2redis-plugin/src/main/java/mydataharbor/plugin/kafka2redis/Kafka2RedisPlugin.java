@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mydataharbor.plugin.kafka.to.redis;
+package mydataharbor.plugin.kafka2redis;
 
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
@@ -23,9 +23,9 @@ import org.pf4j.PluginWrapper;
  *
  * @author Decebal Suiu
  */
-public class KafkaToRedisPlugin extends Plugin {
+public class Kafka2RedisPlugin extends Plugin {
 
-  public KafkaToRedisPlugin(PluginWrapper wrapper) {
+  public Kafka2RedisPlugin(PluginWrapper wrapper) {
     super(wrapper);
   }
 

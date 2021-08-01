@@ -28,6 +28,10 @@ public class DataSinkCreatorInfo implements Serializable {
    */
   private TypeInfo configClassInfo;
 
+  /**
+   * 该creator是否可以创建pipline
+   */
+  private boolean canCreatePipline;
 
   private List<ClassInfo> dataSourceClassInfo;
 
