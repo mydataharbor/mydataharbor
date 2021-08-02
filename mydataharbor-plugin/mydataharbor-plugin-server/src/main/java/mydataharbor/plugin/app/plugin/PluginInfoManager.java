@@ -51,6 +51,7 @@ public class PluginInfoManager implements IPluginInfoManager {
 
   @Override
   public void refresh() throws InstantiationException, IllegalAccessException {
+    dataSinkCreatorMap.clear();
     this.pluginInfos = scanAllPluginInfo();
   }
 
