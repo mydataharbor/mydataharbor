@@ -4,6 +4,7 @@ import lombok.Data;
 import mydataharbor.*;
 import mydataharbor.classutil.classresolver.FieldMarker;
 import mydataharbor.pipline.CommonDataPipline;
+import mydataharbor.plugin.base.creator.AbstractAutoScanPiplineCreator;
 import mydataharbor.plugin.base.util.JsonUtil;
 import mydataharbor.plugin.kafka2redis.checker.KeyNotEmptyChecker;
 import mydataharbor.plugin.kafka2redis.checker.ValueNotEmptyChecker;
@@ -23,10 +24,15 @@ import org.pf4j.ExtensionPoint;
  **/
 @Extension
 @FieldMarker(value = "kafka到redis创建器")
-public class Kafka2RedisCreator implements IDataSinkCreator<Kafka2RedisCreator.Kafka2RedisCreatorConfig, BaseSettingContext>, ExtensionPoint {
+public class Kafka2RedisCreator extends AbstractAutoScanPiplineCreator<Kafka2RedisCreator.Kafka2RedisCreatorConfig, BaseSettingContext> implements ExtensionPoint {
 
   public Kafka2RedisCreator() {
 
+  }
+
+  @Override
+  public String scanPackage() {
+    return "mydataharbor";
   }
 
   @Override
