@@ -11,6 +11,8 @@
 
   <artifactId>mydataharbor-console</artifactId>
 
+  <packaging>jar</packaging>
+
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
 
   <properties>
@@ -142,6 +144,28 @@
           <execution>
             <goals>
               <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!--主要使用的是maven提供的assembly插件完成-->
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <descriptors>
+            <!--具体的配置文件-->
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <!--绑定到maven操作类型上-->
+            <phase>package</phase>
+            <!--运行一次-->
+            <goals>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>

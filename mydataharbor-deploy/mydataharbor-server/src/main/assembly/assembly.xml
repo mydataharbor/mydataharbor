@@ -1,10 +1,9 @@
 <assembly>
-  <id>app</id>
+  <id>bin</id>
   <formats>
-    <format>dir</format>
-    <format>zip</format>
+    <format>tar.gz</format>
   </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
+  <includeBaseDirectory>true</includeBaseDirectory>
   <dependencySets>
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
@@ -15,6 +14,16 @@
     </dependencySet>
   </dependencySets>
   <fileSets>
+
+    <fileSet>
+      <directory>src/main/assembly/bin</directory>
+      <outputDirectory>bin</outputDirectory>
+      <fileMode>0755</fileMode>
+      <!--如果是脚本，一定要改为unix.如果是在windows上面编码，会出现dos编写问题-->
+      <lineEnding>unix</lineEnding>
+      <filtered>true</filtered><!-- 是否进行属性替换 -->
+    </fileSet>
+
     <fileSet>
       <directory>${project.build.directory}</directory>
       <outputDirectory></outputDirectory>
