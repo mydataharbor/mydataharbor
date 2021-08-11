@@ -148,7 +148,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       if (forkJoinPool != null) {
         forkJoinPool.shutdown();
       }
-      log.info("该线程结束！");
+      log.info("{}该线程结束！", getName());
     }
 
   }
