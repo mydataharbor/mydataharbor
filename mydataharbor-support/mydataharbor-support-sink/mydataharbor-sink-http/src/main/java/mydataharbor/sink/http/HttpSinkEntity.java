@@ -1,6 +1,6 @@
 package mydataharbor.sink.http;
 
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,13 +17,13 @@ import java.util.Map;
 @NoArgsConstructor
 public class HttpSinkEntity {
 
-  @FieldMarker(value = "请求方法", require = true)
+  @MyDataHarborMarker(title = "请求方法", require = true)
   private HttpMethod httpMethod;
 
-  @FieldMarker(value = "请求体", des = "有些请求不需要时，置为null", require = false)
+  @MyDataHarborMarker(title = "请求体", des = "有些请求不需要时，置为null", require = false)
   private RequestBody requestBody;
 
-  @FieldMarker(value = "头信息", require = true)
+  @MyDataHarborMarker(title = "头信息", require = true)
   private Map<String, String> headers;
 
 }

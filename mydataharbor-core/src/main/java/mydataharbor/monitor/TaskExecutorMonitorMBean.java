@@ -1,17 +1,11 @@
 package mydataharbor.monitor;
 
 /**
+ * 每一个线程的监控
  * @auth xulang
  * @Date 2021/7/14
  **/
-public interface TaskmonitorMBean {
-
-  /**
-   * taskid
-   *
-   * @return
-   */
-  String getTaskId();
+public interface TaskExecutorMonitorMBean {
 
   /**
    * 拉取的原始消息总数
@@ -83,6 +77,30 @@ public interface TaskmonitorMBean {
    */
   Long getLastRunTime();
 
+  /**
+   * 获取总数
+   * @return
+   */
+  Long getTotal();
+
+  /**
+   * 执行
+   * @return
+   */
+  boolean isRun();
+
+  /**
+   * 暂停
+   * @return
+   */
+  boolean isSuspend();
+
+  /**
+   * 线程是否结束
+   * @return
+   */
+  boolean isEnd();
+
   void addAndGettRecordCount(Long change);
 
   void addAndGetProtocalConventSuccessCount(Long change);
@@ -102,5 +120,7 @@ public interface TaskmonitorMBean {
   void addAndGetWriteErrorCount(Long change);
 
   void setLastRunTime(Long lastRunTime);
+
+  void setTotal(Long total);
 
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>mydataharbor-plugin-plugins</artifactId>
+    <groupId>com.mydataharbor</groupId>
+    <version>1.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>mydataharbor-test-plugin</artifactId>
+
+  <properties>
+    <plugin.id>test-plugin</plugin.id>
+    <plugin.version>1.1</plugin.version>
+    <plugin.provider>xulang</plugin.provider>
+    <plugin.pluginDescription>用于测试的插件，模拟</plugin.pluginDescription>
+    <plugin.dependencies/>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-plugin-base</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -50,7 +50,7 @@ public class NodeLeaderLatchListener implements LeaderLatchListener {
   @Override
   public synchronized void isLeader() {
     if (!nodeInfo.isLeader()) {
-      log.info("im become leader");
+      log.info("i become leader");
       nodeInfo.setLeader(true);
       nodeInfoChange(nodeInfo -> nodeInfo.setLeader(true));
     }

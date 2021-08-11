@@ -17,7 +17,7 @@ public interface IDataConvertor<P extends IProtocalData, R, S extends BaseSettin
    *
    * @return
    */
-  R convent(P record, S settingContext) throws ResetException;
+  R convert(P record, S settingContext) throws ResetException;
 
   default Type getPType() {
     return getTypeByIndex(0, "P", IDataConvertor.class);

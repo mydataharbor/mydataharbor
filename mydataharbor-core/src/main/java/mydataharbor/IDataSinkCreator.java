@@ -80,7 +80,7 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
    *
    * @return
    */
-  default Set<Class<? extends IDataProtocalConvertor>> availableDataProtocalConventor() {
+  default Set<Class<? extends IProtocalDataConvertor>> availableProtocalDataConvertor() {
     return Collections.emptySet();
   }
 
@@ -99,7 +99,7 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
    *
    * @return
    */
-  default Set<Class<? extends IDataConvertor>> avaliableDataConventor() {
+  default Set<Class<? extends IDataConvertor>> avaliabledataConvertor() {
     return Collections.emptySet();
   }
 

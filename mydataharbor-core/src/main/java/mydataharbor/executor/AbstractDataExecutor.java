@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mydataharbor.*;
 import mydataharbor.exception.ResetException;
 import mydataharbor.exception.TheEndException;
-import mydataharbor.monitor.Taskmonitor;
+import mydataharbor.monitor.TaskExecutorMonitor;
 import mydataharbor.setting.BaseSettingContext;
 
 import java.io.Closeable;
@@ -63,7 +63,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
 
   private Map<Object, Boolean> rollbackUnit;
 
-  private Taskmonitor taskmonitor;
+  private TaskExecutorMonitor taskmonitor;
 
   public AbstractDataExecutor(IDataPipline<T, P, R, S> dataPipline, String threadName) {
     this.dataPipline = dataPipline;
@@ -93,12 +93,14 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
   @Override
   public void run() {
     end = false;
+    taskmonitor.setEnd(end);
     if (!suspend)
       safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onRun(this, dataPipline)));
     IDataSource<T, S> dataSource = dataPipline.dataSource();
-    IDataProtocalConvertor<T, P, S> dataProtocalConventor = dataPipline.dataProtocalConventor();
+    taskmonitor.setTotal(dataSource.total());
+    IProtocalDataConvertor<T, P, S> protocalDataConvertor = dataPipline.protocalDataConvertor();
     IProtocalDataChecker<P, S> checker = dataPipline.checker();
-    IDataConvertor<P, R, S> dataConventor = dataPipline.dataConventer();
+    IDataConvertor<P, R, S> dataConvertor = dataPipline.dataConventer();
     IDataSink<R, S> sink = dataPipline.sink();
     try {
       while (run) {
@@ -107,6 +109,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
             //允许暂停时被结束
             break;
           }
+          taskmonitor.setLastRunTime(System.currentTimeMillis());
           try {
             Thread.sleep(500);
           } catch (InterruptedException e) {
@@ -117,11 +120,13 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
           break;
         }
         try {
-          doRun(dataSource, dataProtocalConventor, checker, dataConventor, sink);
+          doRun(dataSource, protocalDataConvertor, checker, dataConvertor, sink);
         } catch (TheEndException e) {
           //数据拉取完毕
           //跳出循环
           break;
+        } finally {
+          taskmonitor.setLastRunTime(System.currentTimeMillis());
         }
         if (settingContext.getSleepTime() != 0L) {
           try {
@@ -137,6 +142,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onExceptionEnd(this, dataPipline, e, writeCount.longValue())));
     } finally {
       end = true;
+      taskmonitor.setEnd(end);
       if (run)
         safeListenerRun(this::close);
       if (forkJoinPool != null) {
@@ -147,7 +153,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
 
   }
 
-  private void doRun(IDataSource<T, S> dataProvider, IDataProtocalConvertor<T, P, S> dataProtocalConventor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConventor, IDataSink<R, S> writer) throws TheEndException {
+  private void doRun(IDataSource<T, S> dataProvider, IProtocalDataConvertor<T, P, S> protocalDataConvertor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConvertor, IDataSink<R, S> writer) throws TheEndException {
     //协议转换通过的数据
     List<P> protocalConventSuccess = Collections.synchronizedList(new ArrayList<>());
     //协议转换失败的数据
@@ -179,13 +185,13 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
         forkJoinPool = new ForkJoinPool(settingContext.getThreadNum());
       try {
         forkJoinPool.submit(() -> {
-          forEach(stream, dataProvider, dataProtocalConventor, checker, dataConventor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces);
+          forEach(stream, dataProvider, protocalDataConvertor, checker, dataConvertor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces);
         }).get();
       } catch (InterruptedException | ExecutionException e) {
         log.error("并行执行任务发生异常！", e);
       }
     } else {
-      forEach(stream, dataProvider, dataProtocalConventor, checker, dataConventor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces);
+      forEach(stream, dataProvider, protocalDataConvertor, checker, dataConvertor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces);
     }
     log.info("原始数据源数据：{}", tRecordsIterable);
     if (tRecordsIterable instanceof Collection) {
@@ -245,6 +251,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
    */
   public void pause() {
     this.suspend = true;
+    taskmonitor.setSuspend(suspend);
     safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onSuspend(this, dataPipline, writeCount.longValue())));
   }
 
@@ -253,14 +260,15 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
    */
   public void doContinue() {
     this.suspend = false;
+    taskmonitor.setSuspend(suspend);
     safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onContinue(this, dataPipline, writeCount.longValue())));
   }
 
-  protected void forEach(Stream<T> stream, IDataSource<T, S> dataProvider, IDataProtocalConvertor<T, P, S> dataProtocalConventor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConventor, IDataSink<R, S> writer, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocalDataChecker.CheckResult>> checkerError, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConventSucces) {
+  protected void forEach(Stream<T> stream, IDataSource<T, S> dataProvider, IProtocalDataConvertor<T, P, S> rotocalDataConvertor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConvertor, IDataSink<R, S> writer, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocalDataChecker.CheckResult>> checkerError, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConventSucces) {
     stream.forEach(tRecord -> {
       Object rollbackTransactionUnit = dataProvider.rollbackTransactionUnit(tRecord);
       if (!rollbackUnit.getOrDefault(rollbackTransactionUnit, false) || settingContext.isContinueOnRollbackOccurContinueInOncePoll())
-        doForEach(dataProvider, dataProtocalConventor, checker, dataConventor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces, tRecord);
+        doForEach(dataProvider, rotocalDataConvertor, checker, dataConvertor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces, tRecord);
     });
   }
 
@@ -269,9 +277,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
    * 处理单条数据
    *
    * @param dataProvider
-   * @param dataProtocalConventor
+   * @param protocalDataConvertor
    * @param checker
-   * @param dataConventor
+   * @param dataConvertor
    * @param writer
    * @param protocalConventSuccess
    * @param protocalConventError
@@ -285,9 +293,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
    * @param tRecord
    * @return
    */
-  protected void doForEach(IDataSource<T, S> dataProvider, IDataProtocalConvertor<T, P, S> dataProtocalConventor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConventor, IDataSink<R, S> writer, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocalDataChecker.CheckResult>> checkerError, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConventSucces, T tRecord) {
+  protected void doForEach(IDataSource<T, S> dataProvider, IProtocalDataConvertor<T, P, S> protocalDataConvertor, IProtocalDataChecker checker, IDataConvertor<P, R, S> dataConvertor, IDataSink<R, S> writer, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocalDataChecker.CheckResult>> checkerError, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConventSucces, T tRecord) {
     //协议转换
-    P protocalData = protocalConvent(dataProtocalConventor, protocalConventSuccess, protocalConventError, tRecord);
+    P protocalData = protocalConvent(protocalDataConvertor, protocalConventSuccess, protocalConventError, tRecord);
     if (protocalData == null) {
       //协议转换失败
       return;
@@ -304,7 +312,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       checkerSuccess.add(protocalData);
     }
     //数据转换
-    List<R> records = dataConvent(dataConventor, dataConventSuccess, dataConventError, protocalData);
+    List<R> records = dataConvent(dataConvertor, dataConventSuccess, dataConventError, protocalData);
     if (records == null) {
       //数据转换失败
       log.error("数据转换失败!");
@@ -436,9 +444,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     }
   }
 
-  private List<R> dataConvent(IDataConvertor<P, R, S> dataConventor, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, P protocalData) {
+  private List<R> dataConvent(IDataConvertor<P, R, S> dataConvertor, List<R> dataConventSuccess, List<ErrorRecord<P, Object>> dataConventError, P protocalData) {
     try {
-      Object record = dataConventor.convent(protocalData, settingContext);
+      Object record = dataConvertor.convert(protocalData, settingContext);
       if (record instanceof List) {
         dataConventSuccess.addAll((List) record);
         return (List) record;
@@ -477,9 +485,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     return null;
   }
 
-  private P protocalConvent(IDataProtocalConvertor<T, P, S> dataProtocalConventor, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, T tRecord) {
+  private P protocalConvent(IProtocalDataConvertor<T, P, S> protocalDataConvertor, List<P> protocalConventSuccess, List<ErrorRecord<T, Object>> protocalConventError, T tRecord) {
     try {
-      P protocalData = dataProtocalConventor.convent(tRecord, settingContext);
+      P protocalData = protocalDataConvertor.convert(tRecord, settingContext);
       protocalConventSuccess.add(protocalData);
       return protocalData;
     } catch (Exception e) {
@@ -495,6 +503,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
   @Override
   public void close() throws IOException {
     run = false;
+    taskmonitor.setRun(run);
     safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onClose(this, dataPipline, writeCount.longValue(), run)));
     while (!end) {
       //等待工作线程结束
@@ -507,7 +516,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     dataPipline.close();
   }
 
-  public void setTaskMonitorMBean(Taskmonitor taskmonitor) {
+  public void setTaskMonitorMBean(TaskExecutorMonitor taskmonitor) {
     this.taskmonitor = taskmonitor;
   }
 }

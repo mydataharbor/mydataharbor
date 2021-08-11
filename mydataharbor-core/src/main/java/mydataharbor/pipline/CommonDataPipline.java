@@ -11,7 +11,7 @@ import lombok.NonNull;
  **/
 public class CommonDataPipline extends AbstractDataPipline {
   @Builder
-  public CommonDataPipline(@NonNull IDataSource dataSource, @NonNull IDataProtocalConvertor dataProtocalConventor, AbstractDataChecker checker, @NonNull IDataConvertor dataConventor, @NonNull IDataSink sink, BaseSettingContext settingContext) {
-    super(dataSource, dataProtocalConventor, checker, dataConventor, sink, settingContext);
+  public CommonDataPipline(@NonNull IDataSource dataSource, @NonNull IProtocalDataConvertor protocalDataConvertor, AbstractDataChecker checker, @NonNull IDataConvertor dataConvertor, @NonNull IDataSink sink, BaseSettingContext settingContext) {
+    super(dataSource, protocalDataConvertor, checker, dataConvertor, sink, settingContext);
   }
 }

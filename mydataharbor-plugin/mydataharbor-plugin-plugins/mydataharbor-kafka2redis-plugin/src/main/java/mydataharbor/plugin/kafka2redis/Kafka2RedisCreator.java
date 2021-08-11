@@ -2,14 +2,14 @@ package mydataharbor.plugin.kafka2redis;
 
 import lombok.Data;
 import mydataharbor.*;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.pipline.CommonDataPipline;
 import mydataharbor.plugin.base.creator.AbstractAutoScanPiplineCreator;
 import mydataharbor.plugin.base.util.JsonUtil;
 import mydataharbor.plugin.kafka2redis.checker.KeyNotEmptyChecker;
 import mydataharbor.plugin.kafka2redis.checker.ValueNotEmptyChecker;
 import mydataharbor.plugin.kafka2redis.convert.DataConvertor;
-import mydataharbor.plugin.kafka2redis.convert.DataProtocalConvertor;
+import mydataharbor.plugin.kafka2redis.convert.ProtocalDataConvertor;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.sink.redis.SingleStringKeyValueRedisSink;
 import mydataharbor.sink.redis.config.SingleRedisConfig;
@@ -23,7 +23,7 @@ import org.pf4j.ExtensionPoint;
  * @Date 2021/5/16
  **/
 @Extension
-@FieldMarker(value = "kafka到redis创建器")
+@MyDataHarborMarker(title = "kafka到redis创建器")
 public class Kafka2RedisCreator extends AbstractAutoScanPiplineCreator<Kafka2RedisCreator.Kafka2RedisCreatorConfig, BaseSettingContext> implements ExtensionPoint {
 
   public Kafka2RedisCreator() {
@@ -52,14 +52,14 @@ public class Kafka2RedisCreator extends AbstractAutoScanPiplineCreator<Kafka2Red
 
     ValueNotEmptyChecker valueChecker = new ValueNotEmptyChecker(null);
     KeyNotEmptyChecker keyChecker = new KeyNotEmptyChecker(valueChecker);
-    IDataProtocalConvertor dataProtocalConventor = new DataProtocalConvertor();
-    IDataConvertor dataConventor = new DataConvertor();
+    IProtocalDataConvertor protocalDataConvertor = new ProtocalDataConvertor();
+    IDataConvertor dataConvertor = new DataConvertor();
     CommonDataPipline kafkaRedisPipline =
       CommonDataPipline.builder()
         .dataSource(dataSource)
-        .dataProtocalConventor(dataProtocalConventor)
+        .protocalDataConvertor(protocalDataConvertor)
         .checker(keyChecker)
-        .dataConventor(dataConventor)
+        .dataConvertor(dataConvertor)
         .sink(redisSink)
         .settingContext(settingContext)
         .build();
@@ -69,10 +69,10 @@ public class Kafka2RedisCreator extends AbstractAutoScanPiplineCreator<Kafka2Red
   @Data
   public static class Kafka2RedisCreatorConfig {
 
-    @FieldMarker(value = "kafka连接参数")
+    @MyDataHarborMarker(title = "kafka连接参数")
     private SimpleKafkaConfig simpleKafkaConfig;
 
-    @FieldMarker(value = "redis连接参数")
+    @MyDataHarborMarker(title = "redis连接参数")
     private SingleRedisConfig redisConfig;
   }
 }

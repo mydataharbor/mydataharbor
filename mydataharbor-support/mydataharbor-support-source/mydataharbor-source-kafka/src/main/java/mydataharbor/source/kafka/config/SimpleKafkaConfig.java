@@ -1,7 +1,7 @@
 package mydataharbor.source.kafka.config;
 
 import mydataharbor.datasource.RateLimitConfig;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.*;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Properties;
  * @auth xulang
  * @Date 2021/5/7
  **/
-@FieldMarker(value = "普通kafka服务连接配置")
+@MyDataHarborMarker(title = "普通kafka服务连接配置")
 @Data
 public class SimpleKafkaConfig extends RateLimitConfig {
 
@@ -23,10 +23,10 @@ public class SimpleKafkaConfig extends RateLimitConfig {
   }
 
 
-  @FieldMarker(value = "监听的topic")
+  @MyDataHarborMarker(title = "监听的topic")
   private List<String> topics;
 
-  @FieldMarker(value = "kafka配置")
+  @MyDataHarborMarker(title = "kafka配置")
   private Properties kafkaConfig;
 
 

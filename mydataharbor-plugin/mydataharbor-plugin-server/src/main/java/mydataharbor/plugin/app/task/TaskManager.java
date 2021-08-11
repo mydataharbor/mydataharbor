@@ -6,7 +6,7 @@ import mydataharbor.IExecutorListener;
 import mydataharbor.datasource.AbstractRateLimitDataSource;
 import mydataharbor.datasource.RateLimitConfig;
 import mydataharbor.executor.AbstractDataExecutor;
-import mydataharbor.monitor.Taskmonitor;
+import mydataharbor.monitor.TaskExecutorMonitor;
 import mydataharbor.plugin.api.IPluginInfoManager;
 import mydataharbor.plugin.api.IPluginServer;
 import mydataharbor.plugin.api.ITaskManager;
@@ -131,7 +131,7 @@ public class TaskManager implements ITaskManager {
           Constructor<? extends AbstractDataExecutor> constructor = pointExecutorType.getConstructor(IDataPipline.class, String.class);
           AbstractDataExecutor abstractDataExecutor = constructor.newInstance(dataPipline, dataPipline.threadNameGenerate(singleTask.getTaskId(), i + 1));
           abstractDataExecutor.addListener(executorListener);
-          abstractDataExecutor.setTaskMonitorMBean(new Taskmonitor(singleTask.getTaskId(), abstractDataExecutor.getName()));
+          abstractDataExecutor.setTaskMonitorMBean(new TaskExecutorMonitor(singleTask.getTaskId(), abstractDataExecutor.getName(), null));
           executors.add(abstractDataExecutor);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
           throw new PiplineCreateException("pipline指定的executor执行器构造方法不符合规范:" + e.getMessage(), e);

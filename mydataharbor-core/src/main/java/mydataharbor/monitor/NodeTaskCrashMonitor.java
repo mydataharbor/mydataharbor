@@ -6,13 +6,15 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @auth xulang
  * @Date 2021/7/16
  **/
 @Slf4j
-public class ExecutorCrash implements ExecutorCrashMBean {
+public class NodeTaskCrashMonitor implements NodeTaskCrashMonitorMBean {
 
   private String taskId;
 
@@ -24,15 +26,24 @@ public class ExecutorCrash implements ExecutorCrashMBean {
 
   private Integer taskNum;
 
-  public ExecutorCrash(String taskId, String nodeName, String nodeIp, Integer nodePort, Integer taskNum) {
+  public NodeTaskCrashMonitor(String taskId, String nodeName, String nodeIp, Integer nodePort, Integer taskNum, Map<String, String> otherInfo) {
     this.taskId = taskId;
     this.nodeName = nodeName;
     this.nodeIp = nodeIp;
     this.nodePort = nodePort;
     this.taskNum = taskNum;
+    Hashtable property = new Hashtable();
+    property.put("ametric", "node-crash-task");
+    property.put("taskId", taskId);
+    property.put("nodeIp", nodeIp);
+    property.put("nodePort", nodePort);
+    property.put("nodeName", nodeName);
+    if (otherInfo != null) {
+      property.putAll(otherInfo);
+    }
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     try {
-      ObjectName mbeanName = new ObjectName("mydataharbor.task.crash:name=" + taskId + "@" + nodeName);
+      ObjectName mbeanName = new ObjectName("mydataharbor", property);
       boolean isMBeanRegistered = server.isRegistered(mbeanName);
       if (isMBeanRegistered) {
         log.info("Unregistering existing JMX MBean [{}].", mbeanName);

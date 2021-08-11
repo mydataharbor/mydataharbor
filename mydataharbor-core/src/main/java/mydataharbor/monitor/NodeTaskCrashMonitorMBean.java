@@ -5,7 +5,7 @@ package mydataharbor.monitor;
  * @auth xulang
  * @Date 2021/7/16
  **/
-public interface ExecutorCrashMBean {
+public interface NodeTaskCrashMonitorMBean {
   /**
    * 任务id
    * @return

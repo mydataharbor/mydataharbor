@@ -13,7 +13,7 @@ import mydataharbor.sink.redis.entity.StringKeyValue;
 
 public class DataConvertor implements IDataConvertor<StringKeyValueKafkaRedisProtocal, StringKeyValue, BaseSettingContext> {
   @Override
-  public StringKeyValue convent(StringKeyValueKafkaRedisProtocal record, BaseSettingContext settingContext) throws ResetException {
+  public StringKeyValue convert(StringKeyValueKafkaRedisProtocal record, BaseSettingContext settingContext) throws ResetException {
     return StringKeyValue.builder().key(record.getKey()).value(record.getValue()).build();
   }
 }

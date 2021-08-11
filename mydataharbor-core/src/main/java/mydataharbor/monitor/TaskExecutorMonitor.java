@@ -6,6 +6,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,9 +16,27 @@ import java.util.concurrent.atomic.AtomicLong;
  * @Date 2021/7/15
  **/
 @Slf4j
-public class Taskmonitor implements TaskmonitorMBean {
+public class TaskExecutorMonitor implements TaskExecutorMonitorMBean {
 
-  private String taskId;
+  /**
+   * 任务总数
+   */
+  private Long total;
+
+  /**
+   * 是否还在运行中
+   */
+  private boolean run = true;
+
+  /**
+   * 是否暂停
+   */
+  private boolean suspend = false;
+
+  /**
+   * 运行结束
+   */
+  private boolean end = true;
 
   private AtomicLong tRecordCount = new AtomicLong();
 
@@ -39,18 +58,22 @@ public class Taskmonitor implements TaskmonitorMBean {
 
   private Long lastRunTime;
 
-  private static final Map<String, Taskmonitor> TASKMONITOR_CACHE = new ConcurrentHashMap<>();
+  private static final Map<String, TaskExecutorMonitor> TASKMONITOR_CACHE = new ConcurrentHashMap<>();
 
-  public static Taskmonitor getTaskmonitorByExecutorId(String executorId) {
+  public static TaskExecutorMonitor getTaskmonitorByExecutorId(String executorId) {
     return TASKMONITOR_CACHE.get(executorId);
   }
 
-  public Taskmonitor(String taskId, String executorId) {
-    this.taskId = taskId;
+  public TaskExecutorMonitor(String taskId, String executorId, Map<String, String> otherInfo) {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-
     try {
-      ObjectName mbeanName = new ObjectName("mydataharbor.task.count:name=" + executorId);
+      Hashtable property = new Hashtable();
+      property.put("ametric", "task-counter");
+      property.put("executorId", executorId);
+      property.put("taskId", taskId);
+      if (otherInfo != null)
+        property.putAll(otherInfo);
+      ObjectName mbeanName = new ObjectName("mydataharbor", property);
       boolean isMBeanRegistered = server.isRegistered(mbeanName);
       if (isMBeanRegistered) {
         log.info("Unregistering existing JMX MBean [{}].", mbeanName);
@@ -65,12 +88,6 @@ public class Taskmonitor implements TaskmonitorMBean {
       log.error("注册jmx bean失败", e);
     }
 
-  }
-
-
-  @Override
-  public String getTaskId() {
-    return taskId;
   }
 
   @Override
@@ -123,6 +140,26 @@ public class Taskmonitor implements TaskmonitorMBean {
     return lastRunTime;
   }
 
+  @Override
+  public Long getTotal() {
+    return total;
+  }
+
+  @Override
+  public boolean isRun() {
+    return run;
+  }
+
+  @Override
+  public boolean isSuspend() {
+    return suspend;
+  }
+
+  @Override
+  public boolean isEnd() {
+    return end;
+  }
+
   public void addAndGettRecordCount(Long change) {
     tRecordCount.addAndGet(change);
   }
@@ -162,5 +199,22 @@ public class Taskmonitor implements TaskmonitorMBean {
   @Override
   public void setLastRunTime(Long lastRunTime) {
     this.lastRunTime = lastRunTime;
+  }
+
+  @Override
+  public void setTotal(Long total) {
+    this.total = total;
+  }
+
+  public void setEnd(boolean end) {
+    this.end = end;
+  }
+
+  public void setRun(boolean run) {
+    this.run = run;
+  }
+
+  public void setSuspend(boolean suspend) {
+    this.suspend = suspend;
   }
 }

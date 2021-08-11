@@ -30,7 +30,7 @@ public interface IDataPipline<T, P extends IProtocalData, R, S extends BaseSetti
    *
    * @return
    */
-  IDataProtocalConvertor<T, P, S> dataProtocalConventor();
+  IProtocalDataConvertor<T, P, S> protocalDataConvertor();
 
   /**
    * 提供消息转换前的检查器

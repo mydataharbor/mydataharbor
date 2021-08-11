@@ -31,8 +31,8 @@ public abstract class AbstractAutoScanPiplineCreator<C, S extends BaseSettingCon
   }
 
   @Override
-  public Set<Class<? extends IDataProtocalConvertor>> availableDataProtocalConventor() {
-    return getSubTypesOf(IDataProtocalConvertor.class)
+  public Set<Class<? extends IProtocalDataConvertor>> availableProtocalDataConvertor() {
+    return getSubTypesOf(IProtocalDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))
       .collect(Collectors.toSet());
@@ -47,7 +47,7 @@ public abstract class AbstractAutoScanPiplineCreator<C, S extends BaseSettingCon
   }
 
   @Override
-  public Set<Class<? extends IDataConvertor>> avaliableDataConventor() {
+  public Set<Class<? extends IDataConvertor>> avaliabledataConvertor() {
     return getSubTypesOf(IDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))

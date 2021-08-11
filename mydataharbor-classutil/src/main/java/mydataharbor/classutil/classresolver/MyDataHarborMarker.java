@@ -10,14 +10,14 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface FieldMarker {
+public @interface MyDataHarborMarker {
 
   /**
-   * 描述
+   * 标题
    *
    * @return
    */
-  String value();
+  String title();
 
   /**
    * 参数描述
@@ -32,4 +32,10 @@ public @interface FieldMarker {
    * @return
    */
   boolean require() default true;
+
+  /**
+   * 默认值，可以为json
+   * @return
+   */
+  String defaultValue() default "";
 }

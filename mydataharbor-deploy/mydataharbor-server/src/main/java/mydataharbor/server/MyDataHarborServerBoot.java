@@ -25,7 +25,6 @@ import mydataharbor.util.VersionUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.rmi.RemoteException;
 
 /**
  * 数据港口基座服务
@@ -34,7 +33,7 @@ import java.rmi.RemoteException;
  */
 @Slf4j
 public class MyDataHarborServerBoot {
-  public static void main(String[] args) throws RemoteException {
+  public static void main(String[] args) {
     System.out.println("\n" +
       "--      __  ___             ____            __             __  __                    __                 \n" +
       "--     /  |/  /   __  __   / __ \\  ____ _  / /_  ____ _   / / / /  ____ _   _____   / /_   ____    _____\n" +

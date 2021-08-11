@@ -5,7 +5,7 @@ import mydataharbor.datasource.AbstractRateLimitDataSource;
 import mydataharbor.datasource.RateLimitConfig;
 import mydataharbor.exception.TheEndException;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -24,7 +24,7 @@ import java.util.*;
  * @Date 2021/5/7
  **/
 @Slf4j
-@FieldMarker(value = "kafka数据源")
+@MyDataHarborMarker(title = "kafka数据源")
 public class SimpleKafkaDataSource extends AbstractRateLimitDataSource<ConsumerRecord<String, String>, BaseSettingContext> {
 
   protected KafkaConsumer<String, String> kafkaConsumer;

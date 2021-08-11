@@ -14,9 +14,9 @@ import java.util.List;
 public class CommonPiplineCreatorConfig {
 
   private ConstructorAndArgs dataSourceConstructorAndArgs;
-  private ConstructorAndArgs dataProtocalConventorConstructorAndArgs;
+  private ConstructorAndArgs protocalDataConvertorConstructorAndArgs;
   private List<ConstructorAndArgs> dataCheckerConstructorAndArgs;
-  private ConstructorAndArgs dataConventorConstructorAndArgs;
+  private ConstructorAndArgs dataConvertorConstructorAndArgs;
   private ConstructorAndArgs dataSinkConstructorAndArgs;
   private String settingContextClazz;
   private String settingContextJsonValue;

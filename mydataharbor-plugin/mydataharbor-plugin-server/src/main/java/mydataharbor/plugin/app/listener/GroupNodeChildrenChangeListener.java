@@ -2,7 +2,7 @@ package mydataharbor.plugin.app.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
-import mydataharbor.monitor.ExecutorCrash;
+import mydataharbor.monitor.NodeTaskCrashMonitor;
 import mydataharbor.plugin.api.IRebalance;
 import mydataharbor.plugin.api.group.GroupInfo;
 import mydataharbor.plugin.api.node.NodeInfo;
@@ -104,7 +104,7 @@ public class GroupNodeChildrenChangeListener implements PathChildrenCacheListene
               if (changeNode.getNodeName().equals(stringNodeAssignedInfoEntry.getKey())) {
                 //消失的节点上有在运行无法Rebalance的任务
                 TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = stringNodeAssignedInfoEntry.getValue();
-                new ExecutorCrash(distributedTask.getTaskId(), changeNode.getNodeName(), changeNode.getIp(), changeNode.getPort(), nodeAssignedInfo.getTaskNum());
+                new NodeTaskCrashMonitor(distributedTask.getTaskId(), changeNode.getNodeName(), changeNode.getIp(), changeNode.getPort(), nodeAssignedInfo.getTaskNum(),null);
                 log.error("消失的节点上有正在运行无法Rebalance的任务，任务id:{},该节点任务信息:{}", distributedTask.getTaskId(), nodeAssignedInfo);
               }
             }

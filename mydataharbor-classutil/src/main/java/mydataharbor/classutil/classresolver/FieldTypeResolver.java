@@ -4,6 +4,7 @@ import com.fasterxml.classmate.*;
 import com.fasterxml.classmate.members.ResolvedField;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 类型解析
@@ -53,38 +54,43 @@ public class FieldTypeResolver {
       typeInfo.setJavaBase(isBaseType(resolvedType));
       typeInfo.setMap(resolvedType.isInstanceOf(Map.class));
       typeInfo.setFieldInfos(cacheTypeInfo.getFieldInfos());
-      return;
-    }
-    visist.put(resolvedType + fieldName, typeInfo);
-    if (resolvedType.isInstanceOf(Collection.class)) {
-      //集合处理
-      typeInfo.setArray(true);
-      List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(Collection.class);
-      ResolvedType parameterType = resolvedTypes.get(0);
-      typeInfo.setClazzStr(parameterType.getTypeName());
-      typeInfo.setType(parameterType);
-      typeInfo.setJavaBase(isBaseType(parameterType));
-    } else if (resolvedType.isArray()) {
-      //数组处理
-      typeInfo.setArray(true);
-      ResolvedType arrayElementType = resolvedType.getArrayElementType();
-      typeInfo.setClazzStr(arrayElementType.getTypeName());
-      typeInfo.setType(arrayElementType);
-      typeInfo.setJavaBase(isBaseType(arrayElementType));
-    } else if (resolvedType.isInstanceOf(Map.class)) {
-      //map处理
-      List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(Map.class);
-      ResolvedType valueType = resolvedTypes.get(1);
-      typeInfo.setMap(true);
-      typeInfo.setArray(false);
-      typeInfo.setType(valueType);
-      typeInfo.setJavaBase(isBaseType(valueType));
-      typeInfo.setClazzStr(valueType.getTypeName());
-    } else {
-      typeInfo.setClazzStr(resolvedType.getTypeName());
-      typeInfo.setType(resolvedType);
-      typeInfo.setArray(false);
-      typeInfo.setJavaBase(isBaseType(resolvedType));
+      typeInfo.setEnumeration(resolvedType.isInstanceOf(Enum.class));
+    }else {
+      visist.put(resolvedType + fieldName, typeInfo);
+      if (resolvedType.isInstanceOf(Collection.class)) {
+        //集合处理
+        typeInfo.setArray(true);
+        List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(Collection.class);
+        ResolvedType parameterType = resolvedTypes.get(0);
+        typeInfo.setClazzStr(parameterType.getTypeName());
+        typeInfo.setType(parameterType);
+        typeInfo.setJavaBase(isBaseType(parameterType));
+      } else if (resolvedType.isArray()) {
+        //数组处理
+        typeInfo.setArray(true);
+        ResolvedType arrayElementType = resolvedType.getArrayElementType();
+        typeInfo.setClazzStr(arrayElementType.getTypeName());
+        typeInfo.setType(arrayElementType);
+        typeInfo.setJavaBase(isBaseType(arrayElementType));
+      } else if (resolvedType.isInstanceOf(Map.class)) {
+        //map处理
+        List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(Map.class);
+        ResolvedType valueType = resolvedTypes.get(1);
+        typeInfo.setMap(true);
+        typeInfo.setType(valueType);
+        typeInfo.setJavaBase(isBaseType(valueType));
+        typeInfo.setClazzStr(valueType.getTypeName());
+      } else if (resolvedType.isInstanceOf(Enum.class)) {
+        //处理枚举
+        typeInfo.setClazzStr(resolvedType.getTypeName());
+        typeInfo.setEnumeration(true);
+        typeInfo.setJavaBase(isBaseType(resolvedType));
+        typeInfo.setType(resolvedType);
+      } else {
+        typeInfo.setClazzStr(resolvedType.getTypeName());
+        typeInfo.setType(resolvedType);
+        typeInfo.setJavaBase(isBaseType(resolvedType));
+      }
     }
   }
 
@@ -126,15 +132,20 @@ public class FieldTypeResolver {
             continue;
           }
           Annotations annotations = memberField.getAnnotations();
-          FieldMarker fieldMarker = annotations.get(FieldMarker.class);
+          MyDataHarborMarker myDataHarborMarker = annotations.get(MyDataHarborMarker.class);
           FieldInfo fieldInfo = new FieldInfo(memberField.getName());
-          if (fieldMarker != null) {
-            fieldInfo.setTitle(fieldMarker.value());
-            fieldInfo.setDes(fieldMarker.des());
-            fieldInfo.setRequire(fieldMarker.require());
+          if (myDataHarborMarker != null) {
+            fieldInfo.setTitle(myDataHarborMarker.title());
+            fieldInfo.setDes(myDataHarborMarker.des());
+            fieldInfo.setRequire(myDataHarborMarker.require());
+            fieldInfo.setDefaultValue(myDataHarborMarker.defaultValue());
           }
-
           doResolveClass(visist, memberField.getType(), fieldInfo);
+          if(fieldInfo.isEnumeration()){
+            Object[] enumConstants = memberField.getType().getErasedType().getEnumConstants();
+            List<String> candidateValue = Arrays.stream(enumConstants).map(Object::toString).collect(Collectors.toList());
+            fieldInfo.setCandidateValue(candidateValue);
+          }
           if (!fieldInfo.isBaseType()) {
             resolveField(visist, fieldInfo);
           }

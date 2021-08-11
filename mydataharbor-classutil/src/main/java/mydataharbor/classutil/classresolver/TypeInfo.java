@@ -43,6 +43,11 @@ public class TypeInfo implements Serializable {
   private boolean map = false;
 
   /**
+   * 是否是枚举
+   */
+  private boolean enumeration = false;
+
+  /**
    * 字段列表
    */
   private List<FieldInfo> fieldInfos;

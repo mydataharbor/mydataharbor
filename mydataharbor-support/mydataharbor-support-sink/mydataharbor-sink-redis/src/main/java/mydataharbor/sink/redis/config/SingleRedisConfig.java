@@ -1,6 +1,6 @@
 package mydataharbor.sink.redis.config;
 
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,19 +19,19 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SingleRedisConfig {
 
-  @FieldMarker(value = "redis地址")
+  @MyDataHarborMarker(title = "redis地址")
   private String host;
 
-  @FieldMarker(value = "redis端口")
+  @MyDataHarborMarker(title = "redis端口")
   private int port;
 
   @Builder.Default
-  @FieldMarker(value = "是否启用授权")
+  @MyDataHarborMarker(title = "是否启用授权")
   private boolean enableAuth = false;
 
-  @FieldMarker(value = "授权信息")
+  @MyDataHarborMarker(title = "授权信息")
   private String auth;
 
-  @FieldMarker(value = "写入超时时间")
+  @MyDataHarborMarker(title = "写入超时时间")
   private long timeout;
 }

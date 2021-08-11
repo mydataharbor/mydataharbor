@@ -25,8 +25,8 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
   @Override
   public IDataPipline createPipline(CommonPiplineCreatorConfig config, BaseSettingContext settingContext) throws Exception {
     IDataSource dataSource = createInstanc(config.getDataSourceConstructorAndArgs(), IDataSource.class);
-    IDataProtocalConvertor dataProtocalConvertor = createInstanc(config.getDataProtocalConventorConstructorAndArgs(), IDataProtocalConvertor.class);
-    IDataConvertor dataConvertor = createInstanc(config.getDataConventorConstructorAndArgs(), IDataConvertor.class);
+    IProtocalDataConvertor protocalDataConvertor = createInstanc(config.getProtocalDataConvertorConstructorAndArgs(), IProtocalDataConvertor.class);
+    IDataConvertor dataConvertor = createInstanc(config.getDataConvertorConstructorAndArgs(), IDataConvertor.class);
     IDataSink dataSink = createInstanc(config.getDataSinkConstructorAndArgs(), IDataSink.class);
     AbstractDataChecker checker = null;
     if (config.getDataCheckerConstructorAndArgs() != null) {
@@ -43,9 +43,9 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
     }
     return CommonDataPipline.builder()
       .dataSource(dataSource)
-      .dataProtocalConventor(dataProtocalConvertor)
+      .protocalDataConvertor(protocalDataConvertor)
       .checker(checker)
-      .dataConventor(dataConvertor)
+      .dataConvertor(dataConvertor)
       .sink(dataSink)
       .settingContext(settingContext)
       .build();
@@ -82,8 +82,8 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
   }
 
   @Override
-  public Set<Class<? extends IDataProtocalConvertor>> availableDataProtocalConventor() {
-    return getSubTypesOf(IDataProtocalConvertor.class)
+  public Set<Class<? extends IProtocalDataConvertor>> availableProtocalDataConvertor() {
+    return getSubTypesOf(IProtocalDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))
       .collect(Collectors.toSet());
@@ -98,7 +98,7 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
   }
 
   @Override
-  public Set<Class<? extends IDataConvertor>> avaliableDataConventor() {
+  public Set<Class<? extends IDataConvertor>> avaliabledataConvertor() {
     return getSubTypesOf(IDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))

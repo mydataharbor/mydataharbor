@@ -3,6 +3,7 @@ package mydataharbor.classutil.classresolver;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class FieldInfo extends TypeInfo implements Serializable {
@@ -40,5 +41,13 @@ public class FieldInfo extends TypeInfo implements Serializable {
    */
   private boolean require;
 
+  /**
+   * 默认值
+   */
+  private String defaultValue;
 
+  /**
+   * 枚举候选值
+   */
+  private List<String> candidateValue;
 }
