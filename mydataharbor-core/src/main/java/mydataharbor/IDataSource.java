@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -233,6 +233,14 @@ public interface IDataSource<T, S extends BaseSettingContext> extends Closeable,
    * @see TheEndException
    */
   Iterable<T> poll(S settingContext) throws TheEndException;
+
+  /**
+   * 搬移数据总数，默认为long的最大值，表示改任务为永久任务
+   * @return
+   */
+  default Long total() {
+    return Long.MAX_VALUE;
+  }
 
   /**
    * 提交数据
@@ -281,7 +289,7 @@ public interface IDataSource<T, S extends BaseSettingContext> extends Closeable,
 
   /**
    * TODO 处理线程路由
-   *
+   * <p>
    * 当单管道开启多线程处理时，框架会调用该方法决定把这个任务分配给哪个线程处理，保证处理的顺序性
    *
    * @param record

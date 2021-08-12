@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -234,6 +234,7 @@ public class TaskController {
   @ApiOperation("向集群提交任务")
   @ResponseBody
   public BaseResponse<TaskAssignedInfo> submitTask(@ApiParam("任务信息") @RequestBody DistributedTask distributedTask) {
+    distributedTask.setTaskState(TaskState.created);
     return BaseResponse.success(taskService.submitTask(distributedTask));
   }
 

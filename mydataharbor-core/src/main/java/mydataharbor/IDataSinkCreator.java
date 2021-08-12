@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -233,6 +233,16 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
   IDataPipline createPipline(C config, S settingContext) throws Exception;
 
   /**
+   * 是否可以创建pipline，有些creator只提供可用的资源
+   *
+   * @return
+   */
+  default boolean canCreatePipline() {
+    return true;
+  }
+
+
+  /**
    * 获得config类型
    *
    * @return
@@ -274,7 +284,7 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
    *
    * @return
    */
-  default Set<Class<? extends IDataProtocalConvertor>> availableDataProtocalConventor() {
+  default Set<Class<? extends IProtocalDataConvertor>> availableProtocalDataConvertor() {
     return Collections.emptySet();
   }
 
@@ -293,7 +303,7 @@ public interface IDataSinkCreator<C, S extends BaseSettingContext> extends IData
    *
    * @return
    */
-  default Set<Class<? extends IDataConvertor>> avaliableDataConventor() {
+  default Set<Class<? extends IDataConvertor>> avaliabledataConvertor() {
     return Collections.emptySet();
   }
 

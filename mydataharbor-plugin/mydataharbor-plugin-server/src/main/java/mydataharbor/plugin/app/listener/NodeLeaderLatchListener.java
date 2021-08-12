@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -254,7 +254,7 @@ public class NodeLeaderLatchListener implements LeaderLatchListener {
   @Override
   public synchronized void isLeader() {
     if (!nodeInfo.isLeader()) {
-      log.info("im become leader");
+      log.info("i become leader");
       nodeInfo.setLeader(true);
       nodeInfoChange(nodeInfo -> nodeInfo.setLeader(true));
     }

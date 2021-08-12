@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -209,7 +209,7 @@ import mydataharbor.creator.ConstructorAndArgs;
 import mydataharbor.exception.InstanceCreateException;
 import mydataharbor.plugin.base.util.JsonUtil;
 import mydataharbor.system.plugin.SystemPlugin;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
 import org.reflections.Reflections;
@@ -224,7 +224,7 @@ import java.util.Set;
  * @auth xulang
  * @Date 2021/6/22
  **/
-@FieldMarker(value = "通用构建器")
+@MyDataHarborMarker(title = "通用构建器")
 @Extension
 public class CommonPiplineCreator extends AbstractCommonDataPiplineCreator implements ExtensionPoint {
 

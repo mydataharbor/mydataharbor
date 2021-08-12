@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -218,9 +218,9 @@ import java.util.List;
 public class CommonPiplineCreatorConfig {
 
   private ConstructorAndArgs dataSourceConstructorAndArgs;
-  private ConstructorAndArgs dataProtocalConventorConstructorAndArgs;
+  private ConstructorAndArgs protocalDataConvertorConstructorAndArgs;
   private List<ConstructorAndArgs> dataCheckerConstructorAndArgs;
-  private ConstructorAndArgs dataConventorConstructorAndArgs;
+  private ConstructorAndArgs dataConvertorConstructorAndArgs;
   private ConstructorAndArgs dataSinkConstructorAndArgs;
   private String settingContextClazz;
   private String settingContextJsonValue;

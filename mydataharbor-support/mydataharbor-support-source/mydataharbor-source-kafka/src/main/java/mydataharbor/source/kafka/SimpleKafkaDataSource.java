@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -209,7 +209,7 @@ import mydataharbor.datasource.AbstractRateLimitDataSource;
 import mydataharbor.datasource.RateLimitConfig;
 import mydataharbor.exception.TheEndException;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -228,7 +228,7 @@ import java.util.*;
  * @Date 2021/5/7
  **/
 @Slf4j
-@FieldMarker(value = "kafka数据源")
+@MyDataHarborMarker(title = "kafka数据源")
 public class SimpleKafkaDataSource extends AbstractRateLimitDataSource<ConsumerRecord<String, String>, BaseSettingContext> {
 
   protected KafkaConsumer<String, String> kafkaConsumer;

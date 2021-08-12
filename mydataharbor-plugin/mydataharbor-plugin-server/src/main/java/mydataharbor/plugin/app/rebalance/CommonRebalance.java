@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -256,8 +256,7 @@ public class CommonRebalance implements IRebalance {
     //机器加入
     TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
     Integer totalNumberOfPipline = distributedTask.getTotalNumberOfPipline();
-    if (totalNumberOfPipline > 2 * liveNodes.size() || liveNodes.size() == 1) {
-      TaskAssignedInfo taskAssignedInfo1 = distributedTask.getTaskAssignedInfo();
+    if (totalNumberOfPipline > 2 * distributedTask.getTaskAssignedInfo().getAssignedInfoMap().keySet().size() || liveNodes.size() == 1) {
       //任务数是目前机器数的2倍再转移
       List<NodeInfo> newLiveNodes = new ArrayList<>(liveNodes);
       //到排序

@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -215,7 +215,7 @@ import lombok.NonNull;
  **/
 public class CommonDataPipline extends AbstractDataPipline {
   @Builder
-  public CommonDataPipline(@NonNull IDataSource dataSource, @NonNull IDataProtocalConvertor dataProtocalConventor, AbstractDataChecker checker, @NonNull IDataConvertor dataConventor, @NonNull IDataSink sink, BaseSettingContext settingContext) {
-    super(dataSource, dataProtocalConventor, checker, dataConventor, sink, settingContext);
+  public CommonDataPipline(@NonNull IDataSource dataSource, @NonNull IProtocalDataConvertor protocalDataConvertor, AbstractDataChecker checker, @NonNull IDataConvertor dataConvertor, @NonNull IDataSink sink, BaseSettingContext settingContext) {
+    super(dataSource, protocalDataConvertor, checker, dataConvertor, sink, settingContext);
   }
 }

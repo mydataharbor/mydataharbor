@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ public interface IDataPipline<T, P extends IProtocalData, R, S extends BaseSetti
    *
    * @return
    */
-  IDataProtocalConvertor<T, P, S> dataProtocalConventor();
+  IProtocalDataConvertor<T, P, S> protocalDataConvertor();
 
   /**
    * 提供消息转换前的检查器

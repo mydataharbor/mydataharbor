@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -221,7 +221,7 @@ public interface IDataConvertor<P extends IProtocalData, R, S extends BaseSettin
    *
    * @return
    */
-  R convent(P record, S settingContext) throws ResetException;
+  R convert(P record, S settingContext) throws ResetException;
 
   default Type getPType() {
     return getTypeByIndex(0, "P", IDataConvertor.class);

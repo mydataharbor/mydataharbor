@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -205,7 +205,7 @@
 package mydataharbor.source.kafka.config;
 
 import mydataharbor.datasource.RateLimitConfig;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import lombok.*;
 
 import java.util.List;
@@ -217,7 +217,7 @@ import java.util.Properties;
  * @auth xulang
  * @Date 2021/5/7
  **/
-@FieldMarker(value = "普通kafka服务连接配置")
+@MyDataHarborMarker(title = "普通kafka服务连接配置")
 @Data
 public class SimpleKafkaConfig extends RateLimitConfig {
 
@@ -227,10 +227,10 @@ public class SimpleKafkaConfig extends RateLimitConfig {
   }
 
 
-  @FieldMarker(value = "监听的topic")
+  @MyDataHarborMarker(title = "监听的topic")
   private List<String> topics;
 
-  @FieldMarker(value = "kafka配置")
+  @MyDataHarborMarker(title = "kafka配置")
   private Properties kafkaConfig;
 
 

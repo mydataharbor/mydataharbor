@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -235,8 +235,8 @@ public abstract class AbstractAutoScanPiplineCreator<C, S extends BaseSettingCon
   }
 
   @Override
-  public Set<Class<? extends IDataProtocalConvertor>> availableDataProtocalConventor() {
-    return getSubTypesOf(IDataProtocalConvertor.class)
+  public Set<Class<? extends IProtocalDataConvertor>> availableProtocalDataConvertor() {
+    return getSubTypesOf(IProtocalDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))
       .collect(Collectors.toSet());
@@ -251,7 +251,7 @@ public abstract class AbstractAutoScanPiplineCreator<C, S extends BaseSettingCon
   }
 
   @Override
-  public Set<Class<? extends IDataConvertor>> avaliableDataConventor() {
+  public Set<Class<? extends IDataConvertor>> avaliabledataConvertor() {
     return getSubTypesOf(IDataConvertor.class)
       .stream()
       .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))

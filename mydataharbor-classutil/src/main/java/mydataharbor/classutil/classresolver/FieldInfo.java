@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -207,6 +207,7 @@ package mydataharbor.classutil.classresolver;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class FieldInfo extends TypeInfo implements Serializable {
@@ -244,5 +245,13 @@ public class FieldInfo extends TypeInfo implements Serializable {
    */
   private boolean require;
 
+  /**
+   * 默认值
+   */
+  private String defaultValue;
 
+  /**
+   * 枚举候选值
+   */
+  private List<String> candidateValue;
 }

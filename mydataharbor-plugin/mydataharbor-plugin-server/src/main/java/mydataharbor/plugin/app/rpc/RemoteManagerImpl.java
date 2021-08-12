@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -320,7 +320,7 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
           startPlugin(pluginId2);
           log.info("插件启动成功！");
         } else {
-          log.error("文件下载失败！{}:{}", pluginId, version, response);
+          log.error("文件下载失败！{}:{},{}", pluginId, version, response);
         }
       } catch (IOException e) {
         log.error("文件下载失败！pluginID：{}，version：{}", pluginId, version, e);

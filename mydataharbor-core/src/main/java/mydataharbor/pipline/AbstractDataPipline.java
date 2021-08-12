@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -219,11 +219,11 @@ public abstract class AbstractDataPipline<T, P extends IProtocalData, R, S exten
 
   protected IDataSource<T, S> dataSource;
 
-  protected IDataProtocalConvertor<T, P, S> dataProtocalConventor;
+  protected IProtocalDataConvertor<T, P, S> protocalDataConvertor;
 
   protected AbstractDataChecker checker;
 
-  protected IDataConvertor<P, R, S> dataConventor;
+  protected IDataConvertor<P, R, S> dataConvertor;
 
   protected IDataSink<R, S> sink;
 
@@ -231,15 +231,15 @@ public abstract class AbstractDataPipline<T, P extends IProtocalData, R, S exten
 
   public AbstractDataPipline(
     @NonNull IDataSource<T, S> dataSource,
-    @NonNull IDataProtocalConvertor<T, P, S> dataProtocalConventor,
+    @NonNull IProtocalDataConvertor<T, P, S> protocalDataConvertor,
     AbstractDataChecker checker,
-    @NonNull IDataConvertor<P, R, S> dataConventor,
+    @NonNull IDataConvertor<P, R, S> dataConvertor,
     @NonNull IDataSink<R, S> sink,
     @NonNull S settingContext) {
     this.dataSource = dataSource;
-    this.dataProtocalConventor = dataProtocalConventor;
+    this.protocalDataConvertor = protocalDataConvertor;
     this.checker = checker;
-    this.dataConventor = dataConventor;
+    this.dataConvertor = dataConvertor;
     this.sink = sink;
     this.settingContext = settingContext;
   }
@@ -250,8 +250,8 @@ public abstract class AbstractDataPipline<T, P extends IProtocalData, R, S exten
   }
 
   @Override
-  public IDataProtocalConvertor<T, P, S> dataProtocalConventor() {
-    return dataProtocalConventor;
+  public IProtocalDataConvertor<T, P, S> protocalDataConvertor() {
+    return protocalDataConvertor;
   }
 
   @Override
@@ -261,7 +261,7 @@ public abstract class AbstractDataPipline<T, P extends IProtocalData, R, S exten
 
   @Override
   public IDataConvertor<P, R, S> dataConventer() {
-    return dataConventor;
+    return dataConvertor;
   }
 
   @Override

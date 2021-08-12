@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -245,6 +245,11 @@ public class TypeInfo implements Serializable {
    * 是否是map
    */
   private boolean map = false;
+
+  /**
+   * 是否是枚举
+   */
+  private boolean enumeration = false;
 
   /**
    * 字段列表

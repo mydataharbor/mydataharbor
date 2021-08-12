@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -213,7 +213,7 @@ import mydataharbor.plugin.api.IPluginInfoManager;
 import mydataharbor.plugin.api.IPluginServer;
 import mydataharbor.plugin.api.plugin.DataSinkCreatorInfo;
 import mydataharbor.plugin.api.plugin.PluginInfo;
-import mydataharbor.classutil.classresolver.FieldMarker;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.classutil.classresolver.FieldTypeResolver;
 import mydataharbor.classutil.classresolver.TypeInfo;
 import org.pf4j.PluginWrapper;
@@ -255,6 +255,7 @@ public class PluginInfoManager implements IPluginInfoManager {
 
   @Override
   public void refresh() throws InstantiationException, IllegalAccessException {
+    dataSinkCreatorMap.clear();
     this.pluginInfos = scanAllPluginInfo();
   }
 
@@ -299,6 +300,7 @@ public class PluginInfoManager implements IPluginInfoManager {
     DataSinkCreatorInfo dataSinkCreatorInfo = new DataSinkCreatorInfo();
     dataSinkCreatorInfo.setClazz(generateClazzInfo(aClass, pluginInfo));
     dataSinkCreatorInfo.setType(dataSinkCreator.type());
+    dataSinkCreatorInfo.setCanCreatePipline(dataSinkCreator.canCreatePipline());
     ResolvedType resolvedType = typeResolver.resolve(dataSinkCreator.getClass());
     List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataSinkCreator.class);
     ResolvedType configResolveType = resolvedTypes.get(0);
@@ -308,13 +310,13 @@ public class PluginInfoManager implements IPluginInfoManager {
     List<ClassInfo> dataSourceClassInfo = classProcess(availableDataSource);
     dataSinkCreatorInfo.setDataSourceClassInfo(dataSourceClassInfo);
 
-    Set<Class> availableProtocalConventor = dataSinkCreator.availableDataProtocalConventor();
+    Set<Class> availableProtocalConventor = dataSinkCreator.availableProtocalDataConvertor();
     List<ClassInfo> protocalConventorClassInfo = classProcess(availableProtocalConventor);
     dataSinkCreatorInfo.setProtocalConvertorClassInfo(protocalConventorClassInfo);
 
-    Set<Class> availableDataConventor = dataSinkCreator.avaliableDataConventor();
-    List<ClassInfo> dataConventorClassInfo = classProcess(availableDataConventor);
-    dataSinkCreatorInfo.setDataConvertorClassInfo(dataConventorClassInfo);
+    Set<Class> availabledataConvertor = dataSinkCreator.avaliabledataConvertor();
+    List<ClassInfo> dataConvertorClassInfo = classProcess(availabledataConvertor);
+    dataSinkCreatorInfo.setDataConvertorClassInfo(dataConvertorClassInfo);
 
     Set<Class> availableDataChecker = dataSinkCreator.avaliableDataChecker();
     List<ClassInfo> dataCheckerClassInfo = classProcess(availableDataChecker);
@@ -339,9 +341,9 @@ public class PluginInfoManager implements IPluginInfoManager {
       MemberResolver memberResolver = new MemberResolver(typeResolver);
       AnnotationConfiguration annConfig = new AnnotationConfiguration.StdConfiguration(AnnotationInclusion.INCLUDE_BUT_DONT_INHERIT);
       ResolvedTypeWithMembers resolvedTypeWithMembers = memberResolver.resolve(resolvedType, annConfig, null);
-      FieldMarker fieldMarker = (FieldMarker) clazz.getAnnotation(FieldMarker.class);
-      if (fieldMarker != null) {
-        classInfo.setTitle(fieldMarker.value());
+      MyDataHarborMarker myDataHarborMarker = (MyDataHarborMarker) clazz.getAnnotation(MyDataHarborMarker.class);
+      if (myDataHarborMarker != null) {
+        classInfo.setTitle(myDataHarborMarker.title());
       }
       ResolvedConstructor[] constructors = resolvedTypeWithMembers.getConstructors();
       List<ConstructorAndArgsConfig> constructorAndArgsConfigs = new ArrayList<>();

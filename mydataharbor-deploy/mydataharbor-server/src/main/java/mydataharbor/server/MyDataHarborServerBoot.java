@@ -187,7 +187,7 @@
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -214,7 +214,6 @@ import mydataharbor.util.VersionUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.rmi.RemoteException;
 
 /**
  * 数据港口基座服务
@@ -223,7 +222,7 @@ import java.rmi.RemoteException;
  */
 @Slf4j
 public class MyDataHarborServerBoot {
-  public static void main(String[] args) throws RemoteException {
+  public static void main(String[] args) {
     System.out.println("\n" +
       "--      __  ___             ____            __             __  __                    __                 \n" +
       "--     /  |/  /   __  __   / __ \\  ____ _  / /_  ____ _   / / / /  ____ _   _____   / /_   ____    _____\n" +
