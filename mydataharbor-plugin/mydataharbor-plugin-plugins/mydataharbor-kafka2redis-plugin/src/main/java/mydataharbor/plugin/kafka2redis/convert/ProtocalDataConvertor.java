@@ -188,7 +188,7 @@ package mydataharbor.plugin.kafka2redis.convert;
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -203,7 +203,6 @@ package mydataharbor.plugin.kafka2redis.convert;
  *    limitations under the License.
  */
 
-package mydataharbor.pipline.kafka2redis.convert;
 
 import mydataharbor.plugin.kafka2redis.protocal.StringKeyValueKafkaRedisProtocal;
 import lombok.extern.slf4j.Slf4j;

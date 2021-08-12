@@ -188,7 +188,7 @@ package mydataharbor.plugin.kafka2redis.protocal;
  *       same "printed page" as the copyright notice for easier
  *       identification within third-party archives.
  *
- *    Copyright [yyyy] [name of copyright owner]
+ *    Copyright 2021 徐浪 1053618636@qq.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -202,8 +202,6 @@ package mydataharbor.plugin.kafka2redis.protocal;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
-package mydataharbor.pipline.kafka2redis.protocal;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
