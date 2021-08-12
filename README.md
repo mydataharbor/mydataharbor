@@ -61,33 +61,61 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 ## 安装使用
 
-MyDataHarbor的安装非常简单：
+MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）：
 
-- 下载zookeeper、mydataharbor-console、mydataharbor-server
+- 下载 
+   
+   [mydataharbor-console-1.0.1-RELEASE-bin.tar.gz](https://github.com/xulang/mydataharbor/releases/download/1.0.1-RELEASE/mydataharbor-console-1.0.1-RELEASE-bin.tar.gz)    
+   [mydataharbor-server-1.0.1-RELEASE-bin.tar.gz](https://github.com/xulang/mydataharbor/releases/download/1.0.1-RELEASE/mydataharbor-server-1.0.1-RELEASE-bin.tar.gz)
+   
+- mydataharbor-console
 
-- 启动zookeeper，参考网络教程
+  - 解压
 
-- 启动mydataharbor-console
+    ![image-20210812143819918](.\doc\image\image-20210812143819918.png)
 
-  -  java -jar -Dzk=127.0.0.1:2181 mydataharbor-console-1.0-SNAPSHOT.jar
+  - 配置
 
-- 启动mydataharbor-server
+    进入config目录，修改applicat.yml，主要修改如下配置
 
+    ```yaml
+    server:
+      port: 8080 #console服务启动端口
+    zk: 127.0.0.1:2181 #zk地址
+    ```
+    
+  - 运行
+
+    Windows系统下运行 start.bat
+
+    Linux系统下运行 start.sh  关闭stop.sh 
+
+- mydataharbor-server
+
+  - 解压
+    
+    ![image-20210812144430744](.\doc\image\image-20210812144430744.png)
+    
   - 配置config目录下的system.yml
+    
     ```yaml
     zk: ["127.0.0.1:2181"] #zk地址
-    port: 1299 #启动端口
+    port: 1299 #server服务启动端口
     group: biz001 #该节点所属组
     pluginRepository: http://127.0.0.1:8080 #插件仓库地址
+    
+  - 运行
   
-  - 启动
-  
-    java -jar mydataharbor-server-1.0-SNAPSHOT.jar
+    Windows系统下运行 start.bat
+    
+    Linux系统下运行 start.sh  关闭stop.sh 
   
 - 验证：
 
   访问：mydataharbor-console  http://127.0.0.1:8080
 
   是否可以看到刚刚启动的节点
-## DEMO
-http://118.25.5.236:8083/
+## 其它
+demo运行实例：http://118.25.5.236:8083/
+
+交流社区：https://bbs.mydataharbor.com
