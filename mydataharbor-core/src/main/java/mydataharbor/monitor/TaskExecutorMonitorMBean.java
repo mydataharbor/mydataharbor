@@ -282,6 +282,12 @@ public interface TaskExecutorMonitorMBean {
   Long getLastRunTime();
 
   /**
+   * 写入耗时
+   * @return
+   */
+  Long getUseTime();
+
+  /**
    * 获取总数
    * @return
    */
