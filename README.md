@@ -59,7 +59,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
   该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
 
-## 安装使用
+## QuickSatrt
 
 MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）：
 
@@ -119,3 +119,8 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 demo运行实例：http://118.25.5.236:8083/
 
 交流社区：https://bbs.mydataharbor.com
+
+QQ群（加群时需要验证项目star数，请star一下然后记下star数告诉管理员）：
+
+![QQ群](./doc/image/qq-discuz.png)
+
