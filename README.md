@@ -76,7 +76,7 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 
   - 配置
 
-    进入config目录，修改applicat.yml，主要修改如下配置
+    进入config目录，修改application.yml，主要修改如下配置
 
     ```yaml
     server:
