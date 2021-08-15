@@ -120,6 +120,8 @@ demo运行实例：http://118.25.5.236:8083/
 
 交流社区：https://bbs.mydataharbor.com
 
+文档(语雀)：http://doc.mydataharbor.com
+
 #### QQ群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
 
 ![QQ群](./doc/image/qq-discuz.png)
