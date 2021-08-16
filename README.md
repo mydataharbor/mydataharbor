@@ -4,8 +4,10 @@
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
 
 [![](https://jitpack.io/v/xulang/mydataharbor.svg)](https://jitpack.io/#xulang/mydataharbor) 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=plastic)
-![GitHub all releases](https://img.shields.io/github/downloads/xulang/mydataharbor/total?style=plastic) 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/xulang/mydataharbor)
+![GitHub all releases](https://img.shields.io/github/downloads/xulang/mydataharbor/total?style=flat) 
+![GitHub](https://img.shields.io/github/license/xulang/mydataharbor)
 
 ## 简介/定位
 
