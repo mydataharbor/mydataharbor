@@ -13,16 +13,22 @@
   <packaging>pom</packaging>
   <name>mydataharbor-plugin-plugins</name>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
+  <developers>
+    <developer>
+      <name>mydataharbor</name>
+      <email>1053618636@qq.com</email>
+      <organization>mydataharbor.com</organization>
+    </developer>
+  </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <!-- Override below properties in each plugin's pom.xml -->
-    <plugin.id/>
+    <plugin.id>${artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version/>
-    <plugin.provider/>
-    <plugin.pluginDescription/>
+    <plugin.version>${version}</plugin.version>
+    <plugin.provider></plugin.provider>
+    <plugin.pluginDescription>${description}</plugin.pluginDescription>
     <plugin.dependencies/>
   </properties>
 
@@ -36,7 +42,7 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
-          <finalName>${plugin.id}-${plugin.version}-plugin</finalName>
+          <finalName>${plugin.id}-${plugin.version}-mydataharbor(${mydataharbor.version})</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <attach>false</attach>
           <archive>
@@ -52,6 +58,7 @@
               <Plugin-Class>${plugin.class}</Plugin-Class>
               <Plugin-Description>${plugin.pluginDescription}</Plugin-Description>
               <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+              <Mydataharbor-Version>${mydataharbor.version}</Mydataharbor-Version>
             </manifestEntries>
           </archive>
         </configuration>
