@@ -3,6 +3,8 @@
 
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
 
+[![](https://jitpack.io/v/xulang/mydataharbor.svg)](https://jitpack.io/#xulang/mydataharbor)
+
 ## 简介/定位
 
 MyDataHarbor是一个致力于解决任意数据源到任意数据源的分布式、高扩展性、高性能、事务级的数据同步中间件。
