@@ -3,10 +3,10 @@
 
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat)](https://github.com/xulang/mydataharbor/actions/workflows/maven.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/xulang/mydataharbor)](https://github.com/xulang/mydataharbor/releases)
-![GitHub all releases](https://img.shields.io/github/downloads/xulang/mydataharbor/total?style=flat) 
-![GitHub](https://img.shields.io/github/license/xulang/mydataharbor)
+[![GitHub all releases](https://img.shields.io/github/downloads/xulang/mydataharbor/total?style=flat)](https://github.com/xulang/mydataharbor/releases)
+[![GitHub](https://img.shields.io/github/license/xulang/mydataharbor)](https://github.com/xulang/mydataharbor/blob/main/LICENSE)
 [![package](https://jitpack.io/v/xulang/mydataharbor.svg)](https://jitpack.io/#xulang/mydataharbor) 
 
 ## 简介/定位
