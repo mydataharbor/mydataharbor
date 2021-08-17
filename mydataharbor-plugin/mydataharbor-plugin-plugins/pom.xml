@@ -13,13 +13,6 @@
   <packaging>pom</packaging>
   <name>mydataharbor-plugin-plugins</name>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
-  <developers>
-    <developer>
-      <name>mydataharbor</name>
-      <email>1053618636@qq.com</email>
-      <organization>mydataharbor.com</organization>
-    </developer>
-  </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -84,7 +77,6 @@
   </build>
 
   <modules>
-    <module>mydataharbor-kafka2redis-plugin</module>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
   </modules>

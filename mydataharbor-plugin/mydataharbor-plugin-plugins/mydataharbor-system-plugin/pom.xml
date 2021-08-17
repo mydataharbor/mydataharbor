@@ -12,13 +12,13 @@
 
   <artifactId>mydataharbor-system-plugin</artifactId>
 
+  <description>
+    系统级基础插件
+  </description>
 
   <properties>
-    <plugin.id>system-plugin</plugin.id>
     <plugin.class>mydataharbor.system.plugin.SystemPlugin</plugin.class>
-    <plugin.version>1.0</plugin.version>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.pluginDescription>系统级基础插件</plugin.pluginDescription>
     <plugin.dependencies/>
   </properties>
 

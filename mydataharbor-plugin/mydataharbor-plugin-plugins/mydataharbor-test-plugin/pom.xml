@@ -11,11 +11,12 @@
 
   <artifactId>mydataharbor-test-plugin</artifactId>
 
+  <description>
+    用于测试的插件，模拟
+  </description>
+
   <properties>
-    <plugin.id>test-plugin</plugin.id>
-    <plugin.version>1.1</plugin.version>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.pluginDescription>用于测试的插件，模拟</plugin.pluginDescription>
     <plugin.dependencies/>
   </properties>
 

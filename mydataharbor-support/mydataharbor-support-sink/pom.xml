@@ -18,5 +18,6 @@
   <modules>
     <module>mydataharbor-sink-redis</module>
     <module>mydataharbor-sink-http</module>
+    <module>mydataharbor-sink-es</module>
   </modules>
 </project>
