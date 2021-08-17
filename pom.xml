@@ -6,7 +6,7 @@
 
   <groupId>com.mydataharbor</groupId>
   <artifactId>mydataharbor</artifactId>
-  <version>1.0.1-RELEASE</version>
+  <version>1.0.2-SNAPSHOT</version>
   <modules>
     <module>mydataharbor-deploy</module>
     <module>mydataharbor-core</module>
@@ -20,7 +20,7 @@
   <url>http://www.mydataharbor.com</url>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
   <properties>
-    <mydataharbor.version>${project.version}</mydataharbor.version>
+    <mydataharbor.version>1.0.2-SNAPSHOT</mydataharbor.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
