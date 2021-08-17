@@ -18,14 +18,14 @@
      <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/v/release/xulang/mydataharbor" alt="查看发行的版本">
     </a>
+    <a href="https://jitpack.io/#xulang/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://jitpack.io/v/xulang/mydataharbor.svg" alt="maven仓库">
+    </a>
     <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/downloads/xulang/mydataharbor/total" alt="下载数量">
     </a>
     <a href="https://github.com/xulang/mydataharbor/blob/main/LICENSE" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/license/xulang/mydataharbor" alt="开源协议">
-    </a>
-    <a href="https://jitpack.io/#xulang/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://jitpack.io/v/xulang/mydataharbor.svg" alt="maven仓库">
     </a>
     <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/gq73iq" target="_blank" style="display:inline-block">
       <img src="https://img.shields.io/badge/Author-MyDataHarbor%20Group-blue" alt="About Author">
