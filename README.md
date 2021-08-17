@@ -1,13 +1,40 @@
 
-![](mydataharbor.png)
+<GitHubWrapper>
+<p align="center">
+	<br/>
+  <a href="http://mydataharbor.com" target="_blank">
+    <img  src="./mydataharbor.png" alt="logo">
+  </a>
+</p>
+
+<TitleInfos />
+
+<p align="center" class="print-break">
+	<GithubInfos />
+    <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
+    <a href="https://github.com/xulang/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
+    </a>
+     <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/v/release/xulang/mydataharbor" alt="查看发行的版本">
+    </a>
+    <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/downloads/xulang/mydataharbor/total" alt="下载数量">
+    </a>
+    <a href="https://github.com/xulang/mydataharbor/blob/main/LICENSE" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/license/xulang/mydataharbor" alt="开源协议">
+    </a>
+    <a href="https://jitpack.io/#xulang/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://jitpack.io/v/xulang/mydataharbor.svg" alt="maven仓库">
+    </a>
+    <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/gq73iq" target="_blank" style="display:inline-block">
+      <img src="https://img.shields.io/badge/Author-MyDataHarbor%20Group-blue" alt="About Author">
+    </a>
+	<PublishInfos />
+</p>
+</GitHubWrapper>
 
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
-
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat)](https://github.com/xulang/mydataharbor/actions/workflows/maven.yml)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/xulang/mydataharbor)](https://github.com/xulang/mydataharbor/releases)
-[![GitHub all releases](https://img.shields.io/github/downloads/xulang/mydataharbor/total)](https://github.com/xulang/mydataharbor/releases)
-[![GitHub](https://img.shields.io/github/license/xulang/mydataharbor)](https://github.com/xulang/mydataharbor/blob/main/LICENSE)
-[![package](https://jitpack.io/v/xulang/mydataharbor.svg)](https://jitpack.io/#xulang/mydataharbor) 
 
 ## 简介/定位
 
