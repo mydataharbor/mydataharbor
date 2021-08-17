@@ -211,7 +211,7 @@ import java.io.Closeable;
 import java.lang.reflect.Type;
 
 /**
- * 数据港口数据源接口
+ * mydataharbor数据源接口
  * 该类会作为一个线程启动
  *
  * @author xulang
