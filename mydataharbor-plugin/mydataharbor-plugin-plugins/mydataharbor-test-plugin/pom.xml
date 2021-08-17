@@ -20,12 +20,4 @@
     <plugin.dependencies/>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.mydataharbor</groupId>
-      <artifactId>mydataharbor-plugin-base</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
-
 </project>

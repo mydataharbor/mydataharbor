@@ -17,11 +17,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Override below properties in each plugin's pom.xml -->
-    <plugin.id>${artifactId}</plugin.id>
+    <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version>${version}</plugin.version>
+    <plugin.version>${project.version}</plugin.version>
     <plugin.provider></plugin.provider>
-    <plugin.pluginDescription>${description}</plugin.pluginDescription>
+    <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
     <plugin.dependencies/>
   </properties>
 
@@ -79,6 +79,10 @@
   <modules>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
+    <module>sink-es-plugin</module>
+    <module>sink-http-plugin</module>
+    <module>sink-redis-plugin</module>
+    <module>source-kafka-plugin</module>
   </modules>
 
   <dependencies>
@@ -94,6 +98,12 @@
       <version>${project.version}</version>
       <!-- !!! VERY IMPORTANT -->
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-plugin-base</artifactId>
+      <version>1.0.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
