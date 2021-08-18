@@ -182,7 +182,7 @@ Linux系统下运行 start.sh  关闭stop.sh
 #### 验证
 访问：mydataharbor-console  [http://127.0.0.1:8080](http://127.0.0.1:8080)
 是否可以看到刚刚启动的节点 
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629093017144-b8bfa59c-9743-43d6-be83-9863e2086c48.png#clientId=u5bdcaa98-eb15-4&from=paste&height=937&id=u94410956&margin=%5Bobject%20Object%5D&name=image.png&originHeight=937&originWidth=1920&originalType=binary&ratio=1&size=68378&status=done&style=none&taskId=ubb8e966f-95fd-4bf2-a073-42678d312da&width=1920)
+ ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
 demo运行实例：http://118.25.5.236:8083/
