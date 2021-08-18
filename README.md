@@ -104,9 +104,20 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
   该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
 
-MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）：
+## 支持的插件
+
+|               | 数据源（DataSource） | 写入源（Sink） |
+| ------------- | -------------------- | -------------- |
+| kafka         | √                    | 计划中         |
+| redis         |                      | √              |
+| elasticsearch | 计划中               | √              |
+| http          |                      | √              |
+| jdbc          | 计划中               | 计划中         |
+
 
 ## 快速开始
+
+MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）：
 
 ### 下载二进制包
 
@@ -122,7 +133,7 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 
 #### 解压
 
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629013982152-3fa9a96f-0c6f-4e9c-9f48-342f10b30512.png#height=100&id=uecd8ec86&margin=%5Bobject%20Object%5D&name=image.png&originHeight=100&originWidth=291&originalType=binary&ratio=1&size=3847&status=done&style=none&width=291)
+ ![image-20210812143819918](./doc/image/image-20210812143819918.png)
 
 #### 配置
 
@@ -148,7 +159,7 @@ Linux系统下运行 start.sh  关闭stop.sh
 
 #### 解压
 
-![image-20210812143819918.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629014029783-5fbb231e-5593-4ce2-baea-1df138e54b91.png#height=86&id=u507198b6&margin=%5Bobject%20Object%5D&name=image-20210812143819918.png&originHeight=86&originWidth=270&originalType=binary&ratio=1&size=1293&status=done&style=none&width=270)
+![image-20210812144430744](./doc/image/image-20210812144430744.png)
 
 #### 配置
 
