@@ -104,62 +104,75 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
   该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
 
-## QuickSatrt
-
 MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）：
 
-- 下载 
-   
-   [mydataharbor-console-1.0.1-RELEASE-bin.tar.gz](https://github.com/xulang/mydataharbor/releases/download/1.0.1-RELEASE/mydataharbor-console-1.0.1-RELEASE-bin.tar.gz)    
-   [mydataharbor-server-1.0.1-RELEASE-bin.tar.gz](https://github.com/xulang/mydataharbor/releases/download/1.0.1-RELEASE/mydataharbor-server-1.0.1-RELEASE-bin.tar.gz)
-   
-- mydataharbor-console
+## 下载二进制包 
 
-  - 解压
+下载地址：[https://github.com/xulang/mydataharbor/releases](https://github.com/xulang/mydataharbor/releases)
+下载列表：
 
-    ![image-20210812143819918](./doc/image/image-20210812143819918.png)
+      mydataharbor-console-xxx-bin.tar.gz
+      mydataharbor-server-xxx-bin.tar.gz
+      
+> xxx是发行的版本号
 
-  - 配置
+## mydataharbor-console 
 
-    进入config目录，修改applicat.yml，主要修改如下配置
+### 解压
 
-    ```yaml
-    server:
-      port: 8080 #console服务启动端口
-    zk: 127.0.0.1:2181 #zk地址
-    ```
-    
-  - 运行
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629013982152-3fa9a96f-0c6f-4e9c-9f48-342f10b30512.png#height=100&id=uecd8ec86&margin=%5Bobject%20Object%5D&name=image.png&originHeight=100&originWidth=291&originalType=binary&ratio=1&size=3847&status=done&style=none&width=291)
 
-    Windows系统下运行 start.bat
+### 配置
 
-    Linux系统下运行 start.sh  关闭stop.sh 
+进入config目录，修改application.yml，主要修改如下配置 
 
-- mydataharbor-server
+```yaml
+server:
+  port: 8080 #console服务启动端口
+zk: 127.0.0.1:2181 #zk地址
+```
 
-  - 解压
-    
-    ![image-20210812144430744](./doc/image/image-20210812144430744.png)
-    
-  - 配置config目录下的system.yml
-    
-    ```yaml
-    zk: ["127.0.0.1:2181"] #zk地址
-    port: 1299 #server服务启动端口
-    group: biz001 #该节点所属组
-    pluginRepository: http://127.0.0.1:8080 #插件仓库地址
-    
-  - 运行
-  
-    Windows系统下运行 start.bat
-    
-    Linux系统下运行 start.sh  关闭stop.sh 
-  
-- 验证：
+### 运行
 
-  访问：mydataharbor-console  http://127.0.0.1:8080
+Windows系统下运行 start.bat
+Linux系统下运行 start.sh  关闭stop.sh 
 
-  是否可以看到刚刚启动的节点
+>
+start.sh 脚本支持 jmx、debug、status参数 如：
+start.sh jmx   启动远程jmx支持
+start.sh debug 开启远程debug方式启动
+start.sh status 查看当前程序状态 
+
+## mydataharbor-server 
+
+### 解压
+
+![image-20210812143819918.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629014029783-5fbb231e-5593-4ce2-baea-1df138e54b91.png#height=86&id=u507198b6&margin=%5Bobject%20Object%5D&name=image-20210812143819918.png&originHeight=86&originWidth=270&originalType=binary&ratio=1&size=1293&status=done&style=none&width=270)
+
+### 配置
+
+修改config目录下的system.yml 
+```yaml
+zk: ["127.0.0.1:2181"] #zk地址
+port: 1299 #server服务启动端口
+group: biz001 #该节点所属组
+pluginRepository: http://127.0.0.1:8080 #插件仓库地址
+```
+### 运行
+Windows系统下运行 start.bat
+Linux系统下运行 start.sh  关闭stop.sh 
+
+>
+start.sh 脚本支持 jmx、debug、status参数 如：
+start.sh jmx   启动远程jmx支持
+start.sh debug 开启远程debug方式启动
+start.sh status 查看当前程序状态 
+
+### 验证
+访问：mydataharbor-console  [http://127.0.0.1:8080](http://127.0.0.1:8080)
+是否可以看到刚刚启动的节点 
+![image.png](https://cdn.nlark.com/yuque/0/2021/png/762711/1629093017144-b8bfa59c-9743-43d6-be83-9863e2086c48.png#clientId=u5bdcaa98-eb15-4&from=paste&height=937&id=u94410956&margin=%5Bobject%20Object%5D&name=image.png&originHeight=937&originWidth=1920&originalType=binary&ratio=1&size=68378&status=done&style=none&taskId=ubb8e966f-95fd-4bf2-a073-42678d312da&width=1920)
+
 ## 其它
 demo运行实例：http://118.25.5.236:8083/
 
