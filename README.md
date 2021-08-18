@@ -2,8 +2,8 @@
 <GitHubWrapper>
 <p align="center">
 	<br/>
-  <a href="http://mydataharbor.com" target="_blank">
-    <img  src="./mydataharbor.png" alt="logo">
+  <a href="http://www.mydataharbor.com" target="_blank">
+    <img  src="mydataharbor.png" alt="logo">
   </a>
 </p>
 
