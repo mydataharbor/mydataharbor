@@ -1,4 +1,4 @@
-package mydataharbor.plugin.sink.es;
+package mydataharbor.plugin.sink.jdbc.mysql;
 
 import mydataharbor.IDataPipline;
 import mydataharbor.plugin.base.creator.AbstractAutoScanPiplineCreator;
@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by xulang on 2021/8/17.
  */
 @Extension
-public class DefaultAutoScanPiplineCretor extends AbstractAutoScanPiplineCreator<Map<String, Object>, BaseSettingContext>implements ExtensionPoint {
+public class DefaultAutoScanPiplineCretor extends AbstractAutoScanPiplineCreator<Map<String, Object>, BaseSettingContext> implements ExtensionPoint {
   @Override
   public String scanPackage() {
     return "mydataharbor";
@@ -20,12 +20,12 @@ public class DefaultAutoScanPiplineCretor extends AbstractAutoScanPiplineCreator
 
   @Override
   public String type() {
-    return "ES 6.8.x 组件扫描器";
+    return "jdbc-mysql6.0.x组件扫描器";
   }
 
   @Override
   public IDataPipline createPipline(Map<String, Object> config, BaseSettingContext settingContext) throws Exception {
-    throw new RuntimeException("改创建器无法创建pipline");
+    throw new RuntimeException("该创建器无法创建pipline");
   }
 
   @Override

@@ -20,7 +20,7 @@ public class DefaultAutoScanPiplineCretor extends AbstractAutoScanPiplineCreator
 
   @Override
   public String type() {
-    return "通用组件扫描器";
+    return "es6.4.x组件扫描器";
   }
 
   @Override

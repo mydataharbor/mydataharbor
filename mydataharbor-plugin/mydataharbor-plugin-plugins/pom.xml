@@ -83,6 +83,7 @@
     <module>sink-http-plugin</module>
     <module>sink-redis-plugin</module>
     <module>source-kafka-plugin</module>
+    <module>source-jdbc-plugin</module>
   </modules>
 
   <dependencies>

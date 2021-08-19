@@ -14,5 +14,6 @@
 
   <modules>
     <module>mydataharbor-source-kafka</module>
+    <module>mydataharbor-source-jdbc</module>
   </modules>
 </project>
