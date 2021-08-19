@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.mydataharbor</groupId>
+    <artifactId>mydataharbor-plugin-plugins</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>source-jdbc-plugin</artifactId>
+  <packaging>pom</packaging>
+  <description>jdbc数据源</description>
+  <modules>
+  <module>source-jdbc-mysql-8.0.x-plugin</module>
+  <module>source-jdbc-mysql-6.0.x-plugin</module>
+  <module>source-jdbc-mysql-5.1.x-plugin</module>
+  <module>source-jdbc-mysql-5.0.x-plugin</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-source-jdbc</artifactId>
+      <version>1.0.2-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+</project>
