@@ -227,7 +227,7 @@ public interface IDataSource<T, S extends BaseSettingContext> extends Closeable,
 
   /**
    * 获取数据，循环调用
-   * 当数据处理完成是，该方法将抛出
+   * 当数据处理完成时，该方法将抛出
    *
    * @return
    * @see TheEndException

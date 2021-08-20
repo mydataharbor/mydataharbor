@@ -17,7 +17,8 @@
 
   <properties>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.dependencies>source-jdbc-mysql-5.1.x-plugin@1.0.2</plugin.dependencies>
+    <plugin.version>1.0.6</plugin.version>
+    <plugin.dependencies>source-jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
   </properties>
 
   <dependencies>

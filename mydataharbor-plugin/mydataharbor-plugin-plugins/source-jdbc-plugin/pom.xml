@@ -9,10 +9,9 @@
   <packaging>pom</packaging>
   <description>jdbc数据源</description>
   <modules>
-  <module>source-jdbc-mysql-8.0.x-plugin</module>
-  <module>source-jdbc-mysql-6.0.x-plugin</module>
-  <module>source-jdbc-mysql-5.1.x-plugin</module>
-  <module>source-jdbc-mysql-5.0.x-plugin</module>
+
+  <module>source-jdbc-mysql-plugin</module>
+  <module>source-jdbc-oracle-plugin</module>
   </modules>
 
   <dependencies>

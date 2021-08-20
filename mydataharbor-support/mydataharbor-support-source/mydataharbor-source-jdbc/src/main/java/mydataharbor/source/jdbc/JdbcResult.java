@@ -20,4 +20,9 @@ public class JdbcResult {
    */
   private Map<String, Object> data;
 
+  /**
+   * 时间标识
+   */
+  private Object timeFlag;
+
 }

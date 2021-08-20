@@ -8,11 +8,10 @@ import mydataharbor.convertor.data.OriginalDataConvertor;
 import mydataharbor.convertor.protocal.OriginalProtocalDataConvertor;
 import mydataharbor.pipline.CommonDataPipline;
 import mydataharbor.plugin.base.util.JsonUtil;
-import mydataharbor.plugin.sink.jdbc.mysql.JdbcMysql51xDataSource;
+import mydataharbor.plugin.source.jdbc.mysql.JdbcMysql51xDataSource;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.source.jdbc.JdbcDataSource;
-import mydataharbor.test.datasource.TestDataSource;
-import mydataharbor.test.sink.TestSink;
+import mydataharbor.test.sink.ObjectSink;
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
 
@@ -34,7 +33,7 @@ public class MysqlTestPiplineCreator implements IDataSinkCreator<MysqlTestPiplin
       .dataSource(new JdbcMysql51xDataSource(config.jdbcDataSourceConfig))
       .protocalDataConvertor(new OriginalProtocalDataConvertor())
       .dataConvertor(new OriginalDataConvertor())
-      .sink(new TestSink())
+      .sink(new ObjectSink())
       .settingContext(settingContext)
       .build();
     return commonDataPipline;
