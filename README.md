@@ -108,11 +108,11 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 |               | 数据源（DataSource） | 写入源（Sink）   |
 | ------------- | -------------------- | ---------------- |
-| kafka         | √                    | 计划中           |
-| redis         |                      | √                |
-| elasticsearch | 计划中               | √ 6.4.x  √ 6.8.x |
-| http          |                      | √                |
-| jdbc          | 计划中               | 计划中           |
+| kafka         | ✅全部版本        | ✅全部版本           |
+| redis         | 暂不考虑          | ✅全部版本            |
+| elasticsearch | 计划中            | ✅6.4.x <br> ✅6.8.x |
+| http          |                  | ✅                |
+| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>hive计划中   | 计划中           |
 
 
 ## 快速开始
