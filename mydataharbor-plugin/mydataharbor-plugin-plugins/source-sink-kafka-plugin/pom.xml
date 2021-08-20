@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.mydataharbor</groupId>
+    <artifactId>mydataharbor-plugin-plugins</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>source-sink-kafka-plugin</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>source-sink-kafka-2.8.x-plugin</module>
+  	<module>source-sink-kafka-2.7.x-plugin</module>
+  	<module>source-sink-kafka-0.10.x-plugin</module>
+  	<module>source-sink-kafka-0.11.x-plugin</module>
+  	<module>source-sink-kafka-0.8.x-plugin</module>
+  	<module>source-sink-kafka-0.9.x-plugin</module>
+  	<module>source-sink-kafka-1.0.x-plugin</module>
+  	<module>source-sink-kafka-1.1.x-plugin</module>
+  	<module>source-sink-kafka-2.0.x-plugin</module>
+  	<module>source-sink-kafka-2.1.x-plugin</module>
+  	<module>source-sink-kafka-2.2.x-plugin</module>
+  	<module>source-sink-kafka-2.3.x-plugin</module>
+  	<module>source-sink-kafka-2.4.x-plugin</module>
+  	<module>source-sink-kafka-2.5.x-plugin</module>
+  	<module>source-sink-kafka-2.6.x-plugin</module>
+  	
+  </modules>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-sink-kafka</artifactId>
+      <version>1.0.2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.mydataharbor</groupId>
+    	<artifactId>mydataharbor-source-kafka</artifactId>
+    	<version>1.0.2-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+</project>

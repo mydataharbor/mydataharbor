@@ -19,6 +19,6 @@
     <module>mydataharbor-sink-redis</module>
     <module>mydataharbor-sink-http</module>
     <module>mydataharbor-sink-es</module>
-    <module>mydataharbor-sink-kafka</module>
+    <module>mydataharbor-source-sink-kafka</module>
   </modules>
 </project>
