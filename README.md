@@ -106,7 +106,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 ## 支持的插件
 
-|               | 数据源（DataSource） | 写入源（Sink）   |
+| 中间件        | 数据源（DataSource） | 写入源（Sink）   |
 | ------------- | -------------------- | ---------------- |
 | kafka         | ✅全部版本        | ✅全部版本           |
 | redis         | 暂不考虑          | ✅全部版本            |
