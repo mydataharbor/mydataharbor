@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.mydataharbor</groupId>
-		<artifactId>source-jdbc-mysql-plugin</artifactId>
+		<artifactId>source-sink-jdbc-mysql-plugin</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>source-jdbc-mysql-6.0.x-plugin</artifactId>
+	<artifactId>source-sink-jdbc-mysql-6.0.x-plugin</artifactId>
 
 	<description>mysql-6.0.x数据源</description>
 

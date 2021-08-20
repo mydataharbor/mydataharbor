@@ -7,14 +7,14 @@
 		<artifactId>source-jdbc-plugin</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>source-jdbc-mysql-plugin</artifactId>
+	<artifactId>source-sink-jdbc-mysql-plugin</artifactId>
 	<packaging>pom</packaging>
 	<description>mysql数据源插件集合</description>
 
 	<modules>
-		<module>source-jdbc-mysql-8.0.x-plugin</module>
-		<module>source-jdbc-mysql-6.0.x-plugin</module>
-		<module>source-jdbc-mysql-5.1.x-plugin</module>
-		<module>source-jdbc-mysql-5.0.x-plugin</module>
+		<module>source-sink-jdbc-mysql-8.0.x-plugin</module>
+		<module>source-sink-jdbc-mysql-6.0.x-plugin</module>
+		<module>source-sink-jdbc-mysql-5.1.x-plugin</module>
+		<module>source-sink-jdbc-mysql-5.0.x-plugin</module>
 	</modules>
 </project>

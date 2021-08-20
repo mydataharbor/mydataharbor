@@ -10,8 +10,8 @@
   <description>jdbc数据源</description>
   <modules>
 
-  <module>source-jdbc-mysql-plugin</module>
-  <module>source-jdbc-oracle-plugin</module>
+  <module>source-sink-jdbc-mysql-plugin</module>
+  <module>source-sink-jdbc-oracle-plugin</module>
   </modules>
 
   <dependencies>

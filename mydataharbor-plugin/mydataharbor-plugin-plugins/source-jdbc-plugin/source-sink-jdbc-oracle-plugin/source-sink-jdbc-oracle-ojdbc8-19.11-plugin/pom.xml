@@ -2,13 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.mydataharbor</groupId>
-    <artifactId>source-jdbc-oracle-plugin</artifactId>
+    <artifactId>source-sink-jdbc-oracle-plugin</artifactId>
     <version>1.0.2-SNAPSHOT</version>
   </parent>
-  <artifactId>source-jdbc-oracle-ojdbc8-19.7-plugin</artifactId>
+  <artifactId>source-sink-jdbc-oracle-ojdbc8-19.11-plugin</artifactId>
 
-
-  <description>ojdbc8-19.7.x数据源</description>
+  <description>ojdbc8-19.11.x数据源</description>
 
   <properties>
     <plugin.provider>xulang</plugin.provider>
@@ -19,7 +18,7 @@
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
       <artifactId>ojdbc8</artifactId>
-      <version>19.7.0.0</version>
+      <version>19.11.0.0</version>
     </dependency>
   </dependencies>
 </project>

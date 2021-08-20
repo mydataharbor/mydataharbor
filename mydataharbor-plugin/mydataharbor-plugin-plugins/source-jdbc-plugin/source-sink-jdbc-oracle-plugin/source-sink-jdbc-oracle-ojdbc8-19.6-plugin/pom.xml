@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.mydataharbor</groupId>
-    <artifactId>source-jdbc-oracle-plugin</artifactId>
+    <artifactId>source-sink-jdbc-oracle-plugin</artifactId>
     <version>1.0.2-SNAPSHOT</version>
   </parent>
-  <artifactId>source-jdbc-oracle-ojdbc8-19.6-plugin</artifactId>
+  <artifactId>source-sink-jdbc-oracle-ojdbc8-19.6-plugin</artifactId>
 
   <description>ojdbc8-19.6.x数据源</description>
 
