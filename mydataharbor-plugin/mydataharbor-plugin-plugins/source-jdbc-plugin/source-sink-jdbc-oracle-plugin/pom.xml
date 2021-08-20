@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.mydataharbor</groupId>
+    <artifactId>source-jdbc-plugin</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>source-sink-jdbc-oracle-plugin</artifactId>
+  <packaging>pom</packaging>
+  <description>oracle jdbc 数据源插件</description>
+  	<modules>
+  		<module>source-sink-jdbc-oracle-ojdbc8-19.8-plugin</module>
+  		<module>source-sink-jdbc-oracle-ojdbc8-19.7-plugin</module>
+  		<module>source-sink-jdbc-oracle-ojdbc8-19.6-plugin</module>
+  		<module>source-sink-jdbc-oracle-ojdbc8-12.2-plugin</module>
+  		<module>source-sink-jdbc-oracle-ojdbc8-19.11-plugin</module>
+  		<module>source-sink-jdbc-oracle-ojdbc8-21.1-plugin</module>
+  	</modules>
+</project>

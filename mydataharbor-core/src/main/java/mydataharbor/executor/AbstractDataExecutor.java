@@ -301,12 +301,12 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
     if (!suspend)
       safeListenerRun(() -> executorListeners.stream().forEach(listener -> listener.onRun(this, dataPipline)));
     IDataSource<T, S> dataSource = dataPipline.dataSource();
-    taskmonitor.setTotal(dataSource.total());
     IProtocalDataConvertor<T, P, S> protocalDataConvertor = dataPipline.protocalDataConvertor();
     IProtocalDataChecker<P, S> checker = dataPipline.checker();
     IDataConvertor<P, R, S> dataConvertor = dataPipline.dataConventer();
     IDataSink<R, S> sink = dataPipline.sink();
     try {
+      taskmonitor.setTotal(dataSource.total());
       while (run) {
         while (suspend) {
           if (!run) {
@@ -431,10 +431,18 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       tRecordsIterable.forEach(record -> rollbackUnit.put(dataProvider.rollbackTransactionUnit(record), true));
       dataProvider.rollback(tRecordsIterable, settingContext);
       return;
-    } else if (tRecordConventSucces.size() == 0) {
+    }
+
+    if (tRecordConventSucces.size() == 0) {
       //数据全部转换失败，并且无需回滚
       dataProvider.commit(tRecordsIterable, settingContext);
     } else {
+      if ((tRecordsIterable instanceof Collection) && ((Collection<T>) tRecordsIterable).size() != tRecordConventSucces.size()) {
+        //无法写入的数据先提交掉
+        ArrayList<T> tobeCommit = new ArrayList<>((Collection<? extends T>) tRecordsIterable);
+        tobeCommit.removeAll(tRecordConventSucces);
+        dataProvider.commit(tobeCommit, settingContext);
+      }
       //批量数据写入
       if (settingContext.isBatchWrite()) {
         batchWrite(dataProvider, writer, dataConventSuccess, writeSuccess, writeError, tRecordConventSucces);
