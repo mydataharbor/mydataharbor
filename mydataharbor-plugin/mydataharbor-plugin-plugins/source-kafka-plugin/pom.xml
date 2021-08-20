@@ -8,7 +8,7 @@
   <artifactId>source-kafka-plugin</artifactId>
 
   <description>
-    kafka写入源插件
+    kafka数据源插件
   </description>
 
   <properties>

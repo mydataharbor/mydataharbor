@@ -1,4 +1,4 @@
-package mydataharbor.plugin.source.jdbc.mysql;
+package mydataharbor.plugin.source.jdbc.oracle;
 
 import mydataharbor.source.jdbc.JdbcDataSource;
 import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
@@ -6,19 +6,19 @@ import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 /**
  * Created by xulang on 2021/8/19.
  */
-public class JdbcMysql60xDataSource extends JdbcDataSource {
+public class JdbcOracle196DataSource extends JdbcDataSource {
 
-  public JdbcMysql60xDataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
+  public JdbcOracle196DataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
     super(jdbcDataSourceConfig);
   }
 
   @Override
   public String driverClassName() {
-    return "com.mysql.cj.jdbc.Driver";
+    return "oracle.jdbc.driver.OracleDriver";
   }
 
   @Override
   public String dataSourceType() {
-    return super.dataSourceType() + "mysql-6.0.x";
+    return super.dataSourceType() + "ojdbc8-21.1.x";
   }
 }

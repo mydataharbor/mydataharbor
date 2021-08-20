@@ -1,5 +1,8 @@
 package mydataharbor.test.creator;
 
+import org.pf4j.Extension;
+import org.pf4j.ExtensionPoint;
+
 import lombok.Data;
 import mydataharbor.IDataPipline;
 import mydataharbor.IDataSinkCreator;
@@ -10,10 +13,8 @@ import mydataharbor.pipline.CommonDataPipline;
 import mydataharbor.plugin.base.util.JsonUtil;
 import mydataharbor.plugin.source.jdbc.mysql.JdbcMysql51xDataSource;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.source.jdbc.JdbcDataSource;
+import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 import mydataharbor.test.sink.ObjectSink;
-import org.pf4j.Extension;
-import org.pf4j.ExtensionPoint;
 
 /**
  * Created by xulang on 2021/8/10.
@@ -48,7 +49,7 @@ public class MysqlTestPiplineCreator implements IDataSinkCreator<MysqlTestPiplin
   public static class MysqlTestPiplineCretorConfig {
 
     @MyDataHarborMarker(title = "数据库连接信息")
-    private JdbcDataSource.JdbcDataSourceConfig jdbcDataSourceConfig;
+    private JdbcDataSourceConfig jdbcDataSourceConfig;
 
   }
 

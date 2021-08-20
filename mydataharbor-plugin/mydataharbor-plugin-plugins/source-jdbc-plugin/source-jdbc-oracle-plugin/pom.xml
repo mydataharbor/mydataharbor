@@ -12,7 +12,6 @@
   		<module>source-jdbc-oracle-ojdbc8-19.8-plugin</module>
   		<module>source-jdbc-oracle-ojdbc8-19.7-plugin</module>
   		<module>source-jdbc-oracle-ojdbc8-19.6-plugin</module>
-  		<module>source-jdbc-oracle-ojdbc8-19.6-plugin</module>
   		<module>source-jdbc-oracle-ojdbc8-12.2-plugin</module>
   		<module>source-jdbc-oracle-ojdbc8-19.11-plugin</module>
   		<module>source-jdbc-oracle-ojdbc8-21.1-plugin</module>

@@ -1,13 +1,14 @@
 package mydataharbor.plugin.source.jdbc.oracle;
 
 import mydataharbor.source.jdbc.JdbcDataSource;
+import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 
 /**
  * Created by xulang on 2021/8/19.
  */
-public class JdbcMysql51xDataSource extends JdbcDataSource {
+public class JdbcOracle197DataSource extends JdbcDataSource {
 
-  public JdbcMysql51xDataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
+  public JdbcOracle197DataSource(JdbcDataSourceConfig jdbcDataSourceConfig) {
     super(jdbcDataSourceConfig);
   }
 
