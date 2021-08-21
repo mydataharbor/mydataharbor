@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-source-jdbc</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
 </project>

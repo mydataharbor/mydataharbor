@@ -19,7 +19,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
 
     <dependency>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
 
     <dependency>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-rpc</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>

@@ -47,7 +47,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

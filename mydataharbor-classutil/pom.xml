@@ -7,7 +7,6 @@
     <groupId>com.mydataharbor</groupId>
     <version>${revision}</version>
   </parent>
-  <groupId>com.mydataharbor</groupId>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>mydataharbor-classutil</artifactId>

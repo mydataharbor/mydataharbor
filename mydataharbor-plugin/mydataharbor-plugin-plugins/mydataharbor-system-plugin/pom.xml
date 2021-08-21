@@ -34,7 +34,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-base</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
 

@@ -19,7 +19,7 @@
     <!-- Override below properties in each plugin's pom.xml -->
     <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version>${revision}</plugin.version>
+    <plugin.version>1.1.0</plugin.version>
     <plugin.provider>MyDataHarbor(www.mydataharbor.com)</plugin.provider>
     <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
     <plugin.group></plugin.group>
@@ -100,7 +100,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
       <!-- !!! VERY IMPORTANT -->
       <scope>provided</scope>
     </dependency>
@@ -108,7 +108,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-base</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
 

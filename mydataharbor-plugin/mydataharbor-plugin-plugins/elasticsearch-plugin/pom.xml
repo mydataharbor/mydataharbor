@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.mydataharbor</groupId>
 			<artifactId>mydataharbor-sink-es</artifactId>
-			<version>${revision}</version>
+			<version>${mydataharbor.version}</version>
 		</dependency>
 	</dependencies>
 	<modules>

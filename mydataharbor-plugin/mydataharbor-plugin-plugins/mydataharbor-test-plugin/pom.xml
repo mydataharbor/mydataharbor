@@ -26,7 +26,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>jdbc-mysql-5.1.x-plugin</artifactId>
-      <version>${revision}</version>
+      <version>${mydataharbor.version}</version>
       <scope>provided</scope>
     </dependency>
 
