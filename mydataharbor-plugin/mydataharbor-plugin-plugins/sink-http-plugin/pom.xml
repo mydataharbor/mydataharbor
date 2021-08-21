@@ -12,11 +12,6 @@
     http写入源插件
   </description>
 
-  <properties>
-    <plugin.provider>xulang</plugin.provider>
-    <plugin.dependencies/>
-  </properties>
-
   <dependencies>
 
     <dependency>

@@ -20,8 +20,10 @@
     <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
     <plugin.version>${project.version}</plugin.version>
-    <plugin.provider></plugin.provider>
+    <plugin.provider>MyDataHarbor(www.mydataharbor.com)</plugin.provider>
     <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
+    <plugin.group></plugin.group>
+    <plugin.group.logo></plugin.group.logo>
     <plugin.dependencies/>
   </properties>
 
@@ -51,6 +53,8 @@
               <Plugin-Class>${plugin.class}</Plugin-Class>
               <Plugin-Description>${plugin.pluginDescription}</Plugin-Description>
               <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+              <Plugin-Group>${plugin.group}</Plugin-Group>
+              <Plugin-Group-Logo>${plugin.group.logo}</Plugin-Group-Logo>
               <Mydataharbor-Version>${mydataharbor.version}</Mydataharbor-Version>
             </manifestEntries>
           </archive>
@@ -79,11 +83,11 @@
   <modules>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
-    <module>sink-es-plugin</module>
     <module>sink-http-plugin</module>
-    <module>sink-redis-plugin</module>
-    <module>source-jdbc-plugin</module>
-    <module>source-sink-kafka-plugin</module>
+    <module>jdbc-plugin</module>
+    <module>kafka-plugin</module>
+    <module>redis-plugin</module>
+    <module>elasticsearch-plugin</module>
   </modules>
 
   <dependencies>
