@@ -50,7 +50,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>${project.version}</version>
+      <version>${revision}</version>
     </dependency>
   </dependencies>
 </project>
