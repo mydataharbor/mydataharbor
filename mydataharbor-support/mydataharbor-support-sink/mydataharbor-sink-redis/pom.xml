@@ -12,6 +12,7 @@
     <dependency>
       <groupId>io.lettuce</groupId>
       <artifactId>lettuce-core</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>io.netty</groupId>

@@ -18,14 +18,14 @@
   <properties>
     <plugin.provider>xulang</plugin.provider>
     <plugin.version>1.0.6</plugin.version>
-    <plugin.dependencies>source-sink-jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
+    <plugin.dependencies>jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
   </properties>
 
   <dependencies>
 
     <dependency>
       <groupId>com.mydataharbor</groupId>
-      <artifactId>source-sink-jdbc-mysql-5.1.x-plugin</artifactId>
+      <artifactId>jdbc-mysql-5.1.x-plugin</artifactId>
       <version>1.0.2-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
