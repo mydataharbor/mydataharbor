@@ -246,4 +246,6 @@ public class BeanConfiguration {
       .add(new ManifestPluginDescriptorFinder());
     return compoundPluginDescriptorFinder;
   }
+
+
 }

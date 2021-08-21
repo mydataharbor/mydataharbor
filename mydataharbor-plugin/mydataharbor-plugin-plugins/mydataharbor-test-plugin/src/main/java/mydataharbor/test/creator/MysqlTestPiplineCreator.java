@@ -11,7 +11,7 @@ import mydataharbor.convertor.data.OriginalDataConvertor;
 import mydataharbor.convertor.protocal.OriginalProtocalDataConvertor;
 import mydataharbor.pipline.CommonDataPipline;
 import mydataharbor.plugin.base.util.JsonUtil;
-import mydataharbor.plugin.source.jdbc.mysql.JdbcMysql51xDataSource;
+import mydataharbor.plugin.jdbc.mysql.source.JdbcMysql51xDataSource;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 import mydataharbor.test.sink.ObjectSink;

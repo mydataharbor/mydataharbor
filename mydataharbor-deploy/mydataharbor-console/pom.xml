@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mydataharbor-deploy</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -61,12 +61,12 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.curator</groupId>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-rpc</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>

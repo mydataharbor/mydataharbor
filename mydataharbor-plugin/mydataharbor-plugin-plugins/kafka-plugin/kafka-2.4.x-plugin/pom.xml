@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>kafka-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>kafka-2.4.x-plugin</artifactId>
 

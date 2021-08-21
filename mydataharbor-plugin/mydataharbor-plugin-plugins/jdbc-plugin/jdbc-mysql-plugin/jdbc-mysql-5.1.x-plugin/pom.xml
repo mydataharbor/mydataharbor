@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>jdbc-mysql-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>jdbc-mysql-5.1.x-plugin</artifactId>
 

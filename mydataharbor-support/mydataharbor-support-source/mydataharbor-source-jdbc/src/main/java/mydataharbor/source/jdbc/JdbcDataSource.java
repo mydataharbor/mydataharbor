@@ -227,12 +227,12 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     List<JdbcResult> result = new CopyOnWriteArrayList<>();
     int count = 0;
     SqlRowSetMetaData metaData = resultSet.getMetaData();
+    String[] columnNames = metaData.getColumnNames();
     while (count < jdbcDataSourceConfig.getMaxPollRecords()) {
       if (resultSet.next()) {
         JdbcResult row = new JdbcResult();
         row.setPosition(resultSet.getRow());
         Map<String, Object> data = new HashMap<>();
-        String[] columnNames = metaData.getColumnNames();
         for (String columnName : columnNames) {
           Object columnValue = resultSet.getObject(columnName);
           if (columnName.equals(jdbcDataSourceConfig.getRollingFieldName())) {

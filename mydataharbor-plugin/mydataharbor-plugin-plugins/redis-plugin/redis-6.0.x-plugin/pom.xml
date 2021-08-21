@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>redis-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>redis-6.0.x-plugin</artifactId>
 

@@ -4,16 +4,12 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>jdbc-oracle-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>jdbc-oracle-ojdbc8-19.6-plugin</artifactId>
 
   <description>ojdbc8-19.6.x数据源</description>
 
-  <properties>
-    <plugin.provider>xulang</plugin.provider>
-    <plugin.dependencies/>
-  </properties>
   <dependencies>
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
     <dependency>

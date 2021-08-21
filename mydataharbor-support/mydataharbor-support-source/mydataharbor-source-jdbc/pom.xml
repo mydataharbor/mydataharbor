@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-support-source</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>mydataharbor-source-jdbc</artifactId>
   <description>jdbc数据源</description>

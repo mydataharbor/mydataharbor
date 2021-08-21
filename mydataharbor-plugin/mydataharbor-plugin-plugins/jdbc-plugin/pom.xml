@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.mydataharbor</groupId>
     <artifactId>mydataharbor-plugin-plugins</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
   <artifactId>jdbc-plugin</artifactId>
   <packaging>pom</packaging>
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-source-jdbc</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>${revision}</version>
     </dependency>
   </dependencies>
 </project>
