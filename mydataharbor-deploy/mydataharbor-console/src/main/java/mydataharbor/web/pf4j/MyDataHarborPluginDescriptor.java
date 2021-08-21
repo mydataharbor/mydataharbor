@@ -9,32 +9,32 @@ public class MyDataHarborPluginDescriptor extends DefaultPluginDescriptor {
   /**
    * 组件分组
    */
-  private String group;
+  private String pluginGroup;
 
   /**
    * 分组logo
    */
-  private String groupLogo;
+  private String pluginGroupLogo;
 
   /**
    * 编译环境信息
    */
   private String mydataharborVersion;
 
-  public String getGroup() {
-    return group;
+  public String getPluginGroup() {
+    return pluginGroup;
   }
 
-  public void setGroup(String group) {
-    this.group = group;
+  public void setPluginGroup(String pluginGroup) {
+    this.pluginGroup = pluginGroup;
   }
 
-  public String getGroupLogo() {
-    return groupLogo;
+  public String getPluginGroupLogo() {
+    return pluginGroupLogo;
   }
 
-  public void setGroupLogo(String groupLogo) {
-    this.groupLogo = groupLogo;
+  public void setPluginGroupLogo(String pluginGroupLogo) {
+    this.pluginGroupLogo = pluginGroupLogo;
   }
 
   public void setMydataharborVersion(String mydataharborVersion) {

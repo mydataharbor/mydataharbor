@@ -239,8 +239,8 @@ public class PluginService implements IPluginService {
     pluginEntity.setFileName(fileName);
     if (pluginDescriptor instanceof MyDataHarborPluginDescriptor) {
       MyDataHarborPluginDescriptor myDataHarborPluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptor;
-      pluginEntity.setGroup(myDataHarborPluginDescriptor.getGroup());
-      pluginEntity.setGroupLogo(myDataHarborPluginDescriptor.getGroupLogo());
+      pluginEntity.setPluginGroup(myDataHarborPluginDescriptor.getPluginGroup());
+      pluginEntity.setPluginGroupLogo(myDataHarborPluginDescriptor.getPluginGroupLogo());
       pluginEntity.setMydataharborVersion(myDataHarborPluginDescriptor.getMydataharborVersion());
     }
     pluginDao.save(pluginEntity);

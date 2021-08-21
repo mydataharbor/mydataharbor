@@ -265,14 +265,14 @@ public class PluginEntity {
   /**
    * 插件所属组
    */
-  @Column(columnDefinition = "varchar(500)", name = "group")
-  private String group;
+  @Column(columnDefinition = "varchar(500)", name = "plugin_group")
+  private String pluginGroup;
 
   /**
    * 组logo
    */
-  @Column(columnDefinition = "CLOB", name = "group_logo")
-  private String groupLogo;
+  @Column(columnDefinition = "CLOB", name = "plugin_group_logo")
+  private String pluginGroupLogo;
 
   /**
    * 创建时间

@@ -19,8 +19,8 @@ public class MyDataHarborManifestPluginDescriptorFinder extends ManifestPluginDe
     if (pluginDescriptor instanceof MyDataHarborPluginDescriptor) {
       Attributes mainAttributes = manifest.getMainAttributes();
       MyDataHarborPluginDescriptor myDataHarborPluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptor;
-      myDataHarborPluginDescriptor.setGroup(mainAttributes.getValue(PLUGIN_GROUP));
-      myDataHarborPluginDescriptor.setGroupLogo(mainAttributes.getValue(PLUGIN_GROUP_LOGO));
+      myDataHarborPluginDescriptor.setPluginGroup(mainAttributes.getValue(PLUGIN_GROUP));
+      myDataHarborPluginDescriptor.setPluginGroupLogo(mainAttributes.getValue(PLUGIN_GROUP_LOGO));
       myDataHarborPluginDescriptor.setMydataharborVersion(mainAttributes.getValue(MY_DATA_HARBOR_VERSION));
     }
     return pluginDescriptor;
