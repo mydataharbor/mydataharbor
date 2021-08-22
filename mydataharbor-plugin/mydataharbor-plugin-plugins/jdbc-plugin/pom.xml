@@ -12,6 +12,7 @@
 
   <module>jdbc-mysql-plugin</module>
   <module>jdbc-oracle-plugin</module>
+  <module>jdbc-hive-plugin</module>
   </modules>
 
   <dependencies>

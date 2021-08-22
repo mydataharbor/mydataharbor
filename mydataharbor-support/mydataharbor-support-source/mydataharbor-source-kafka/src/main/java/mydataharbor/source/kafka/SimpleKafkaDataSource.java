@@ -254,7 +254,7 @@ public class SimpleKafkaDataSource extends AbstractRateLimitDataSource<ConsumerR
 
   @Override
   public String dataSourceType() {
-    return "kafka";
+    return "kafka-";
   }
 
 

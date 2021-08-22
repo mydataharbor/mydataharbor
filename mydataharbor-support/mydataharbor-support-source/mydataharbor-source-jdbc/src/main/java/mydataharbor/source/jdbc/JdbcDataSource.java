@@ -316,7 +316,7 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
 
   @Override
   public String dataSourceType() {
-    return "jdbc";
+    return "jdbc-";
   }
 
 

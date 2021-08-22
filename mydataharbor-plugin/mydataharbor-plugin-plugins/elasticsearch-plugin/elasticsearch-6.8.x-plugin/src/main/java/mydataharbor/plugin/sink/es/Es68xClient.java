@@ -1,4 +1,4 @@
-package mydataharbor.plugin.sink.es.sink;
+package mydataharbor.plugin.sink.es;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,6 @@ import mydataharbor.sink.es.IEsClient;
 import mydataharbor.sink.exception.EsException;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.DocWriteRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
@@ -17,6 +16,7 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +56,7 @@ public class Es68xClient implements IEsClient {
   public void createIndex(String index, Map settings, Map mapping) {
     CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
     createIndexRequest.settings(settings);
-    createIndexRequest.mapping("_doc", mapping);
+    createIndexRequest.mapping(mapping);
     try {
       restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
     } catch (IOException e) {
