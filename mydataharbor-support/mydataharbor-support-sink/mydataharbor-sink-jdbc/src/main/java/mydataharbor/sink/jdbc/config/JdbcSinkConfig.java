@@ -2,10 +2,10 @@ package mydataharbor.sink.jdbc.config;
 
 import lombok.Data;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.datasource.RateLimitConfig;
+import mydataharbor.config.AbstractConfig;
 
 @Data
-public class JdbcSinkConfig {
+public class JdbcSinkConfig extends AbstractConfig {
 
   public static final String MILLI_SECOND = "MILLI_SECOND";
 
@@ -22,5 +22,8 @@ public class JdbcSinkConfig {
 
   @MyDataHarborMarker(title = "任务创建时和数据库的连接数", defaultValue = "1")
   private Integer initialSize = 1;
+
+  @MyDataHarborMarker(title = "默认目标表")
+  private String defaultTableName;
 
 }

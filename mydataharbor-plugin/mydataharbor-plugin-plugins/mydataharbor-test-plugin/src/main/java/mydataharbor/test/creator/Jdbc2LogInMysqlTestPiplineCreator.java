@@ -1,5 +1,6 @@
 package mydataharbor.test.creator;
 
+import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
 
@@ -20,7 +21,7 @@ import mydataharbor.test.sink.ObjectSink;
  * Created by xulang on 2021/8/10.
  */
 @Extension
-public class MysqlTestPiplineCreator implements IDataSinkCreator<MysqlTestPiplineCreator.MysqlTestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
+public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2LogInMysqlTestPiplineCreator.MysqlTestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
 
 
   @Override
@@ -48,8 +49,11 @@ public class MysqlTestPiplineCreator implements IDataSinkCreator<MysqlTestPiplin
   @Data
   public static class MysqlTestPiplineCretorConfig {
 
-    @MyDataHarborMarker(title = "数据库连接信息")
+    @MyDataHarborMarker(title = "数据库数据源信息")
     private JdbcDataSourceConfig jdbcDataSourceConfig;
+
+    @MyDataHarborMarker(title = "数据库写入源信息")
+    private JdbcSinkConfig jdbcSinkConfig;
 
   }
 

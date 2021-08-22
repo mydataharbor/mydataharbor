@@ -48,6 +48,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
         .createDataSource(connectionProps);
       dataSourceTransactionManager = new DataSourceTransactionManager(dataSource);
       dataSource.start();
+      jdbcTemplate = new JdbcTemplate(dataSource);
     } catch (Exception e) {
       throw new DataSourceCreateException("创建jdbc数据源失败！:" + e.getMessage(), e);
     }
@@ -136,7 +137,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             sql.append(writeDataInfo.getTableName());
             sql.append(" SET ");
             sql.append(updateColumnNames);
-            if (whereSql.toString().length() > 0) {
+            if (whereValues.length > 0) {
               sql.append(whereSql.toString());
             }
             int update = jdbcTemplate.update(sql.toString(), concat(values, whereValues));
@@ -145,7 +146,7 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
           case DELETE:
             sql.append("DELETE FROM ");
             sql.append(writeDataInfo.getTableName());
-            if (whereSql.toString().length() > 0) {
+            if (whereValues.length > 0) {
               sql.append(whereSql.toString());
             }
             int deleteUpdate = jdbcTemplate.update(sql.toString(), whereValues);
@@ -156,11 +157,11 @@ public abstract class JdbcSink implements IDataSink<JdbcSinkReq, BaseSettingCont
             sql.append(writeDataInfo.getTableName());
             sql.append(" SET ");
             sql.append(updateColumnNames);
-            if (whereSql.toString().length() > 0) {
+            if (whereValues.length > 0) {
               sql.append(whereSql.toString());
             }
             int upset = jdbcTemplate.update(sql.toString(), concat(values, whereValues));
-            if (upset > 0) {
+            if (upset == 0) {
               sql = new StringBuilder();
               sql.append("INSERT INTO ");
               sql.append(writeDataInfo.getTableName());

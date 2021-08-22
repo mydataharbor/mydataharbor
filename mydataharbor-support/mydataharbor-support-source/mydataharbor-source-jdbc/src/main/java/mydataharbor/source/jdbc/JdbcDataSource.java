@@ -215,7 +215,8 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
   public void setCompletePollOk(boolean completePollOk) {
     //TODO 把这个值持久化存起来
     this.completePollOk = completePollOk;
-    setLastTime(completeLastTime);
+    if (completeLastTime != null)
+      setLastTime(completeLastTime);
   }
 
   public boolean getCompletePollOk() {
