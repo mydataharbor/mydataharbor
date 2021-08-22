@@ -4,6 +4,8 @@ import lombok.Data;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.datasource.RateLimitConfig;
 
+import java.util.List;
+
 @Data
 public class JdbcDataSourceConfig extends RateLimitConfig {
 
@@ -43,5 +45,8 @@ public class JdbcDataSourceConfig extends RateLimitConfig {
 
   @MyDataHarborMarker(title = "时间滚动字段的格式", des = "如 yyyy-MM-dd HH:mm:ss.SSS，如果为数值类型，秒填写" + SECOND + ",毫秒填写：" + MILLI_SECOND)
   private String timeFormat;
+
+  @MyDataHarborMarker(title = "主键列", des = "传递给下游，能唯一标识数据库中记录的唯一性，支持联合主键")
+  private List<String> primaryKeys;
 
 }

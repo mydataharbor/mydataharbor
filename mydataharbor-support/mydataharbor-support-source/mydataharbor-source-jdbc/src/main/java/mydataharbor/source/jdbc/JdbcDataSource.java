@@ -231,10 +231,14 @@ public abstract class JdbcDataSource extends AbstractRateLimitDataSource<JdbcRes
     while (count < jdbcDataSourceConfig.getMaxPollRecords()) {
       if (resultSet.next()) {
         JdbcResult row = new JdbcResult();
+        row.setJdbcSyncModel(jdbcDataSourceConfig.getModel());
         row.setPosition(resultSet.getRow());
         Map<String, Object> data = new HashMap<>();
         for (String columnName : columnNames) {
           Object columnValue = resultSet.getObject(columnName);
+          if (jdbcDataSourceConfig.getPrimaryKeys() != null && jdbcDataSourceConfig.getPrimaryKeys().contains(columnName)) {
+            row.getPrimaryKeysValues().put(columnName, columnValue);
+          }
           if (columnName.equals(jdbcDataSourceConfig.getRollingFieldName())) {
             row.setTimeFlag(columnValue);
             if (completePollOk) {

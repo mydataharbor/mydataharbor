@@ -20,5 +20,10 @@
       <artifactId>mydataharbor-source-jdbc</artifactId>
       <version>${mydataharbor.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-sink-jdbc</artifactId>
+      <version>${mydataharbor.version}</version>
+    </dependency>
   </dependencies>
 </project>

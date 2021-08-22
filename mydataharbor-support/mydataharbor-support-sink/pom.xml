@@ -19,5 +19,6 @@
     <module>mydataharbor-sink-http</module>
     <module>mydataharbor-sink-es</module>
     <module>mydataharbor-sink-kafka</module>
+    <module>mydataharbor-sink-jdbc</module>
   </modules>
 </project>
