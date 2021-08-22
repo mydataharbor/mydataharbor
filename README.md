@@ -112,7 +112,8 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 | redis         | 暂不考虑          | ✅全部版本            |
 | elasticsearch | 计划中            | ✅6.4.x <br> ✅6.8.x |
 | http          | 暂不考虑          | ✅                |
-| jdbc          | 全量/增量/先全量再增量，三种模式<br>✅mysql全部版本<br>✅oracle全部版本<br>hive/hbase计划中   | 计划中           |
+| jdbc          | 全量/增量/先全量再增量，三种模式<br>✅mysql全部版本<br>✅oracle全部版本<br>hive/hbase计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>hive/hbase计划中           |
+| MongoDB       | 计划中          | 计划中                |
 
 
 ## 快速开始
