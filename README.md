@@ -12,20 +12,20 @@
 <p align="center" class="print-break">
 	<GithubInfos />
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
-    <a href="https://github.com/xulang/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/workflow/status/xulang/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
+    <a href="https://github.com/mydataharbor/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/workflow/status/mydataharbor/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
     </a>
-     <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/v/release/xulang/mydataharbor" alt="查看发行的版本">
+     <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/v/release/mydataharbor/mydataharbor" alt="查看发行的版本">
     </a>
-    <a href="https://jitpack.io/#xulang/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://jitpack.io/v/xulang/mydataharbor.svg" alt="maven仓库">
+    <a href="https://jitpack.io/#mydataharbor/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://jitpack.io/v/mydataharbor/mydataharbor.svg" alt="maven仓库">
     </a>
-    <a href="https://github.com/xulang/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/downloads/xulang/mydataharbor/total" alt="下载数量">
+    <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/downloads/mydataharbor/mydataharbor/total" alt="下载数量">
     </a>
-    <a href="https://github.com/xulang/mydataharbor/blob/main/LICENSE" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/license/xulang/mydataharbor" alt="开源协议">
+    <a href="https://github.com/mydataharbor/mydataharbor/blob/main/LICENSE" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/github/license/mydataharbor/mydataharbor" alt="开源协议">
     </a>
     <br/>
     <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/pckin3" target="_blank" style="display:inline-block">
@@ -123,7 +123,7 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 
 ### 下载二进制包
 
-下载地址：[https://github.com/xulang/mydataharbor/releases](https://github.com/xulang/mydataharbor/releases)
+下载地址：[https://github.com/mydataharbor/mydataharbor/releases](https://github.com/mydataharbor/mydataharbor/releases)
 下载列表：
 
       mydataharbor-console-xxx-bin.tar.gz
