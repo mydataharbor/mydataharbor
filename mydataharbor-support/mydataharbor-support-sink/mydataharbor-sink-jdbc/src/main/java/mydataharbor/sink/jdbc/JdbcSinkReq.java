@@ -1,6 +1,7 @@
 package mydataharbor.sink.jdbc;
 
 import lombok.Data;
+import mydataharbor.sink.jdbc.config.WriteModel;
 
 import java.util.List;
 import java.util.Map;
@@ -40,25 +41,5 @@ public class JdbcSinkReq {
     private WriteModel writeModel = WriteModel.UPSET;
   }
 
-  public static enum WriteModel {
-    /**
-     * 插入
-     */
-    INSERT,
 
-    /**
-     * 更新
-     */
-    UPDATE,
-
-    /**
-     * 删除
-     */
-    DELETE,
-
-    /**
-     * 先更新，不存在新增
-     */
-    UPSET
-  }
 }

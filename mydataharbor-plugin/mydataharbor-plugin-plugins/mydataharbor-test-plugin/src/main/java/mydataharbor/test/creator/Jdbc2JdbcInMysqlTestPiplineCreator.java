@@ -12,6 +12,7 @@ import mydataharbor.plugin.jdbc.mysql.source.JdbcMysql51xDataSource;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.sink.jdbc.JdbcSinkReq;
 import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
+import mydataharbor.sink.jdbc.config.WriteModel;
 import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 import mydataharbor.source.jdbc.protocal.JdbcProtocalConvertor;
 import mydataharbor.source.jdbc.protocal.JdbcProtocalData;
@@ -47,7 +48,8 @@ public class Jdbc2JdbcInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc
         writeDataInfo.setData(record.getJdbcResult().getData());
         writeDataInfo.setTableName(config.jdbcSinkConfig.getDefaultTableName());
         writeDataInfo.setWhere(record.getJdbcResult().getPrimaryKeysValues());
-        writeDataInfo.setWriteModel(config.writeModel);
+        if (config.writeModel != null)
+          writeDataInfo.setWriteModel(config.writeModel);
         return jdbcSinkReq;
       })
       .sink(new JdbcMysql51xSink(config.jdbcSinkConfig))
@@ -70,7 +72,7 @@ public class Jdbc2JdbcInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc
     @MyDataHarborMarker(title = "数据库写入源信息")
     private JdbcSinkConfig jdbcSinkConfig;
 
-    private JdbcSinkReq.WriteModel writeModel;
+    private WriteModel writeModel;
 
   }
 
