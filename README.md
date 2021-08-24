@@ -17,7 +17,7 @@
      <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/v/release/mydataharbor/mydataharbor" alt="查看发行的版本">
     </a>
-    <a href="https://mvnrepository.com/artifact/com.mydataharbor/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
+    <a href="https://search.maven.org/search?q=com.mydataharbor" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/maven-central/v/com.mydataharbor/mydataharbor" alt="maven仓库">
     </a>
     <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
@@ -26,9 +26,8 @@
     <a href="https://github.com/mydataharbor/mydataharbor/blob/main/LICENSE" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/license/mydataharbor/mydataharbor" alt="开源协议">
     </a>
-    <br/>
     <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/pckin3" target="_blank" style="display:inline-block">
-      <img src="https://img.shields.io/badge/plugins-view-blue" alt="插件列表">
+      <img src="https://img.shields.io/badge/plugins-支持清单-blue" alt="插件列表">
     </a>
    
 </p>
