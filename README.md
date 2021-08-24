@@ -10,7 +10,6 @@
 <TitleInfos />
 
 <p align="center" class="print-break">
-	<GithubInfos />
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
     <a href="https://github.com/mydataharbor/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/workflow/status/mydataharbor/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
@@ -32,7 +31,6 @@
       <img src="https://img.shields.io/badge/plugins-view-blue" alt="插件列表">
     </a>
    
-	<PublishInfos />
 </p>
 </GitHubWrapper>
 
