@@ -17,8 +17,8 @@
      <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/v/release/mydataharbor/mydataharbor" alt="查看发行的版本">
     </a>
-    <a href="https://jitpack.io/#mydataharbor/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://jitpack.io/v/mydataharbor/mydataharbor.svg" alt="maven仓库">
+    <a href="https://mvnrepository.com/artifact/com.mydataharbor/mydataharbor" target="_blank" style="display:inline-block" class="not-print">
+       <img src="https://img.shields.io/maven-central/v/com.mydataharbor/mydataharbor" alt="maven仓库">
     </a>
     <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/downloads/mydataharbor/mydataharbor/total" alt="下载数量">
