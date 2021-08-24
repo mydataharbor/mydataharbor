@@ -16,6 +16,7 @@
   </description>
 
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.provider>xulang</plugin.provider>
     <plugin.version>1.0.7</plugin.version>
     <plugin.dependencies>jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
@@ -31,5 +32,6 @@
     </dependency>
 
   </dependencies>
+
 
 </project>

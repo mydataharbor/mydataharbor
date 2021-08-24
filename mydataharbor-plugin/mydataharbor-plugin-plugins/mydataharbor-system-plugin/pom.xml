@@ -17,6 +17,7 @@
   </description>
 
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.class>mydataharbor.system.plugin.SystemPlugin</plugin.class>
     <plugin.provider>xulang</plugin.provider>
     <plugin.dependencies/>
@@ -37,6 +38,5 @@
       <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
-
 
 </project>
