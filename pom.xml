@@ -19,7 +19,7 @@
   <url>http://www.mydataharbor.com</url>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
   <properties>
-    <revision>1.0.2-SNAPSHOT</revision>
+    <revision>1.0.2-RELEASE</revision>
     <mydataharbor.version>${revision}</mydataharbor.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -55,6 +55,10 @@
     <developer>
       <name>xulang</name>
       <email>1053618636@qq.com</email>
+      <roles>
+        <role>owner</role>
+      </roles>
+      <timezone>+8</timezone>
       <organization>mydataharbor</organization>
       <organizationUrl>http://www.mydataharbor.com</organizationUrl>
     </developer>
@@ -63,7 +67,7 @@
   <scm>
     <connection>scm:git:git://github.com/mydataharbor/mydataharbor.git</connection>
     <developerConnection>scm:git:ssh://github.com:mydataharbor/mydataharbor.git</developerConnection>
-    <url>https://github.com/mydataharbor/mydataharbor/tree/main</url>
+    <url>https://github.com/mydataharbor/mydataharbor</url>
   </scm>
 
   <dependencyManagement>
@@ -246,7 +250,7 @@
         <artifactId>flatten-maven-plugin</artifactId>
         <version>1.2.2</version>
         <configuration>
-          <updatePomFile>false</updatePomFile>
+          <updatePomFile>true</updatePomFile>
           <flattenMode>resolveCiFriendliesOnly</flattenMode>
         </configuration>
         <executions>
@@ -307,6 +311,19 @@
             <configuration>
               <additionalparam>-Xdoclint:none</additionalparam>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
