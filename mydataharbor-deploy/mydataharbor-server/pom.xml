@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mydataharbor-deploy</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +13,7 @@
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
 
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <main.class>mydataharbor.server.MyDataHarborServerBoot</main.class>
   </properties>
 
@@ -37,7 +38,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-server</artifactId>
-      <version>1.0.1-RELEASE</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
 
@@ -75,13 +76,8 @@
           </archive>
         </configuration>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
     </plugins>
+
+
   </build>
 </project>

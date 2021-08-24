@@ -5,26 +5,33 @@
   <parent>
     <artifactId>mydataharbor-plugin-plugins</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>mydataharbor-test-plugin</artifactId>
 
+  <description>
+    用于测试的插件，模拟
+  </description>
+
   <properties>
-    <plugin.id>test-plugin</plugin.id>
-    <plugin.version>1.1</plugin.version>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.pluginDescription>用于测试的插件，模拟</plugin.pluginDescription>
-    <plugin.dependencies/>
+    <plugin.version>1.0.7</plugin.version>
+    <plugin.dependencies>jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>com.mydataharbor</groupId>
-      <artifactId>mydataharbor-plugin-base</artifactId>
-      <version>1.0.1-RELEASE</version>
+      <artifactId>jdbc-mysql-5.1.x-plugin</artifactId>
+      <version>1.1.0</version>
+      <scope>provided</scope>
     </dependency>
+
   </dependencies>
+
 
 </project>

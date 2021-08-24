@@ -286,7 +286,7 @@ public class GroupNodeChildrenChangeListener implements PathChildrenCacheListene
     try {
       switch (event.getType()) {
         case CHILD_ADDED:
-          //与新机器加入
+          //有新机器加入
           log.info("node join，开始Rebalance以下任务:{}", rebalanceTaskList);
           for (DistributedTask distributedTask : rebalanceTaskList) {
             TaskAssignedInfo taskAssignedInfo = rebalance.rebalance(liveNodes, distributedTask, changeNode, true);

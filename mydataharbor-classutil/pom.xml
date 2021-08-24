@@ -5,9 +5,8 @@
   <parent>
     <artifactId>mydataharbor</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
-  <groupId>com.mydataharbor</groupId>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>mydataharbor-classutil</artifactId>
@@ -18,4 +17,16 @@
       <artifactId>classmate</artifactId>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <configuration>
+          <skipNexusStagingDeployMojo>false</skipNexusStagingDeployMojo>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

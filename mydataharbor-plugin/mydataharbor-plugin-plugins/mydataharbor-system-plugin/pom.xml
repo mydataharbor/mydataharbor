@@ -5,20 +5,21 @@
   <parent>
     <artifactId>mydataharbor-plugin-plugins</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>mydataharbor-system-plugin</artifactId>
 
+  <description>
+    系统级基础插件
+  </description>
 
   <properties>
-    <plugin.id>system-plugin</plugin.id>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.class>mydataharbor.system.plugin.SystemPlugin</plugin.class>
-    <plugin.version>1.0</plugin.version>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.pluginDescription>系统级基础插件</plugin.pluginDescription>
     <plugin.dependencies/>
   </properties>
 
@@ -34,9 +35,8 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-base</artifactId>
-      <version>1.0.1-RELEASE</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
-
 
 </project>

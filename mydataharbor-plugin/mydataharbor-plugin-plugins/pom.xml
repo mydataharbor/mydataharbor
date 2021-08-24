@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mydataharbor-plugin</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -16,13 +16,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <!-- Override below properties in each plugin's pom.xml -->
-    <plugin.id/>
+    <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version/>
-    <plugin.provider/>
-    <plugin.pluginDescription/>
+    <plugin.version>1.1.0</plugin.version>
+    <plugin.provider>MyDataHarbor(www.mydataharbor.com)</plugin.provider>
+    <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
+    <plugin.group></plugin.group>
+    <plugin.group.logo></plugin.group.logo>
     <plugin.dependencies/>
   </properties>
 
@@ -36,7 +37,7 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
-          <finalName>${plugin.id}-${plugin.version}-plugin</finalName>
+          <finalName>${plugin.id}-${plugin.version}-mydataharbor(${mydataharbor.version})</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <attach>false</attach>
           <archive>
@@ -52,6 +53,9 @@
               <Plugin-Class>${plugin.class}</Plugin-Class>
               <Plugin-Description>${plugin.pluginDescription}</Plugin-Description>
               <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+              <Plugin-Group>${plugin.group}</Plugin-Group>
+              <Plugin-Group-Logo>${plugin.group.logo}</Plugin-Group-Logo>
+              <Mydataharbor-Version>${mydataharbor.version}</Mydataharbor-Version>
             </manifestEntries>
           </archive>
         </configuration>
@@ -65,19 +69,10 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-        <version>2.8.2</version>
-      </plugin>
     </plugins>
   </build>
 
   <modules>
-    <module>mydataharbor-kafka2redis-plugin</module>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
   </modules>
@@ -86,15 +81,20 @@
     <dependency>
       <groupId>org.pf4j</groupId>
       <artifactId>pf4j</artifactId>
-      <version>${pf4j.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>${project.version}</version>
+      <version>${mydataharbor.version}</version>
       <!-- !!! VERY IMPORTANT -->
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-plugin-base</artifactId>
+      <version>${mydataharbor.version}</version>
     </dependency>
   </dependencies>
 

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mydataharbor-plugin</artifactId>
     <groupId>com.mydataharbor</groupId>
-    <version>1.0.1-RELEASE</version>
+    <version>${revision}</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -14,12 +14,17 @@
   <name>mydataharbor-plugin-server</name>
 
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
   <dependencies>
 
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-plugin-api</artifactId>
-      <version>${project.version}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
 
     <dependency>
@@ -30,7 +35,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-core</artifactId>
-      <version>1.0.1-RELEASE</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
 
     <dependency>
@@ -57,7 +62,7 @@
     <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-rpc</artifactId>
-      <version>${project.version}</version>
+      <version>${mydataharbor.version}</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
@@ -65,5 +70,17 @@
       <version>${okhttp.version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <configuration>
+          <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
