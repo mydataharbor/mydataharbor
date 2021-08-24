@@ -102,13 +102,13 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 ## 支持的插件
 
-| 中间件/协议        | 数据源（DataSource） | 写入源（Sink）   |
-| ------------- | -------------------- | ---------------- |
-| kafka         | ✅全部版本        | ✅全部版本           |
-| redis         | 暂不考虑          | ✅全部版本            |
-| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x✅6.8.x✅6.5.x✅6.6.x✅6.7.x✅7.7.x✅7.13.x |
+| 中间件/协议        | 数据源（DataSource） | 写入源（Sink）   |作者	|
+| ------------- | -------------------- | ---------------- |-----------|
+| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor(1053618636@qq.com)|
+| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor(1053618636@qq.com)|
+| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x✅6.8.x✅6.5.x✅6.6.x✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor(1053618636@qq.com)|
 | http          | 暂不考虑          | ✅                |
-| jdbc <br>全量/增量/先全量再增量<br>❗ 此种方式无法同步删除的数据          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |
+| jdbc <br>全量/增量/先全量再增量<br>❗ 此种方式无法同步删除的数据          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor(1053618636@qq.com)|
 | MongoDB       | 计划中          | 计划中                |
 | binlog       | 计划中          | ×                |
 
