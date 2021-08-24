@@ -1,3 +1,4 @@
+/*
 package mydataharbor.test.creator;
 
 import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
@@ -17,9 +18,11 @@ import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 import mydataharbor.test.sink.ObjectSink;
 
+*/
 /**
  * Created by xulang on 2021/8/10.
- */
+ *//*
+
 @Extension
 public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2LogInMysqlTestPiplineCreator.MysqlTestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
 
@@ -59,3 +62,4 @@ public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2
 
 }
 
+*/

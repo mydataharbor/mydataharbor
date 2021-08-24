@@ -33,15 +33,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <configuration>
-          <skipNexusStagingDeployMojo>false</skipNexusStagingDeployMojo>
-        </configuration>
-      </plugin>
-    </plugins>
+
   </build>
 
   <modules>
