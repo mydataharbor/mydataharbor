@@ -10,7 +10,6 @@
   <modules>
     <module>mydataharbor-deploy</module>
     <module>mydataharbor-core</module>
-    <module>mydataharbor-support</module>
     <module>mydataharbor-plugin</module>
     <module>mydataharbor-classutil</module>
     <module>mydataharbor-rpc</module>
@@ -64,7 +63,7 @@
   <scm>
     <connection>scm:git:git://github.com/mydataharbor/mydataharbor.git</connection>
     <developerConnection>scm:git:ssh://github.com:mydataharbor/mydataharbor.git</developerConnection>
-    <url>http://github.com/mydataharbor/mydataharbor</url>
+    <url>https://github.com/mydataharbor/mydataharbor/tree/main</url>
   </scm>
 
   <dependencyManagement>
@@ -281,7 +280,7 @@
         </configuration>
       </plugin>
 
-      <plugin>
+     <!-- <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <version>2.2.1</version>
@@ -309,7 +308,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
     </plugins>
   </build>
 </project>

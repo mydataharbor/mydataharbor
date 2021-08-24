@@ -83,11 +83,6 @@
   <modules>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
-    <module>http-plugin</module>
-    <module>jdbc-plugin</module>
-    <module>kafka-plugin</module>
-    <module>redis-plugin</module>
-    <module>elasticsearch-plugin</module>
   </modules>
 
   <dependencies>
