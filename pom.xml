@@ -19,7 +19,7 @@
   <url>http://www.mydataharbor.com</url>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
   <properties>
-    <revision>1.0.3-RELEASE</revision>
+    <revision>1.0.4-SNAPSHOT</revision>
     <mydataharbor.version>${revision}</mydataharbor.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
