@@ -44,7 +44,6 @@
     <okhttp.version>4.8.1</okhttp.version>
   </properties>
 
-
   <licenses>
     <license>
       <name>GNU General Public License v3.0</name>
