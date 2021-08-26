@@ -1,4 +1,3 @@
-/*
 package mydataharbor.test.creator;
 
 import lombok.Data;
@@ -23,10 +22,6 @@ import org.pf4j.ExtensionPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-*/
-/**
- * Created by xulang on 2021/8/10.
- *//*
 
 @Extension
 public class Jdbc2JdbcInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2JdbcInMysqlTestPiplineCreator.MysqlTestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
@@ -81,4 +76,3 @@ public class Jdbc2JdbcInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc
 
 }
 
-*/

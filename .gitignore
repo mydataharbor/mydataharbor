@@ -26,7 +26,7 @@
 
 
 logs/
-plugins/
+repoPlugins/
 dbdata/
 
 .flattened-pom.xml

@@ -207,8 +207,6 @@ package mydataharbor.web.configuration;
 import io.swagger.annotations.ApiOperation;
 import mydataharbor.web.pf4j.MyDataHarborManifestPluginDescriptorFinder;
 import org.pf4j.CompoundPluginDescriptorFinder;
-import org.pf4j.ManifestPluginDescriptorFinder;
-import org.pf4j.PropertiesPluginDescriptorFinder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -221,6 +219,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class BeanConfiguration {
+
   @Bean
   public Docket createRestApi() {
     return new Docket(DocumentationType.OAS_30)
@@ -246,6 +245,5 @@ public class BeanConfiguration {
       .add(new MyDataHarborManifestPluginDescriptorFinder());
     return compoundPluginDescriptorFinder;
   }
-
 
 }

@@ -217,20 +217,43 @@ import java.util.List;
 @Data
 public class PluginInfo implements Serializable {
 
+  /**
+   * 插件id
+   */
   private String pluginId;
-  private String pluginDescription;
-  private String pluginClass;
+
+  /**
+   * 版本
+   */
   private String version;
-  private String requires = "*"; // SemVer format
-  private String provider;
-  private List<PluginDependency> dependencies;
+
+
+  /**
+   * 插件描述
+   */
+  private String pluginDescription;
+
+
+  /**
+   * 插件依赖
+   */
+  private List<PluginInfo.PluginDependency> dependencies;
+
+  /**
+   * 授权信息
+   */
   private String license;
+
+
+  private String requires;
+
+  private String pluginClass;
+  private String provider;
 
   /**
    * creator信息
    */
   private List<DataSinkCreatorInfo> dataSinkCreatorInfos;
-
 
   public void fillByPluginDescriptor(PluginDescriptor pluginDescriptor) {
     this.setPluginId(pluginDescriptor.getPluginId());

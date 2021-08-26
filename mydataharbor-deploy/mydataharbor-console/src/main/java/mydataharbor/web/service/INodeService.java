@@ -208,8 +208,8 @@ import mydataharbor.plugin.api.group.GroupInfo;
 import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.plugin.api.node.NodeInfo;
 import mydataharbor.plugin.api.IPluginRemoteManager;
+import mydataharbor.web.entity.RepoPlugin;
 import org.apache.curator.framework.CuratorFramework;
-import org.pf4j.PluginDescriptor;
 
 import java.util.List;
 import java.util.Map;
@@ -257,18 +257,18 @@ public interface INodeService {
    * @param nodeGroup 集群分组
    * @return
    */
-  PluginInfo installPluginByRpcUpload(String fileName, PluginDescriptor pluginDescriptor, byte[] body, String nodeGroup);
+  PluginInfo installPluginByRpcUpload(String fileName, RepoPlugin repoPluginDescriptor, byte[] body, String nodeGroup);
 
   /**
    * 通过仓库来安装
    *
    * @param pluginId
    * @param version
-   * @param pluginDescriptor
+   * @param repoPluginDescriptor
    * @param nodeGroup
    * @return
    */
-  PluginInfo installPluginByReporsitory(String pluginId, String version, PluginDescriptor pluginDescriptor, String nodeGroup);
+  PluginInfo installPluginByReporsitory(String pluginId, String version, RepoPlugin repoPluginDescriptor, String nodeGroup);
 
   /**
    * 获取rpc实例
