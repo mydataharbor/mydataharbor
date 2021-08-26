@@ -215,7 +215,6 @@ import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.rpc.client.RpcClient;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.web.entity.RepoPlugin;
-import mydataharbor.web.mapper.IPluginMapper;
 import mydataharbor.web.service.IGroupChangeAction;
 import mydataharbor.web.service.INodeService;
 import org.apache.commons.lang3.RandomUtils;
@@ -228,7 +227,6 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -256,9 +254,6 @@ public class NodeService implements INodeService, InitializingBean {
   private volatile Map<String, NodeInfo> nodeInfoCache = new ConcurrentHashMap<>();
 
   private volatile Map<String, GroupInfo> groupInfoCache = new ConcurrentHashMap<>();
-
-  @Autowired
-  private IPluginMapper pluginMapper;
 
   @Override
   public Map<String, List<NodeInfo>> lisNode() {

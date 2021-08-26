@@ -22,6 +22,9 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
 
   private static final String MYDATAHARBOR_REPORSITORY_HOST = "https://repo.mydataharbor.com";
 
+  private String email;
+
+  private String token;
 
   public MyDataHarborPluginRepository() {
   }
@@ -40,7 +43,6 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
   public RepoPlugin query(String pluginId, String pluginVersion) {
     return null;
   }
-
 
   @Override
   public boolean isAuth(String pluginId, String version) {
@@ -70,6 +72,7 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
 
   @Override
   public void config(Map<String, Object> config) {
-
+    this.email = (String) config.get("email");
+    this.token = (String) config.get("token");
   }
 }

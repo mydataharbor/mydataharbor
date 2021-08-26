@@ -11,9 +11,13 @@ import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.exception.ReconfigException;
+import mydataharbor.web.service.INodeService;
 import mydataharbor.web.service.IPluginRepository;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,6 +47,9 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
   @Autowired
   private Map<String, IPluginRepository> pluginReporsitoryMap;
 
+  @Autowired
+  private INodeService nodeService;
+
   private IPluginRepository pluginReporsitory;
 
   private static final List<RepositoryConfig> DEFAULT_REPOSITORY_CONFIGS = new ArrayList<>();
@@ -52,17 +59,24 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
   }
 
   private List<RepositoryConfig> getLatestRepoConfig() throws IOException {
-    File file = new File(Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME);
-    if (file.exists()) {
-      try {
-        String repoConfig = FileUtils.readFileToString(file, "UTF-8");
+    String path = Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME;
+    try {
+      Stat stat = nodeService.getClient().checkExists().forPath(path);
+      if (stat == null) {
+        nodeService.getClient().create().creatingParentContainersIfNeeded().forPath(path);
+        nodeService.getClient().setData().forPath(path, JsonUtil.serialize(DEFAULT_REPOSITORY_CONFIGS));
+      }
+      byte[] bytes = nodeService.getClient().getData().forPath(path);
+      if (bytes.length != 0) {
+        String repoConfig = new String(bytes);
         if (StringUtils.isNotBlank(repoConfig)) {
           return JsonUtil.jsonToObjectList(repoConfig, List.class, RepositoryConfig.class);
         }
-      } catch (IOException e) {
-        log.error("从repo.json读取配置失败！", e);
-        throw e;
+      } else {
+        return DEFAULT_REPOSITORY_CONFIGS;
       }
+    } catch (Exception e) {
+      log.error("获取repo配置文件失败", e);
     }
     throw new RuntimeException("无法读取repo.json配置文件！");
   }
@@ -152,7 +166,12 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
   @Override
   public void afterPropertiesSet() throws Exception {
     DEFAULT_REPOSITORY_CONFIGS.add(new RepositoryConfig(getNameByBean(localPluginReporsitory), new HashMap<>()));
-    DEFAULT_REPOSITORY_CONFIGS.add(new RepositoryConfig(getNameByBean(myDataHarborPluginReporsitory), new HashMap<>()));
+    DEFAULT_REPOSITORY_CONFIGS.add(new RepositoryConfig(getNameByBean(myDataHarborPluginReporsitory), new HashMap<String, Object>() {
+      {
+        put("email", "");
+        put("token", "");
+      }
+    }));
     try {
       List<RepositoryConfig> latestRepoConfig = getLatestRepoConfig();
       reConfig(latestRepoConfig);
@@ -160,6 +179,20 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
       log.error("使用repo.json初始化仓库服务失败，将使用默认仓库配置", e);
       reConfig(DEFAULT_REPOSITORY_CONFIGS);
     }
+    NodeCache nodeCache = new NodeCache(nodeService.getClient(), Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME);
+    nodeCache.getListenable().addListener(new NodeCacheListener() {
+      @Override
+      public void nodeChanged() throws Exception {
+        try {
+          List<RepositoryConfig> latestRepoConfig = getLatestRepoConfig();
+          reConfig(latestRepoConfig);
+        } catch (Exception e) {
+          log.error("使用repo.json初始化仓库服务失败，将使用默认仓库配置", e);
+          reConfig(DEFAULT_REPOSITORY_CONFIGS);
+        }
+      }
+    });
+    nodeCache.start();
   }
 
 
