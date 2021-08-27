@@ -27,6 +27,11 @@ public class PluginGroup {
   private String repoName;
 
   /**
+   * 仓库类型
+   */
+  private String repoType;
+
+  /**
    *
    */
   private List<PluginId> plugins = new ArrayList<>();

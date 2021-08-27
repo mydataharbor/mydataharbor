@@ -17,10 +17,12 @@ import java.util.Map;
  * 官方插件仓库，链条的最后一个节点，相当于maven的中央仓库
  * Created by xulang on 2021/8/26.
  */
-@Repository("MyDataHarbor-Reporsitory")
+@Repository(MyDataHarborPluginRepository.REPO_TYPE)
 public class MyDataHarborPluginRepository implements IPluginRepository {
 
   private static final String MYDATAHARBOR_REPORSITORY_HOST = "https://repo.mydataharbor.com";
+
+  public static final String REPO_TYPE = "MyDataHarbor-Reporsitory";
 
   private String email;
 

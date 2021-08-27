@@ -33,12 +33,16 @@ import java.util.stream.Collectors;
  * Created by xulang on 2021/8/25.
  */
 @Slf4j
-@Repository("LocalFileSystem-Plugin-Reporsitory")
+@Repository(LocalPluginRepository.REPO_TYPE)
 public class LocalPluginRepository extends AbstractPluginRepository implements InitializingBean {
 
   private Map<String, Path> fileMap = new HashMap<>();
 
   private Map<String, PluginGroup> pluginGroupMap = new HashMap<>();
+
+  private Map<String, MyDataHarborPluginDescriptor> myDataHarborPluginDescriptorMap = new HashMap<>();
+
+  public static final String REPO_TYPE = "LocalFileSystem-Plugin-Reporsitory";
 
   @Autowired
   private PluginDescriptorFinder pluginDescriptorFinder;
@@ -92,7 +96,7 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
     if (path == null) {
       return null;
     }
-    MyDataHarborPluginDescriptor pluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptorFinder.find(path);
+    MyDataHarborPluginDescriptor pluginDescriptor = myDataHarborPluginDescriptorMap.get(path.toFile().getPath());
     PluginGroup pluginGroup = pluginGroupMap.get(pluginDescriptor.getPluginGroup());
     if (pluginGroup != null) {
       for (PluginId plugin : pluginGroup.getPlugins()) {
@@ -170,6 +174,7 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
       pluginGroup.setGroupName(pluginGroupName);
       pluginGroup.setImageBase64(pluginDescriptor.getPluginGroupLogo());
       pluginGroup.setRepoName(name());
+      pluginGroup.setRepoType(REPO_TYPE);
       pluginGroupMap.put(pluginDescriptor.getPluginGroup(), pluginGroup);
     }
     List<PluginId> plugins = pluginGroup.getPlugins();
@@ -233,17 +238,46 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
 
     }
 
-    @Override
-    public void onFileCreate(File file) {
-      onFileChange(file);
+    public void waitFileWriteComplete(File file) {
+      long oldLen = 0;
+      long newLen = 0;
+      while (true) {
+        newLen = file.length();
+        if ((newLen - oldLen) > 0) {
+          oldLen = newLen;
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            log.error("线程被打断", e);
+          }
+        } else {
+          break;
+        }
+      }
     }
 
     @Override
-    public void onFileChange(File file) {
+    public void onFileCreate(File file) {
+      log.info("plugin add : {}", file);
+      waitFileWriteComplete(file);
       try {
         MyDataHarborPluginDescriptor pluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptorFinder.find(file.toPath());
         fileMap.put(pluginDescriptor.getPluginId() + pluginDescriptor.getVersion(), file.toPath());
         updatePluginCache(file, pluginDescriptor);
+        myDataHarborPluginDescriptorMap.put(file.getPath(), pluginDescriptor);
+      } catch (Exception e) {
+        log.error("处理文件变更异常", e);
+      }
+    }
+
+    @Override
+    public void onFileChange(File file) {
+      log.info("plugin change : {}", file);
+      try {
+        MyDataHarborPluginDescriptor pluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptorFinder.find(file.toPath());
+        fileMap.put(pluginDescriptor.getPluginId() + pluginDescriptor.getVersion(), file.toPath());
+        updatePluginCache(file, pluginDescriptor);
+        myDataHarborPluginDescriptorMap.put(file.getPath(), pluginDescriptor);
       } catch (Exception e) {
         log.error("处理文件变更异常", e);
       }
@@ -252,8 +286,9 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
 
     @Override
     public void onFileDelete(File file) {
+      log.info("plugin delete : {}", file);
       try {
-        MyDataHarborPluginDescriptor pluginDescriptor = (MyDataHarborPluginDescriptor) pluginDescriptorFinder.find(file.toPath());
+        MyDataHarborPluginDescriptor pluginDescriptor = myDataHarborPluginDescriptorMap.get(file.getPath());
         fileMap.remove(pluginDescriptor.getPluginId() + pluginDescriptor.getVersion());
         PluginGroup pluginGroup = pluginGroupMap.get(pluginDescriptor.getPluginGroup());
         if (pluginGroup != null) {
