@@ -16,7 +16,7 @@
   </modules>
   <packaging>pom</packaging>
   <name>mydataharbor</name>
-  <url>http://www.mydataharbor.com</url>
+  <url>https://www.mydataharbor.com</url>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
   <properties>
     <revision>1.0.4-SNAPSHOT</revision>

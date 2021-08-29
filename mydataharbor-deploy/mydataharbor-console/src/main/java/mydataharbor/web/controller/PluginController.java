@@ -268,9 +268,9 @@ public class PluginController {
   }
 
 
-  @GetMapping("/localPluginList")
+  @GetMapping("/listPlugins")
   @ApiOperation("查询本地插件记录")
-  public List<PluginGroup> listLocalPluginGroup() {
+  public List<PluginGroup> listPlugins() {
     return pluginReporsitory.listPluginGroup();
   }
 
