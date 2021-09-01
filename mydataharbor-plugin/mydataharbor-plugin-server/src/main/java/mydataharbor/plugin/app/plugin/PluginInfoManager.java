@@ -206,7 +206,7 @@ package mydataharbor.plugin.app.plugin;
 
 import com.fasterxml.classmate.*;
 import com.fasterxml.classmate.members.ResolvedConstructor;
-import mydataharbor.IDataSinkCreator;
+import mydataharbor.*;
 import mydataharbor.creator.ClassInfo;
 import mydataharbor.creator.ConstructorAndArgsConfig;
 import mydataharbor.plugin.api.IPluginInfoManager;
@@ -216,6 +216,7 @@ import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.classutil.classresolver.FieldTypeResolver;
 import mydataharbor.classutil.classresolver.TypeInfo;
+import org.jetbrains.annotations.NotNull;
 import org.pf4j.PluginWrapper;
 
 import java.lang.reflect.Modifier;
@@ -335,37 +336,77 @@ public class PluginInfoManager implements IPluginInfoManager {
   private List<ClassInfo> classProcess(Set<Class> clazzes) {
     List<ClassInfo> classInfos = new ArrayList<>();
     for (Class clazz : clazzes) {
-      ResolvedType resolvedType = typeResolver.resolve(clazz);
-      ClassInfo classInfo = new ClassInfo();
-      classInfo.setClazz(clazz.getTypeName());
-      MemberResolver memberResolver = new MemberResolver(typeResolver);
-      AnnotationConfiguration annConfig = new AnnotationConfiguration.StdConfiguration(AnnotationInclusion.INCLUDE_BUT_DONT_INHERIT);
-      ResolvedTypeWithMembers resolvedTypeWithMembers = memberResolver.resolve(resolvedType, annConfig, null);
-      MyDataHarborMarker myDataHarborMarker = (MyDataHarborMarker) clazz.getAnnotation(MyDataHarborMarker.class);
-      if (myDataHarborMarker != null) {
-        classInfo.setTitle(myDataHarborMarker.title());
-      }
-      ResolvedConstructor[] constructors = resolvedTypeWithMembers.getConstructors();
-      List<ConstructorAndArgsConfig> constructorAndArgsConfigs = new ArrayList<>();
-      classInfo.setConstructorAndArgsConfigs(constructorAndArgsConfigs);
-      for (ResolvedConstructor constructor : constructors) {
-        ConstructorAndArgsConfig constructorAndArgsConfig = new ConstructorAndArgsConfig();
-        constructorAndArgsConfig.setConstructorName(constructor.getName());
-        constructorAndArgsConfigs.add(constructorAndArgsConfig);
-        constructorAndArgsConfig.setArgsType(new ArrayList<>());
-        constructorAndArgsConfig.setArgsTypeInfo(new ArrayList<>());
-        int argumentCount = constructor.getArgumentCount();
-        constructorAndArgsConfig.setArgsCount(argumentCount);
-        for (int i = 0; i < argumentCount; i++) {
-          ResolvedType argumentType = constructor.getArgumentType(i);
-          TypeInfo typeInfo = fieldTypeResolver.resolveClass(argumentType);
-          constructorAndArgsConfig.getArgsType().add(argumentType.getTypeName());
-          constructorAndArgsConfig.getArgsTypeInfo().add(typeInfo);
-        }
-      }
+      ClassInfo classInfo = getClassInfo(clazz);
       classInfos.add(classInfo);
     }
     return classInfos;
+  }
+
+  @NotNull
+  private ClassInfo getClassInfo(Class clazz) {
+    ResolvedType resolvedType = typeResolver.resolve(clazz);
+    ClassInfo classInfo = new ClassInfo();
+    classInfo.setClazz(clazz.getTypeName());
+    MemberResolver memberResolver = new MemberResolver(typeResolver);
+    AnnotationConfiguration annConfig = new AnnotationConfiguration.StdConfiguration(AnnotationInclusion.INCLUDE_BUT_DONT_INHERIT);
+    ResolvedTypeWithMembers resolvedTypeWithMembers = memberResolver.resolve(resolvedType, annConfig, null);
+    MyDataHarborMarker myDataHarborMarker = (MyDataHarborMarker) clazz.getAnnotation(MyDataHarborMarker.class);
+    if (myDataHarborMarker != null) {
+      classInfo.setTitle(myDataHarborMarker.title());
+    }
+    ResolvedConstructor[] constructors = resolvedTypeWithMembers.getConstructors();
+    List<ConstructorAndArgsConfig> constructorAndArgsConfigs = new ArrayList<>();
+    classInfo.setConstructorAndArgsConfigs(constructorAndArgsConfigs);
+    for (ResolvedConstructor constructor : constructors) {
+      ConstructorAndArgsConfig constructorAndArgsConfig = new ConstructorAndArgsConfig();
+      constructorAndArgsConfig.setConstructorName(constructor.getName());
+      constructorAndArgsConfigs.add(constructorAndArgsConfig);
+      constructorAndArgsConfig.setArgsType(new ArrayList<>());
+      constructorAndArgsConfig.setArgsTypeInfo(new ArrayList<>());
+      int argumentCount = constructor.getArgumentCount();
+      constructorAndArgsConfig.setArgsCount(argumentCount);
+      for (int i = 0; i < argumentCount; i++) {
+        ResolvedType argumentType = constructor.getArgumentType(i);
+        TypeInfo typeInfo = fieldTypeResolver.resolveClass(argumentType);
+        constructorAndArgsConfig.getArgsType().add(argumentType.getTypeName());
+        constructorAndArgsConfig.getArgsTypeInfo().add(typeInfo);
+      }
+    }
+
+    //再解析
+    if(IDataSource.class.isAssignableFrom(clazz)){
+      Class tClass = IData.getTypeByClass(0, clazz, IDataSource.class);
+      Class sClass = IData.getTypeByClass(1, clazz, IDataSource.class);
+      classInfo.setTClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(tClass)));
+      classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
+    }
+
+    if(IProtocalDataConvertor.class.isAssignableFrom(clazz)){
+      Class tClass = IData.getTypeByClass(0, clazz, IProtocalDataConvertor.class);
+      Class pClass = IData.getTypeByClass(1, clazz, IProtocalDataConvertor.class);
+      Class sClass = IData.getTypeByClass(2, clazz, IProtocalDataConvertor.class);
+      classInfo.setTClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(tClass)));
+      classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
+      classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
+    }
+
+    if(IDataConvertor.class.isAssignableFrom(clazz)){
+      Class pClass = IData.getTypeByClass(0, clazz, IDataConvertor.class);
+      Class rClass = IData.getTypeByClass(1, clazz, IDataConvertor.class);
+      Class sClass = IData.getTypeByClass(2, clazz, IDataConvertor.class);
+      classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
+      classInfo.setRClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(rClass)));
+      classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
+    }
+
+    if(IDataSink.class.isAssignableFrom(clazz)){
+      Class rClass = IData.getTypeByClass(0, clazz, IDataSink.class);
+      Class sClass = IData.getTypeByClass(1, clazz, IDataSink.class);
+      classInfo.setRClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(rClass)));
+      classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
+    }
+
+    return classInfo;
   }
 
 

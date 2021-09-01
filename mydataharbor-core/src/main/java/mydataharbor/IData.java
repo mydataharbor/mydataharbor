@@ -227,4 +227,10 @@ public interface IData {
   }
 
 
+  static Class getTypeByClass(int index, Class clazzToGet, Class clazz){
+    ResolvedType resolvedType = TYPE_RESOLVER.resolve(clazzToGet);
+    List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(clazz);
+    return resolvedTypes.get(index).getErasedType();
+  }
+
 }

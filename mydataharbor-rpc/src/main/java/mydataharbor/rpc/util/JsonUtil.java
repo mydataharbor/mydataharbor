@@ -279,6 +279,10 @@ public class JsonUtil {
         return obj;
     }
 
+    public static ObjectMapper getObjMapper() {
+        return objMapper;
+    }
+
     public static <type> type jsonToObjectHashMap(String json,
                                                   Class<?> keyClass, Class<?> valueClass) {
         type obj = null;

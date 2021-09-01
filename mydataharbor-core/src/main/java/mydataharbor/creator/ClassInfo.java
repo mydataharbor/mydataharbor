@@ -208,6 +208,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import mydataharbor.classutil.classresolver.TypeInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -223,4 +224,12 @@ public class ClassInfo implements Serializable {
   private String title;
 
   private List<ConstructorAndArgsConfig> constructorAndArgsConfigs;
+
+  private TypeInfo tClassInfo;
+
+  private TypeInfo pClassInfo;
+
+  private TypeInfo rClassInfo;
+
+  private TypeInfo sClassInfo;
 }

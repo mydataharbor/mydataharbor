@@ -129,6 +129,8 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
   @Override
   public InputStream doFetchPlugin(String pluginId, String version) throws NoAuthException, IOException {
     Path path = fileMap.get(pluginId + version);
+    if (path == null)
+      throw new IOException("本地没有该插件！");
     return new FileInputStream(path.toFile());
   }
 

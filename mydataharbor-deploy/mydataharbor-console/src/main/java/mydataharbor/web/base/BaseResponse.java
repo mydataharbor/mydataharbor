@@ -216,6 +216,8 @@ public class BaseResponse<T> {
   private T data;
   private String msg;
 
+  public BaseResponse(){}
+
   public BaseResponse(int code, T data, String msg) {
     this.code = code;
     this.data = data;

@@ -78,20 +78,25 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
   @Override
   public InputStream fetchPlugin(String pluginId, String version) throws NoAuthException, IOException {
     try {
-      if (isAuth(pluginId, version)) {
-        return doFetchPlugin(pluginId, version);
-      } else {
+      if (!isAuth(pluginId, version)) {
         AuthResponse authResponse = auth(pluginId, version);
-        if (authResponse.isSuccess()) {
-          log.warn("授权{}@{}，成功！", pluginId, version);
-          return doFetchPlugin(pluginId, version);
-        } else {
+        if (!authResponse.isSuccess()) {
+          log.warn("存储器:{},授权{}@{}，失败，原因：{}！", name(), pluginId, version, authResponse);
           throw new NoAuthException("对存储器" + name() + "尝试授权失败，失败信息:" + authResponse.getMsg());
         }
       }
+      return doFetchPlugin(pluginId, version);
     } catch (NoAuthException | IOException e) {
-      log.error("当前存储器{}获插件{}@{}异常，尝试使用next存储器获取", name(), pluginId, version);
+      log.error("当前存储器:{} 获插件:{}@{} 无法处理该插件下载请求，尝试使用next存储器获取", name(), pluginId, version);
       if (getNext() != null) {
+        log.warn("next存储器为:{}", getNext().name());
+        if (!getNext().isAuth(pluginId, version)) {
+          AuthResponse authResponse = getNext().auth(pluginId, version);
+          if (!authResponse.isSuccess()) {
+            log.warn("存储器:{},授权{}@{}，失败，原因：{}！", getNext().name(), pluginId, version, authResponse);
+            throw new NoAuthException("存储器:" + getNext().name() + ",授权" + pluginId + "@" + version + "，失败，原因：" + authResponse.getMsg() + "！");
+          }
+        }
         return getNext().fetchPlugin(pluginId, version);
       } else {
         log.warn("next存储器为空！");

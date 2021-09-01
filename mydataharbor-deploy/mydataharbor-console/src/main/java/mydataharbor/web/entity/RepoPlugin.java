@@ -27,11 +27,6 @@ public class RepoPlugin extends PluginInfo {
   private boolean authed = true;
 
   /**
-   * 是否需要授权
-   */
-  private boolean needAuth = false;
-
-  /**
    * 授权说明信息,html
    */
   private String otherInfoHtml;

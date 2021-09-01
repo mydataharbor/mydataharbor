@@ -269,7 +269,7 @@ public class PluginController {
 
 
   @GetMapping("/listPlugins")
-  @ApiOperation("查询本地插件记录")
+  @ApiOperation("列出所有的插件")
   public List<PluginGroup> listPlugins() {
     return pluginReporsitory.listPluginGroup();
   }
@@ -279,21 +279,29 @@ public class PluginController {
   @ApiOperation("下载插件")
   public ResponseEntity<InputStreamResource> downloadPlugin(@RequestParam("pluginId") String pluginId, @RequestParam("version") String version)
     throws IOException, NoAuthException {
-    RepoPlugin repoPlugin = pluginReporsitory.query(pluginId, version);
-    if (repoPlugin == null) {
+    try {
+      RepoPlugin repoPlugin = pluginReporsitory.query(pluginId, version);
+      if (repoPlugin == null) {
+        return ResponseEntity.notFound().build();
+      }
+      InputStream inputStream = pluginReporsitory.fetchPlugin(pluginId, version);
+      if(inputStream==null){
+        return ResponseEntity.notFound().build();
+      }
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+      headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", repoPlugin.getFileName()));
+      headers.add("Pragma", "no-cache");
+      headers.add("Expires", "0");
+      return ResponseEntity
+        .ok()
+        .headers(headers)
+        .contentLength(inputStream.available())
+        .contentType(MediaType.parseMediaType("application/octet-stream"))
+        .body(new InputStreamResource(inputStream));
+    }catch (Exception e){
       return ResponseEntity.notFound().build();
     }
-    InputStream inputStream = pluginReporsitory.fetchPlugin(pluginId, version);
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", repoPlugin.getFileName()));
-    headers.add("Pragma", "no-cache");
-    headers.add("Expires", "0");
-    return ResponseEntity
-      .ok()
-      .headers(headers)
-      .contentLength(inputStream.available())
-      .contentType(MediaType.parseMediaType("application/octet-stream"))
-      .body(new InputStreamResource(inputStream));
+
   }
 }
