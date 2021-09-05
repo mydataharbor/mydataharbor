@@ -390,6 +390,13 @@ public class PluginInfoManager implements IPluginInfoManager {
       classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
     }
 
+    if(IProtocalDataChecker.class.isAssignableFrom(clazz)){
+      Class pClass = IData.getTypeByClass(0, clazz, IProtocalDataChecker.class);
+      Class sClass = IData.getTypeByClass(1, clazz, IProtocalDataChecker.class);
+      classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
+      classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
+    }
+
     if(IDataConvertor.class.isAssignableFrom(clazz)){
       Class pClass = IData.getTypeByClass(0, clazz, IDataConvertor.class);
       Class rClass = IData.getTypeByClass(1, clazz, IDataConvertor.class);

@@ -295,7 +295,7 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
     log.info("安装插件:{}:{}", pluginId, version);
     if (StringUtils.isBlank(pluginServer.getPluginServerConfig().getPluginRepository())) {
       log.warn("没有配置repository地址，无法异步下载插件进行安装！");
-      return pluginId;
+      return null;
     }
     PluginWrapper plugin = pluginServer.getPluginManager().getPlugin(pluginId);
     if (plugin != null) {
@@ -314,11 +314,9 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
         if (response.isSuccessful()) {
           log.info("插件{}:{}文件下载成功，准备安装...", pluginId, version);
           byte[] bytes = response.body().bytes();
-          String pluginId2 = loadPluginByRpc(pluginId + "-" + version + "-plugin.jar", bytes);
+          String loadedPluginId = loadPluginByRpc(pluginId + "-" + version + "-plugin.jar", bytes);
           log.info("插件{},版本:{}，安装成功！", pluginId, version);
-          log.info("准备启动插件:{},版本:{}", pluginId, version);
-          startPlugin(pluginId2);
-          log.info("插件启动成功！");
+          return loadedPluginId;
         } else {
           log.error("文件下载失败！{}:{},{}", pluginId, version, response);
         }
@@ -326,7 +324,7 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
         log.error("文件下载失败！pluginID：{}，version：{}", pluginId, version, e);
       }
     }
-    return pluginId;
+    return null;
   }
 
   @Override
