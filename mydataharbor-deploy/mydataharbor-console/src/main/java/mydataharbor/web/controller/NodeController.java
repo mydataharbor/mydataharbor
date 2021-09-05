@@ -273,9 +273,9 @@ public class NodeController {
     if (repoPlugin == null) {
       throw new RuntimeException("找不到该插件！");
     }
-    InputStream inputStream = pluginReporsitory.fetchPlugin(pluginId, version);
-    byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
     if (sync) {
+      InputStream inputStream = pluginReporsitory.fetchPlugin(pluginId, version);
+      byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
       return BaseResponse.success(nodeService.installPluginByRpcUpload(repoPlugin.getFileName(), repoPlugin, bytes, groupName));
     } else {
       return BaseResponse.success(nodeService.installPluginByReporsitory(pluginId, version, repoPlugin, groupName));
