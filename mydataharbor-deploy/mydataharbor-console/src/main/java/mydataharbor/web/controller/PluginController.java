@@ -270,8 +270,8 @@ public class PluginController {
 
   @GetMapping("/listPlugins")
   @ApiOperation("列出所有的插件")
-  public List<PluginGroup> listPlugins() {
-    return pluginReporsitory.listPluginGroup();
+  public BaseResponse<List<PluginGroup>> listPlugins() {
+    return BaseResponse.success(pluginReporsitory.listPluginGroup());
   }
 
 
