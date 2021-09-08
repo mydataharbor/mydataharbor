@@ -1,5 +1,3 @@
-
-<GitHubWrapper>
 <p align="center">
 	<br/>
   <a href="http://www.mydataharbor.com" target="_blank">
@@ -7,7 +5,7 @@
   </a>
 </p>
 
-<TitleInfos />
+
 
 <p align="center" class="print-break">
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
@@ -29,9 +27,7 @@
     <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/pckin3" target="_blank" style="display:inline-block">
       <img src="https://img.shields.io/badge/plugins-清单-blue" alt="插件列表">
     </a>
-   
 </p>
-</GitHubWrapper>
 
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
 
@@ -103,11 +99,11 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 | 中间件/协议        | 数据源（DataSource） | 写入源（Sink）   |作者	|备注	 |
 | ------------- | -------------------- | ---------------- |-----------|----------|
-| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor(1053618636@qq.com)||
-| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor(1053618636@qq.com)||
-| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x<br>✅6.8.x✅6.5.x✅6.6.x<br>✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor(1053618636@qq.com)||
-| http          | 暂不考虑          | ✅                |MyDataHarbor(1053618636@qq.com)||
-| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor(1053618636@qq.com)|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
+| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor||
+| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor|支持连接单机，主从，哨兵，cluster模式的各种redis服务端<br/>目前支持string数据格式的操作<br/>有需要可以联系作者扩展：list、set、zset、hash|
+| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x<br>✅6.8.x✅6.5.x✅6.6.x<br>✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor||
+| http          | 暂不考虑          | ✅                |MyDataHarbor||
+| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
 | MongoDB       | 计划中          | 计划中                |虚位以待	|	|
 | binlog       | 计划中          | ×                |虚位以待			|		|
 
@@ -123,7 +119,7 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 
       mydataharbor-console-xxx-bin.tar.gz
       mydataharbor-server-xxx-bin.tar.gz
-      
+
 > xxx是发行的版本号
 
 ### mydataharbor-console 
@@ -182,9 +178,9 @@ Linux系统下运行 start.sh  关闭stop.sh
  ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
-demo运行实例：http://118.25.5.236:8083/
+demo运行实例：http://mydataharbor.com:8080/
 
-交流社区：https://bbs.mydataharbor.com
+插件市场：https://www.mydataharbor.com/user/info.html
 
 文档(语雀)：http://doc.mydataharbor.com
 
@@ -192,5 +188,3 @@ demo运行实例：http://118.25.5.236:8083/
 
 ![QQ群](./doc/image/qq-discuz.png)
 
-#### 微信群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
-![wchat群](./doc/image/wchat-discuz.png)
