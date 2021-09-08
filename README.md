@@ -189,6 +189,3 @@ demo运行实例：http://118.25.5.236:8083/
 #### QQ群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
 
 ![QQ群](./doc/image/qq-discuz.png)
-
-#### 微信群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
-![wchat群](./doc/image/wchat-discuz.png)
