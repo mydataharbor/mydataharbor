@@ -2,6 +2,7 @@ package mydataharbor.web.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import mydataharbor.exception.DataSinkCommonException;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.web.base.BaseResponse;
 import mydataharbor.web.entity.PluginGroup;
@@ -182,6 +183,7 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
   @Override
   public InputStream fetchPlugin(String pluginId, String version) throws NoAuthException, IOException {
     try {
+
       Response response = httpClient.newCall(createRequest("/repo/fetchPlugin", new FormBody(Arrays.asList("pluginId", "version"), Arrays.asList(pluginId, version)), pluginId, version)).execute();
       if (response.isSuccessful()) {
         return new ByteArrayInputStream(response.body().bytes());
@@ -197,7 +199,7 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
 
   @Override
   public void upload(String fileName, String pluginId, String version, InputStream inputStream) throws IOException {
-    throw new RuntimeException("云仓库无法通过此方式上传插件！");
+    throw new DataSinkCommonException("云仓库无法通过此方式上传插件！");
   }
 
   @Override

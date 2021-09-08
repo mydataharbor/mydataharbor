@@ -30,3 +30,5 @@ repoPlugins/
 dbdata/
 
 .flattened-pom.xml
+
+plugins
