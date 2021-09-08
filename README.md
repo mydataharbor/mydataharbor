@@ -106,6 +106,8 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 | jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
 | MongoDB       | 计划中          | 计划中                |虚位以待	|	|
 | binlog       | 计划中          | ×                |虚位以待			|		|
+| rabbitMQ | 计划中 | 计划中 |虚位以待	|	|
+| RocketMQ | 计划中 | 计划中 |虚位以待	|	|
 
 
 ## 快速开始
