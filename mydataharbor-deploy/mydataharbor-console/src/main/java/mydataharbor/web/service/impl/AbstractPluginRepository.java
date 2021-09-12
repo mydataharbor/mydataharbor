@@ -73,6 +73,7 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
     return null;
   }
 
+
   abstract RepoPlugin doQuery(String pluginId, String pluginVersion);
 
   @Override

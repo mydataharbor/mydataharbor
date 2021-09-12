@@ -1,5 +1,6 @@
 package mydataharbor.web.service.impl;
 
+import com.github.zafarkhaja.semver.Version;
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
 import mydataharbor.web.entity.RepoPlugin;
@@ -18,6 +19,7 @@ import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginDescriptorFinder;
+import org.pf4j.VersionManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -136,9 +138,12 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
 
   @Override
   public void upload(String fileName, String pluginId, String version, InputStream inputStream) throws IOException {
-    RepoPlugin repoPlugin = query(pluginId, version);
+    RepoPlugin repoPlugin = doQuery(pluginId, version);
     if (repoPlugin != null) {
-      throw new RuntimeException("该版本的插件已经存在！");
+      Version semverVersion = Version.valueOf(repoPlugin.getVersion());
+      String preReleaseVersion = semverVersion.getPreReleaseVersion();
+      if (StringUtils.isBlank(preReleaseVersion))
+        throw new RuntimeException("该版本的插件已经存在！");
     }
     File reporsitoryPath = FileUtils.getFile(this.reporsitoryPath);
     if (!reporsitoryPath.exists()) {
