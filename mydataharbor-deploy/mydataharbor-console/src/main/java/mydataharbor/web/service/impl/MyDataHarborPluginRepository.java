@@ -6,6 +6,7 @@ import mydataharbor.exception.DataSinkCommonException;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.web.base.BaseResponse;
 import mydataharbor.web.entity.PluginGroup;
+import mydataharbor.web.entity.PluginId;
 import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
@@ -122,21 +123,18 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
 
   @Override
   public RepoPlugin query(String pluginId, String pluginVersion) {
-    try {
-      Response response = httpClient.newCall(createRequest("/repo/query", new FormBody(Arrays.asList("pluginId", "version"), Arrays.asList(pluginId, pluginVersion)), pluginId, pluginVersion)).execute();
-      if (response.isSuccessful()) {
-        String body = response.body().string();
-        BaseResponse<RepoPlugin> baseResponse = JsonUtil.getObjMapper().readValue(body, new
-          TypeReference<BaseResponse<RepoPlugin>>() {
-          });
-        if (baseResponse.getCode() == 0) {
-          return baseResponse.getData();
-        } else {
-          throw new NoAuthException(baseResponse.getMsg());
+    if (pluginGroups != null) {
+      for (PluginGroup pluginGroup : pluginGroups) {
+        for (PluginId plugin : pluginGroup.getPlugins()) {
+          if (plugin.getPluginId().equals(pluginId)) {
+            for (RepoPlugin repoPlugin : plugin.getRepoPlugins()) {
+              if (repoPlugin.getVersion().equals(pluginVersion)) {
+                return repoPlugin;
+              }
+            }
+          }
         }
       }
-    } catch (Exception e) {
-      log.error("请求插件仓库失败！", e);
     }
     return null;
   }
