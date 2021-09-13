@@ -89,7 +89,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 - mydataharbor-console
 
-  该应用是一个springboot应用，内部实现了对整个集群的管理，插件仓库服务/管理，可视化任务管理。该应用内部默认使用了H2数据库记录插件仓库信息，所以只能单机部署，如果后面有需要的话可以把插件仓库服务独立部署，或者使用mysql等独立的数据库服务器。
+  该应用是一个springboot应用，内部实现了对整个集群的管理，插件仓库服务/管理，可视化任务管理。
 
 - mydataharbor-server
 
