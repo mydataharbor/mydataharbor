@@ -384,6 +384,12 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       return;
     }
     rollbackUnit = new ConcurrentHashMap<>();
+    log.info("原始数据源数据：{}", tRecordsIterable);
+    if (tRecordsIterable instanceof Collection) {
+      taskmonitor.addAndGettRecordCount((long) ((Collection) tRecordsIterable).size());
+    } else {
+      tRecordsIterable.forEach((record) -> taskmonitor.addAndGettRecordCount(1L));
+    }
     Stream<T> stream = StreamSupport.stream(tRecordsIterable.spliterator(), settingContext.isParallel());
     //开启了并行，并且制定了线程数
     if (settingContext.isParallel() && settingContext.getThreadNum() != 0) {
@@ -398,12 +404,6 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
       }
     } else {
       forEach(stream, dataProvider, protocalDataConvertor, checker, dataConvertor, writer, protocalConventSuccess, protocalConventError, checkerSuccess, checkerError, dataConventSuccess, dataConventError, writeSuccess, writeError, tRecordConventSucces);
-    }
-    log.info("原始数据源数据：{}", tRecordsIterable);
-    if (tRecordsIterable instanceof Collection) {
-      taskmonitor.addAndGettRecordCount((long) ((Collection) tRecordsIterable).size());
-    } else {
-      tRecordsIterable.forEach((record) -> taskmonitor.addAndGettRecordCount(1L));
     }
     //日志记录
     log.info("协议转换通过记录:{}", protocalConventSuccess);
@@ -522,7 +522,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocalData, R, S exte
         return;
       }
     } else {
-      log.info("checker没有配置");
+      log.debug("checker没有配置");
       checkerSuccess.add(protocalData);
     }
     //数据转换
