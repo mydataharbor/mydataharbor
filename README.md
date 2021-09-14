@@ -83,17 +83,11 @@ MyDataHarbor在这种场景需求下应用而生！
 
    对于DataSource无法多线程并发拉取的情况下（如jdbc游标取数据），内部引入forkjoin并发处理模型开启多线程处理，并且灵活的事务控制，让速度飞快的同时保证数据迁移的稳定、不丢失，汽车变高铁。
 
-## 宏观设计
+## 设计
 
 MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataharbor-console、mydataharbor-server
-
-- mydataharbor-console
-
-  该应用是一个springboot应用，内部实现了对整个集群的管理，插件仓库服务/管理，可视化任务管理。
-
-- mydataharbor-server
-
-  该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
+   ![集群设计](./doc/image/cluster-design.png)
+   ![节点任务设计](./doc/image/node-design.png)
 
 ## 支持的插件
 
