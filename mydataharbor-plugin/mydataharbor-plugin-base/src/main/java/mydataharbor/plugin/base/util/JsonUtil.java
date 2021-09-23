@@ -256,6 +256,24 @@ public class JsonUtil {
     }
 
     public static <type> type jsonToObject(String json, Class<type> cls) {
+        if (cls.equals(String.class)) {
+            return cls.cast(json);
+        } else if (cls.equals(Byte.class))
+            return cls.cast(Byte.valueOf(json));
+        else if (cls.equals(Short.class))
+            return cls.cast(Short.valueOf(json));
+        else if (cls.equals(Integer.class))
+            return cls.cast(Integer.valueOf(json));
+        else if (cls.equals(Long.class))
+            return cls.cast(Long.valueOf(json));
+        else if (cls.equals(Float.class))
+            return cls.cast(Float.valueOf(json));
+        else if (cls.equals(Double.class))
+            return cls.cast(Double.valueOf(json));
+        else if (cls.equals(Boolean.class))
+            return cls.cast(Boolean.valueOf(json));
+        else if (cls.equals(Character.class))
+            return cls.cast(json.toCharArray()[0]);
         type obj = null;
         JavaType javaType = objMapper.getTypeFactory().constructType(cls);
         try {

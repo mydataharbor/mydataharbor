@@ -226,6 +226,7 @@ import java.util.stream.Collectors;
  **/
 public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreator<CommonPiplineCreatorConfig, BaseSettingContext> {
 
+
   @Override
   public IDataPipline createPipline(CommonPiplineCreatorConfig config, BaseSettingContext settingContext) throws Exception {
     IDataSource dataSource = createInstanc(config.getDataSourceConstructorAndArgs(), IDataSource.class);
@@ -245,6 +246,10 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
       Class<? extends BaseSettingContext> settingContextClazz = (Class<? extends BaseSettingContext>) Class.forName(config.getSettingContextClazz());
       settingContext = parseJson(config.getSettingContextJsonValue(), settingContextClazz);
     }
+    return buildPipeline(settingContext, dataSource, protocalDataConvertor, dataConvertor, dataSink, checker);
+  }
+
+  public IDataPipline buildPipeline(BaseSettingContext settingContext, IDataSource dataSource, IProtocalDataConvertor protocalDataConvertor, IDataConvertor dataConvertor, IDataSink dataSink, AbstractDataChecker checker) {
     return CommonDataPipline.builder()
       .dataSource(dataSource)
       .protocalDataConvertor(protocalDataConvertor)

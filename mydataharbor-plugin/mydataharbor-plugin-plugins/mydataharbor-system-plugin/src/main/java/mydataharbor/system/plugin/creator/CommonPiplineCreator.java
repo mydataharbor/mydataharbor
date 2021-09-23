@@ -204,10 +204,13 @@
 
 package mydataharbor.system.plugin.creator;
 
+import mydataharbor.*;
 import mydataharbor.creator.AbstractCommonDataPiplineCreator;
 import mydataharbor.creator.ConstructorAndArgs;
 import mydataharbor.exception.InstanceCreateException;
 import mydataharbor.plugin.base.util.JsonUtil;
+import mydataharbor.setting.BaseSettingContext;
+import mydataharbor.system.plugin.GroovyDataConvert;
 import mydataharbor.system.plugin.SystemPlugin;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import org.pf4j.Extension;
@@ -232,6 +235,15 @@ public class CommonPiplineCreator extends AbstractCommonDataPiplineCreator imple
 
   public CommonPiplineCreator() {
     this.reflections = new Reflections("mydataharbor");
+  }
+
+  @Override
+  public IDataPipline buildPipeline(BaseSettingContext settingContext, IDataSource dataSource, IProtocalDataConvertor protocalDataConvertor, IDataConvertor dataConvertor, IDataSink dataSink, AbstractDataChecker checker) {
+    if(dataConvertor instanceof GroovyDataConvert){
+      GroovyDataConvert groovyDataConvert = (GroovyDataConvert) dataConvertor;
+      groovyDataConvert.initClass((Class) dataSink.getRType());
+    }
+    return super.buildPipeline(settingContext, dataSource, protocalDataConvertor, dataConvertor, dataSink, checker);
   }
 
   @Override
