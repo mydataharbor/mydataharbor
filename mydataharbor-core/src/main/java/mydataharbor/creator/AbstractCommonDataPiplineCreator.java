@@ -229,15 +229,15 @@ public abstract class AbstractCommonDataPiplineCreator implements IDataSinkCreat
 
   @Override
   public IDataPipline createPipline(CommonPiplineCreatorConfig config, BaseSettingContext settingContext) throws Exception {
-    IDataSource dataSource = createInstanc(config.getDataSourceConstructorAndArgs(), IDataSource.class);
-    IProtocalDataConvertor protocalDataConvertor = createInstanc(config.getProtocalDataConvertorConstructorAndArgs(), IProtocalDataConvertor.class);
-    IDataConvertor dataConvertor = createInstanc(config.getDataConvertorConstructorAndArgs(), IDataConvertor.class);
-    IDataSink dataSink = createInstanc(config.getDataSinkConstructorAndArgs(), IDataSink.class);
+    IDataSource dataSource = createInstanc(config.getDataSource(), IDataSource.class);
+    IProtocalDataConvertor protocalDataConvertor = createInstanc(config.getProtocalDataConvertor(), IProtocalDataConvertor.class);
+    IDataConvertor dataConvertor = createInstanc(config.getDataConvertor(), IDataConvertor.class);
+    IDataSink dataSink = createInstanc(config.getDataSink(), IDataSink.class);
     AbstractDataChecker checker = null;
-    if (config.getDataCheckerConstructorAndArgs() != null) {
+    if (config.getDataCheckers() != null) {
       //创建责任链模式的checker
-      for (int i = config.getDataCheckerConstructorAndArgs().size() - 1; i >= 0; i--) {
-        AbstractDataChecker tmpChecker = createInstanc(config.getDataCheckerConstructorAndArgs().get(i), AbstractDataChecker.class);
+      for (int i = config.getDataCheckers().size() - 1; i >= 0; i--) {
+        AbstractDataChecker tmpChecker = createInstanc(config.getDataCheckers().get(i), AbstractDataChecker.class);
         tmpChecker.setNext(checker);
         checker = tmpChecker;
       }

@@ -206,6 +206,8 @@ package mydataharbor.plugin.api.task;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -255,6 +257,11 @@ public class Task {
    * setting的配置
    */
   private String settingJsonConfig;
+
+  /**
+   * 业务自定义标签
+   */
+  private Map<String,String> tags  = new HashMap<>();
 
 
   @Override

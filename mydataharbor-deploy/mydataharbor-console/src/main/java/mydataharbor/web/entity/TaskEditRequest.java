@@ -231,4 +231,10 @@ public class TaskEditRequest {
    * pipline条数
    */
   private Integer totalNumberOfPipline;
+
+  /**
+   * 任务名称
+   */
+  private String taskName;
+
 }

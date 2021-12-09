@@ -270,15 +270,15 @@ public class TaskExecutorMonitor implements TaskExecutorMonitorMBean {
     return TASKMONITOR_CACHE.get(executorId);
   }
 
-  public TaskExecutorMonitor(String taskId, String executorId, Map<String, String> otherInfo) {
+  public TaskExecutorMonitor(String taskId, String executorId, Map<String, String> tags) {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     try {
       Hashtable property = new Hashtable();
       property.put("ametric", "task-counter");
       property.put("executorId", executorId);
       property.put("taskId", taskId);
-      if (otherInfo != null)
-        property.putAll(otherInfo);
+      if (tags != null)
+        property.putAll(tags);
       ObjectName mbeanName = new ObjectName("mydataharbor", property);
       boolean isMBeanRegistered = server.isRegistered(mbeanName);
       if (isMBeanRegistered) {
