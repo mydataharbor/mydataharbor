@@ -43,11 +43,6 @@
       <artifactId>groovy</artifactId>
       <version>3.0.7</version>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>groupName
-      <artifactId>groovy-jsr223</artifactId>
-      <version>3.0.7</version>
-    </dependency>
   </dependencies>
 
 </project>
