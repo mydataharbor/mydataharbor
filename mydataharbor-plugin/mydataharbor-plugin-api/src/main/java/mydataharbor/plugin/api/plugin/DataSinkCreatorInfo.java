@@ -247,7 +247,7 @@ public class DataSinkCreatorInfo implements Serializable {
 
   private List<ClassInfo> dataSinkClassInfo;
 
-  private List<ClassInfo> settingClassInfo;
+  private TypeInfo settingClassInfo;
 
 
 }

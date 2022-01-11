@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,13 +32,15 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
   }
 
   @Override
-  public List<PluginGroup> listPluginGroup() {
+  public Map<String, List<PluginGroup>> listPluginGroup() {
+    Map<String,List<PluginGroup>> plugins = new HashMap<>();
     List<PluginGroup> pluginGroups = doListPluginGroup();
     pluginGroups = pluginGroups == null ? new ArrayList<>() : pluginGroups;
+    plugins.put(name(),pluginGroups);
     if (getNext() != null) {
-      pluginGroups.addAll(getNext().listPluginGroup());
+      plugins.putAll(getNext().listPluginGroup());
     }
-    return pluginGroups;
+    return plugins;
   }
 
   /**

@@ -143,7 +143,7 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
       Version semverVersion = Version.valueOf(repoPlugin.getVersion());
       String preReleaseVersion = semverVersion.getPreReleaseVersion();
       if (StringUtils.isBlank(preReleaseVersion))
-        throw new RuntimeException("该版本的插件已经存在！");
+        throw new RuntimeException("版本号不符合规范");
     }
     File reporsitoryPath = FileUtils.getFile(this.reporsitoryPath);
     if (!reporsitoryPath.exists()) {

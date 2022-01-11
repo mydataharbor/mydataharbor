@@ -267,11 +267,17 @@ public class PluginController {
     }
   }
 
-
   @GetMapping("/listPlugins")
   @ApiOperation("列出所有的插件")
-  public BaseResponse<List<PluginGroup>> listPlugins() {
+  public BaseResponse<Map<String, List<PluginGroup>>> listPlugins() {
     return BaseResponse.success(pluginReporsitory.listPluginGroup());
+  }
+
+  @GetMapping("/downloadPluginToLocal")
+  @ApiOperation("下载插件到本地")
+  public BaseResponse<Boolean> downloadPluginToLocal(@RequestParam("pluginId") String pluginId, @RequestParam("version") String version, @RequestParam("repoType") String repoType) {
+    pluginReporsitory.downloadPluginToLocal(pluginId, version, repoType);
+    return BaseResponse.success(true);
   }
 
 
@@ -285,7 +291,7 @@ public class PluginController {
         return ResponseEntity.notFound().build();
       }
       InputStream inputStream = pluginReporsitory.fetchPlugin(pluginId, version);
-      if(inputStream==null){
+      if (inputStream == null) {
         return ResponseEntity.notFound().build();
       }
       HttpHeaders headers = new HttpHeaders();
@@ -299,7 +305,7 @@ public class PluginController {
         .contentLength(inputStream.available())
         .contentType(MediaType.parseMediaType("application/octet-stream"))
         .body(new InputStreamResource(inputStream));
-    }catch (Exception e){
+    } catch (Exception e) {
       return ResponseEntity.notFound().build();
     }
 

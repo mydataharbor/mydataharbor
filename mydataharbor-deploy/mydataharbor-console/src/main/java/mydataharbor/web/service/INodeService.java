@@ -240,6 +240,13 @@ public interface INodeService {
    */
   void groupTouch(String groupName, IGroupChangeAction groupChangeAction);
 
+  /**
+   * 删除group
+   *
+   * @param groupName
+   */
+  void deleteGroup(String groupName);
+
 
   /**
    * 通过组名称获得插件详细信息，会触发对node的调用

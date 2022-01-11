@@ -28,7 +28,7 @@ public interface IPluginRepository {
    *
    * @return
    */
-  List<PluginGroup> listPluginGroup();
+  Map<String, List<PluginGroup>> listPluginGroup();
 
   /**
    * 是否存在
@@ -89,4 +89,13 @@ public interface IPluginRepository {
    * @param config
    */
   void config(Map<String, Object> config);
+
+
+  /**
+   * 下载到本地
+   * @param repoPlugin
+   */
+  default void downloadToLocal(RepoPlugin repoPlugin) {
+  }
+
 }

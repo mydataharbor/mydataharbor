@@ -223,6 +223,8 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.TreeCache;
+import org.apache.curator.framework.recipes.locks.InterProcessLock;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
@@ -298,6 +300,26 @@ public class NodeService implements INodeService, InitializingBean {
       }
     } catch (Exception e) {
       throw new RuntimeException("zk操作失败！", e);
+    }
+  }
+
+  @Override
+  public void deleteGroup(String groupName) {
+    GroupInfo groupInfo = groupInfoCache.get(groupName);
+    if (groupInfo != null && (!groupInfo.getTasks().isEmpty() || !groupInfo.getNodeInfos().isEmpty())) {
+      throw new RuntimeException("该分组还有任务没有删除，或者还有节点还在运行，请检查");
+    }
+    //查询group信息
+    String groupLockPath = Constant.LOCK_PATH + Constant.NODE_NAME + "_" + groupName;
+    InterProcessLock lock = new InterProcessMutex(client, groupLockPath);
+    try {
+      lock.acquire();
+      //删除
+      String groupPath = Constant.NODE_PREFIX + "/" + Constant.NODE_NAME + "/" + groupName;
+      client.delete().forPath(groupPath);
+      lock.release();
+    } catch (Exception e) {
+      throw new RuntimeException("删除group：" + groupName + "失败：" + e.getMessage(), e);
     }
   }
 

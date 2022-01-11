@@ -1,7 +1,9 @@
 package mydataharbor.web.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import mydataharbor.constant.Constant;
 import mydataharbor.exception.DataSinkCommonException;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.web.base.BaseResponse;
@@ -12,7 +14,7 @@ import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.IPluginRepository;
 import okhttp3.*;
-import org.springframework.beans.factory.InitializingBean;
+import org.apache.commons.io.FileUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +22,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.*;
@@ -95,8 +95,8 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
   }
 
   @Override
-  public List<PluginGroup> listPluginGroup() {
-    return pluginGroups;
+  public Map<String, List<PluginGroup>> listPluginGroup() {
+    return ImmutableMap.of(name(), pluginGroups);
   }
 
 
@@ -212,4 +212,52 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
     scheduleFetchPluginGroups();
   }
 
+  @Override
+  public void downloadToLocal(RepoPlugin repoPlugin) {
+
+    boolean auth = isAuth(repoPlugin.getPluginId(), repoPlugin.getVersion());
+    if (!auth) {
+      AuthResponse authResponse = auth(repoPlugin.getPluginId(), repoPlugin.getVersion());
+      if (!authResponse.isSuccess()) {
+        throw new RuntimeException("授权失败：" + authResponse.getMsg());
+      }
+    }
+    try {
+      InputStream inputStream = fetchPlugin(repoPlugin.getPluginId(), repoPlugin.getVersion());
+      File reporsitoryPath = FileUtils.getFile(Constant.PLUGIN_PATH);
+      if (!reporsitoryPath.exists()) {
+        reporsitoryPath.mkdirs();
+      }
+      File pluginFile = new File(reporsitoryPath, repoPlugin.getFileName());
+      if (pluginFile.exists()) {
+        pluginFile.delete();
+      }
+      try {
+        pluginFile.createNewFile();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        FileOutputStream fileOutputStream = new FileOutputStream(pluginFile);
+        try {
+          byte[] buffer = new byte[1024];
+          int read = 0;
+          while ((read = inputStream.read(buffer)) > 0) {
+            fileOutputStream.write(buffer, 0, read);
+          }
+        } finally {
+          fileOutputStream.close();
+          inputStream.close();
+        }
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+
+    } catch (Exception e) {
+      throw new RuntimeException("获取插件失败:" + e.getMessage());
+    }
+
+
+  }
 }

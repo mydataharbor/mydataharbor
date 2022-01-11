@@ -305,8 +305,12 @@ public class PluginInfoManager implements IPluginInfoManager {
     ResolvedType resolvedType = typeResolver.resolve(dataSinkCreator.getClass());
     List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataSinkCreator.class);
     ResolvedType configResolveType = resolvedTypes.get(0);
+    ResolvedType settingResolveType = resolvedTypes.get(1);
     TypeInfo configClassInfo = fieldTypeResolver.resolveClass(configResolveType);
+    TypeInfo settingClassInfo = fieldTypeResolver.resolveClass(settingResolveType);
     dataSinkCreatorInfo.setConfigClassInfo(configClassInfo);
+    dataSinkCreatorInfo.setSettingClassInfo(settingClassInfo);
+
     Set<Class> availableDataSource = dataSinkCreator.availableDataSource();
     List<ClassInfo> dataSourceClassInfo = classProcess(availableDataSource);
     dataSinkCreatorInfo.setDataSourceClassInfo(dataSourceClassInfo);
@@ -327,9 +331,6 @@ public class PluginInfoManager implements IPluginInfoManager {
     List<ClassInfo> dataSinkClassInfo = classProcess(availableDataSink);
     dataSinkCreatorInfo.setDataSinkClassInfo(dataSinkClassInfo);
 
-    Set<Class> avaliableSettingContext = dataSinkCreator.avaliableSettingContext();
-    List<ClassInfo> settingContextClassInfo = classProcess(avaliableSettingContext);
-    dataSinkCreatorInfo.setSettingClassInfo(settingContextClassInfo);
     return dataSinkCreatorInfo;
   }
 

@@ -89,7 +89,7 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
   }
 
   @Override
-  public List<PluginGroup> listPluginGroup() {
+  public Map<String, List<PluginGroup>> listPluginGroup() {
     return pluginReporsitory.listPluginGroup();
   }
 
@@ -193,6 +193,18 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
     nodeCache.start();
   }
 
+
+  public void downloadPluginToLocal(String pluginId, String version, String repoType) {
+    IPluginRepository pluginRepository = pluginReporsitoryMap.get(repoType);
+    if (pluginRepository == null) {
+      throw new RuntimeException("没有这个插件仓库类型:" + repoType);
+    }
+    RepoPlugin repoPlugin = pluginRepository.query(pluginId, version);
+    if (repoPlugin == null) {
+      throw new RuntimeException("改插件仓库没有这个插件或者这个版本的插件");
+    }
+    pluginRepository.downloadToLocal(repoPlugin);
+  }
 
   /**
    * 仓库配置

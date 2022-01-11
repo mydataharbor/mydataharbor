@@ -28,11 +28,16 @@ public class GroovyDataConvert implements IDataConvertor<IProtocalData, Object, 
 
   private static ThreadLocal<ScriptEngine> scriptEngineThreadLocal = new ThreadLocal<>();
 
-  private static ScriptEngine getScriptEngine() {
+  private static ScriptEngine getScriptEngine(String script) {
     ScriptEngine scriptEngine = scriptEngineThreadLocal.get();
     if (scriptEngine == null) {
       scriptEngine = factory.getEngineByName("groovy");
       scriptEngineThreadLocal.set(scriptEngine);
+      try {
+        scriptEngine.eval(script);
+      } catch (javax.script.ScriptException e) {
+        throw new ScriptException("初始化groovy脚本发生异常！", e);
+      }
     }
     return scriptEngine;
   }
@@ -52,9 +57,8 @@ public class GroovyDataConvert implements IDataConvertor<IProtocalData, Object, 
     }
     JSONObject input = (JSONObject) JSON.toJSON(record);
     JSONObject output = new JSONObject();
-    ScriptEngine scriptEngine = getScriptEngine();
+    ScriptEngine scriptEngine = getScriptEngine(script);
     try {
-      scriptEngine.eval(script);
       Invocable inv = (Invocable) scriptEngine;
       inv.invokeFunction("dataConvert", input, output);
     } catch (javax.script.ScriptException | NoSuchMethodException e) {

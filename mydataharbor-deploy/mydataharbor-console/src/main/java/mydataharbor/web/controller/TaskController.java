@@ -216,7 +216,9 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @auth xulang
@@ -248,6 +250,20 @@ public class TaskController {
   }
 
 
+  @PostMapping("listTaskByGroup")
+  @ApiOperation("依据分组列出集群任务")
+  @ResponseBody
+  public BaseResponse<Map<String, DistributedTask>> listTask(@ApiParam("taskId") @RequestParam("groupName") String groupName) {
+    Map<String, DistributedTask> taskMap = taskService.listTasks();
+    Map<String, DistributedTask> result = new HashMap<>();
+    for (Map.Entry<String, DistributedTask> taskEntry : taskMap.entrySet()) {
+      if (Objects.equals(taskEntry.getValue().getGroupName(), groupName)) {
+        result.put(taskEntry.getKey(), taskEntry.getValue());
+      }
+    }
+    return BaseResponse.success(result);
+  }
+
   @PostMapping("listTask")
   @ApiOperation("列出集群任务")
   @ResponseBody
@@ -260,5 +276,12 @@ public class TaskController {
   @ResponseBody
   public BaseResponse<Boolean> editTask(@ApiParam("修改请求参数") @RequestBody TaskEditRequest taskEditRequest) {
     return BaseResponse.success(taskService.editTask(taskEditRequest));
+  }
+
+  @PostMapping("deleteTask")
+  @ApiOperation("删除任务")
+  @ResponseBody
+  public BaseResponse<Boolean> deleteTask(@ApiParam("taskId") @RequestParam("taskId") String taskId) {
+    return BaseResponse.success(taskService.deleteTask(taskId));
   }
 }

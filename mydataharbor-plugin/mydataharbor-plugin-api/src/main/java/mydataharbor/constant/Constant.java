@@ -231,4 +231,6 @@ public class Constant {
   public static final String NODE_GROUP_PATH = Constant.NODE_PREFIX + "/" + Constant.NODE_NAME + "/";
 
   public static final String PLUGIN_REPOSITORY_CONFIG_FILE_NAME = "repo.json";
+
+  public static final String LOCK_PATH = Constant.NODE_PREFIX + "/" + "lock" + "/";
 }

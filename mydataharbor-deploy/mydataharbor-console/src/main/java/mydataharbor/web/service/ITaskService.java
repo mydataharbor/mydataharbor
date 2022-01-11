@@ -247,4 +247,10 @@ public interface ITaskService {
    * @return
    */
   Boolean editTask(TaskEditRequest taskEditRequest);
+
+  /**
+   * 删除任务
+   * @return
+   */
+  Boolean deleteTask(String taskId);
 }

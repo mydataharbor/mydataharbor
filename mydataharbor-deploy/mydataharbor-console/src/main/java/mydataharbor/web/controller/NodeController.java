@@ -249,6 +249,13 @@ public class NodeController {
     return BaseResponse.success(true);
   }
 
+  @ApiOperation("删除group")
+  @GetMapping("deleteGroup")
+  public BaseResponse<Boolean> deleteGroup(@RequestParam("groupName") String groupName) {
+    nodeService.deleteGroup(groupName);
+    return BaseResponse.success(true);
+  }
+
   /**
    * @return
    */
