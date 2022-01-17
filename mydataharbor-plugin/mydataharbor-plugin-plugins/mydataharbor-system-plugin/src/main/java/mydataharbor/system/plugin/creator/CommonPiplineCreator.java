@@ -248,11 +248,13 @@ public class CommonPiplineCreator extends AbstractCommonDataPiplineCreator imple
 
   @Override
   public <T> T createInstanc(ConstructorAndArgs constructorAndArgs, Class<T> targetClazz) throws InstanceCreateException {
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       ClassLoader pluginClassLoader = SystemPlugin.getPluginManager().getPluginClassLoader(constructorAndArgs.getPluginId());
       if(pluginClassLoader==null){
         throw new InstanceCreateException("目标分组，没有安装该插件:"+constructorAndArgs.getPluginId());
       }
+      Thread.currentThread().setContextClassLoader(pluginClassLoader);
       Class<? extends T> clazz = (Class<? extends T>) Class.forName(constructorAndArgs.getClazz(), true, pluginClassLoader);
       List<String> argsTypeStrList = constructorAndArgs.getArgsType();
       List<Class<?>> argsType = new ArrayList<>();
@@ -267,6 +269,8 @@ public class CommonPiplineCreator extends AbstractCommonDataPiplineCreator imple
       return constructor.newInstance(argsValue.toArray());
     } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new InstanceCreateException("创建实例失败！", e);
+    } finally {
+      Thread.currentThread().setContextClassLoader(contextClassLoader);
     }
   }
 

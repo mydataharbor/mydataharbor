@@ -20,6 +20,7 @@
     <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.class>mydataharbor.system.plugin.SystemPlugin</plugin.class>
     <plugin.provider>xulang</plugin.provider>
+    <plugin.version>1.1.1</plugin.version>
     <plugin.dependencies/>
   </properties>
 
@@ -40,8 +41,9 @@
     <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
+      <artifactId>groovy-all</artifactId>
       <version>3.0.7</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
 

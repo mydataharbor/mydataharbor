@@ -29,7 +29,7 @@ public class Jdbc2JdbcInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc
 
   @Override
   public String type() {
-    return "mysql test管道创建器";
+    return "mysql到mysql测试";
   }
 
   @Override

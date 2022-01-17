@@ -18,7 +18,7 @@
   <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.provider>xulang</plugin.provider>
-    <plugin.version>1.0.8</plugin.version>
+    <plugin.version>1.0.9</plugin.version>
     <plugin.dependencies>jdbc-mysql-5.1.x-plugin</plugin.dependencies>
   </properties>
 

@@ -22,7 +22,7 @@ public class TestPiplineCreator extends AbstractAutoScanPiplineCreator<TestPipli
 
   @Override
   public String type() {
-    return "test管道创建器";
+    return "随机产生数据到丢弃写入器";
   }
 
   @Override

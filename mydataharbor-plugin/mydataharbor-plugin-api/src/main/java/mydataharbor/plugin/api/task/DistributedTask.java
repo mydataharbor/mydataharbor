@@ -239,6 +239,16 @@ public class DistributedTask extends Task {
    */
   private TaskAssignedInfo taskAssignedInfo;
 
+  /**
+   * 创建时间
+   */
+  private long createTime = System.currentTimeMillis();
+
+  /**
+   * 修改时间
+   */
+  private long lastUpdateTime = System.currentTimeMillis();
+
   public String generateTaskId() {
     String taskId = Constant.TASK_PATH + "-" + getGroupName() + "-" + RandomStringUtil.generateRandomStr(10);
     return taskId;

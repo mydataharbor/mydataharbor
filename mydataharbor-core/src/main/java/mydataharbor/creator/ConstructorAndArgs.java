@@ -208,6 +208,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 
 import java.util.List;
 
@@ -215,9 +216,18 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@MyDataHarborMarker(title = "构造器信息")
 public class ConstructorAndArgs {
+
+  @MyDataHarborMarker(title = "插件ID")
   private String pluginId;
+
+  @MyDataHarborMarker(title = "类全路径")
   private String clazz;
+
+  @MyDataHarborMarker(title = "类型列表")
   private List<String> argsType;
+
+  @MyDataHarborMarker(title = "json值列表")
   private List<String> argsJsonValue;
 }

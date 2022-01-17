@@ -36,7 +36,7 @@ public class GroovyDataConvert implements IDataConvertor<IProtocalData, Object, 
       try {
         scriptEngine.eval(script);
       } catch (javax.script.ScriptException e) {
-        throw new ScriptException("初始化groovy脚本发生异常！", e);
+        throw new ScriptException("初始化groovy脚本发生异常:" + e.getMessage(), e);
       }
     }
     return scriptEngine;
@@ -62,9 +62,12 @@ public class GroovyDataConvert implements IDataConvertor<IProtocalData, Object, 
       Invocable inv = (Invocable) scriptEngine;
       inv.invokeFunction("dataConvert", input, output);
     } catch (javax.script.ScriptException | NoSuchMethodException e) {
-      throw new ScriptException("执行groovy脚本发生异常！", e);
+      throw new ScriptException("执行groovy脚本发生异常:" + e.getMessage(), e);
     }
     return output.toJavaObject(rClass);
   }
 
+  public Class getrClass() {
+    return rClass;
+  }
 }
