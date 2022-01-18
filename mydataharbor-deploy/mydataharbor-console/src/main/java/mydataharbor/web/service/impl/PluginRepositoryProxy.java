@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 插件存储库，代理
@@ -56,7 +57,7 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
 
   }
 
-  private List<RepositoryConfig> getLatestRepoConfig() throws IOException {
+  public List<RepositoryConfig> getLatestRepoConfig() throws IOException {
     String path = Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME;
     try {
       Stat stat = nodeService.getClient().checkExists().forPath(path);
@@ -193,7 +194,6 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
     nodeCache.start();
   }
 
-
   public void downloadPluginToLocal(String pluginId, String version, String repoType) {
     IPluginRepository pluginRepository = pluginReporsitoryMap.get(repoType);
     if (pluginRepository == null) {
@@ -204,6 +204,20 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
       throw new RuntimeException("改插件仓库没有这个插件或者这个版本的插件");
     }
     pluginRepository.downloadToLocal(repoPlugin);
+  }
+
+  public Boolean configPluginRepo(RepositoryConfig repositoryConfig) throws Exception {
+    List<RepositoryConfig> newRepositoryConfigs = new ArrayList<>();
+    List<RepositoryConfig> repositoryConfigs = getLatestRepoConfig();
+    for (RepositoryConfig config : repositoryConfigs) {
+      if(config.repoName.equals(repositoryConfig.repoName)){
+        newRepositoryConfigs.add(repositoryConfig);
+      }else {
+        newRepositoryConfigs.add(config);
+      }
+    }
+    nodeService.getClient().setData().forPath(Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME,JsonUtil.serialize(newRepositoryConfigs));
+    return true;
   }
 
   /**

@@ -234,7 +234,7 @@ public class BeanConfiguration {
     return new ApiInfoBuilder()
       .title("数据港口接口文档")
       .description("更多请咨询服务开发者")
-      .contact(new Contact("徐浪", "www.mydataharbor.com", "1053618636@qq.com"))
+      .contact(new Contact("mydataharbor", "https://www.mydataharbor.com", "1053618636@qq.com"))
       .version("1.0")
       .build();
   }

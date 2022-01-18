@@ -234,6 +234,7 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginManager;
+import org.pf4j.util.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;

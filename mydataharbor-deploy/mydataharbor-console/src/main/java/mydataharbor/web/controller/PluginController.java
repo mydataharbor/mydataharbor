@@ -310,4 +310,28 @@ public class PluginController {
     }
 
   }
+
+  @GetMapping("queryPluginRepoConfig")
+  @ApiOperation("查询插件仓库配置")
+  public BaseResponse<Map<String, PluginRepositoryProxy.RepositoryConfig>> queryPluginRepoConfig() throws IOException {
+    Map<String, PluginRepositoryProxy.RepositoryConfig> repositoryConfigMap = new HashMap<>();
+    List<PluginRepositoryProxy.RepositoryConfig> repoConfig = pluginReporsitory.getLatestRepoConfig();
+    for (PluginRepositoryProxy.RepositoryConfig repositoryConfig : repoConfig) {
+      repositoryConfigMap.put(repositoryConfig.getRepoName(), repositoryConfig);
+    }
+    return BaseResponse.success(repositoryConfigMap);
+  }
+
+  @PostMapping("configPluginRepo")
+  @ApiOperation("配置仓库参数")
+  public BaseResponse<Boolean> configPluginRepo(@RequestBody PluginRepositoryProxy.RepositoryConfig repositoryConfig) throws Exception {
+    return BaseResponse.success(pluginReporsitory.configPluginRepo(repositoryConfig));
+  }
+
+  @GetMapping("downloadToLocal")
+  @ApiOperation("远程仓库插件下载到本地")
+  public BaseResponse<Boolean> downloadToLocal(@RequestParam("pluginId") String pluginId, @RequestParam("version") String version, @RequestParam("repoType") String repoType) {
+    pluginReporsitory.downloadPluginToLocal(pluginId, version, repoType);
+    return BaseResponse.success(true);
+  }
 }
