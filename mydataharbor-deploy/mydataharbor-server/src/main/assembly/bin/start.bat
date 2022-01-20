@@ -6,7 +6,7 @@ set LOGGING_CONFIG=
 if exist ../config/%LOG_IMPL_FILE% (
     set LOGGING_CONFIG=-Dlogging.config=../config/%LOG_IMPL_FILE%
 )
-set CONFIG= -Dlogging.path=../logs %LOGGING_CONFIG% -Dspring.config.location=../config/
+set CONFIG= -Dfile.encoding=utf-8 -Dlogging.path=../logs %LOGGING_CONFIG% -Dspring.config.location=../config/
 
 set DEBUG_OPTS=
 if ""%1"" == ""debug"" (
