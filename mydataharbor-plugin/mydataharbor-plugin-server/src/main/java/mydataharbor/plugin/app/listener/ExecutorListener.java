@@ -790,13 +790,19 @@ public class ExecutorListener implements IExecutorListener {
           if (writeTotal != null) {
             nodeAssignedInfo.getWriteTotal().put(executor.getName(), writeTotal);
           }
+          boolean taskOver = false;
           if (PiplineStateUtil.piplineIsDone(piplineState)) {
             //将任务整体状态职位over
             if (PiplineStateUtil.doesAssignedTaskAllDone(taskAssignedInfo)) {
               distributedTask.setTaskState(TaskState.over);
+              taskOver = true;
             }
           }
           client.setData().withVersion(stat.getVersion()).forPath(Constant.TASK_PATH_PARENT + taskId, JsonUtil.serialize(distributedTask));
+          if(taskOver){
+            //任务结束
+            onTaskOver(distributedTask);
+          }
           break;
         } catch (KeeperException.BadVersionException badVersionException) {
           log.warn("乐观锁生效，重试..");
@@ -835,5 +841,10 @@ public class ExecutorListener implements IExecutorListener {
   @Override
   public void onExceptionEnd(AbstractDataExecutor executor, IDataPipline pipline, Throwable throwable, long writeTotal) {
     updateExecutorState(executor, PiplineState.crash_done, writeTotal);
+  }
+
+  @Override
+  public void onTaskOver(Object distributedTask) {
+
   }
 }

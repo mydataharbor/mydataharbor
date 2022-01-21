@@ -762,6 +762,7 @@ public class TaskManager implements ITaskManager {
       IDataSinkCreator dataSinkCreator = getDataSinkCreator(singleTask);
       dataPiplines = new ArrayList<>();
       List<AbstractDataExecutor> executors = new ArrayList<>();
+      executorListener.beforePiplineCreate(singleTask);
       doCreatePipline(0, singleTask.getNumberOfPipline(), singleTask, dataSinkCreator, dataPiplines, executors, executorListener);
       piplineMap.put(singleTask.getTaskId(), dataPiplines);
       executorMap.put(singleTask.getTaskId(), executors);
@@ -968,6 +969,7 @@ public class TaskManager implements ITaskManager {
     IExecutorListener executorListener = executorListenerMap.get(newSingleTask.getTaskId());
     try {
       IDataSinkCreator dataSinkCreator = getDataSinkCreator(newSingleTask);
+      executorListener.beforePiplineCreate(newSingleTask);
       doCreatePipline(executorMap.get(taskId).size(), change, newSingleTask, dataSinkCreator, dataPiplineChanges, executorChanges, executorListener);
       piplineMap.get(taskId).addAll(dataPiplineChanges);
       executorMap.get(taskId).addAll(executorChanges);
