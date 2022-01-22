@@ -13,6 +13,6 @@ then
     echo ${APPLICATION} is already stopped
 else
     echo kill  ${PID}
-    kill -9 ${PID}
+    kill ${PID}
     echo ${APPLICATION} stopped successfully
 fi
