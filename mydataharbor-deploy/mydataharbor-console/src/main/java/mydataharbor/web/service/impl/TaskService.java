@@ -707,6 +707,7 @@ import mydataharbor.rpc.util.JsonUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -907,10 +908,17 @@ public class TaskService implements ITaskService, InitializingBean {
           hasEdit = true;
           distributedTask.setTotalNumberOfPipline(taskEditRequest.getTotalNumberOfPipline());
         }
+        if (!Objects.equals(distributedTask.getTaskName(), taskEditRequest.getTaskName()) || !Objects.equals(distributedTask.getTags(), taskEditRequest.getTags())) {
+          distributedTask.setTaskName(taskEditRequest.getTaskName());
+          if (taskEditRequest.getTags() != null && distributedTask.getTags() != null)
+            distributedTask.getTags().putAll(taskEditRequest.getTags());
+          hasEdit = true;
+        }
         if (!hasEdit) {
           return true;
         }
         //写入zk
+        distributedTask.setLastUpdateTime(System.currentTimeMillis());
         nodeService.getClient().setData().withVersion(stat.getVersion()).forPath(taskPath, JsonUtil.serialize(distributedTask));
         //通知任务变更
         nodeService.groupTouch(distributedTask.getGroupName(), null);

@@ -680,6 +680,9 @@ package mydataharbor.web.entity;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 修改任务请求
  * 任务只能修改以下几个参数
@@ -710,5 +713,10 @@ public class TaskEditRequest {
    * 任务名称
    */
   private String taskName;
+
+  /**
+   * 自定义tag
+   */
+  private Map<String, String> tags = new HashMap<>();
 
 }
