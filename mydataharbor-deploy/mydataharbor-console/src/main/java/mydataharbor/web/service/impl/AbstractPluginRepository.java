@@ -33,10 +33,10 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
 
   @Override
   public Map<String, List<PluginGroup>> listPluginGroup() {
-    Map<String,List<PluginGroup>> plugins = new HashMap<>();
+    Map<String, List<PluginGroup>> plugins = new HashMap<>();
     List<PluginGroup> pluginGroups = doListPluginGroup();
     pluginGroups = pluginGroups == null ? new ArrayList<>() : pluginGroups;
-    plugins.put(name(),pluginGroups);
+    plugins.put(name(), pluginGroups);
     if (getNext() != null) {
       plugins.putAll(getNext().listPluginGroup());
     }
@@ -70,9 +70,9 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
     RepoPlugin repoPlugin = doQuery(pluginId, pluginVersion);
     if (repoPlugin != null) {
       return repoPlugin;
-    } else if (getNext() != null) {
+    }/* else if (getNext() != null) {
       return getNext().query(pluginId, pluginVersion);
-    }
+    }*/
     return null;
   }
 
@@ -91,6 +91,8 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
       }
       return doFetchPlugin(pluginId, version);
     } catch (NoAuthException | IOException e) {
+      throw e;
+      /*
       log.error("当前存储器:{} 获插件:{}@{} 无法处理该插件下载请求，尝试使用next存储器获取", name(), pluginId, version);
       if (getNext() != null) {
         log.warn("next存储器为:{}", getNext().name());
@@ -105,7 +107,7 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
       } else {
         log.warn("next存储器为空！");
         throw e;
-      }
+      }*/
     }
   }
 

@@ -752,12 +752,22 @@ public class NodeInfo extends JvmSystemInfo {
   private boolean leader = false;
 
   /**
+   * leader选举是否结束
+   */
+  private volatile boolean  leaderElected = false;
+
+  /**
    * 版本
    */
   private String version;
 
   public NodeInfo() {
 
+  }
+
+  public void setLeader(boolean leader) {
+    this.leader = leader;
+    this.leaderElected = true;
   }
 
   public NodeInfo(PluginServerConfig pluginServerConfig) {

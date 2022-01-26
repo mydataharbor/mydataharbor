@@ -42,7 +42,7 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
 
   private OkHttpClient httpClient = new OkHttpClient().newBuilder()
     .connectTimeout(1, TimeUnit.SECONDS)
-    .readTimeout(600, TimeUnit.SECONDS)
+    .readTimeout(60, TimeUnit.SECONDS)
     .build();
 
   private List<PluginGroup> pluginGroups = new ArrayList<>();
@@ -117,7 +117,7 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
         }
       }
     } catch (Exception e) {
-      log.error("请求插件仓库失败！", e);
+      log.warn("请求插件仓库失败：{}", e.getMessage());
     }
   }
 

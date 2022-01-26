@@ -22,6 +22,6 @@ public class DashboardController {
 
   @GetMapping("version")
   public Map<String, String> getVersion() {
-    return ImmutableMap.of("console-version", VersionUtil.getVersion());
+    return ImmutableMap.of("console-version", VersionUtil.getVersion() == null ? "dev" : VersionUtil.getVersion());
   }
 }
