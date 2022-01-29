@@ -1,5 +1,3 @@
-
-<GitHubWrapper>
 <p align="center">
 	<br/>
   <a href="http://www.mydataharbor.com" target="_blank">
@@ -7,7 +5,7 @@
   </a>
 </p>
 
-<TitleInfos />
+
 
 <p align="center" class="print-break">
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
@@ -29,25 +27,23 @@
     <a href="https://mydataharbor.yuque.com/books/share/d5b1360e-d316-4be0-85de-b0958ac64267/pckin3" target="_blank" style="display:inline-block">
       <img src="https://img.shields.io/badge/plugins-清单-blue" alt="插件列表">
     </a>
- 
 </p>
-</GitHubWrapper>
 
 欢迎前端、插件开发人员前来贡献代码，感兴趣的请联系我：1053618636@qq.com
 
 ## 简介/定位
 
-:cn: 🚢 MyDataHarbor是一个致力于解决任意数据源到任意数据源的分布式、高扩展性、高性能、事务级的数据同步中间件。
+:cn: 🚢 MyDataHarbor是一个致力于解决任意数据源到任意数据源的分布式、高扩展性、高性能、事务级、准实时的数据同步中间件。
 
 它可以帮助用户可靠、快速、稳定的对海量数据进行准实时增量同步或者定时全量同步，主要定位是为实时交易系统服务，亦可用于大数据的数据同步（ETL领域）。
 
 ## 背景
 
-在微服务的大背景下，实时交易系统的数据的分散存储已经成为常态，然而有时候我们需要对这些数据进行实时或者定时全量的进行同步到另外一个地方。
+在微服务的大背景下，实时交易系统的数据的分散存储已经成为常态，然而有时候我们需要对这些数据进行实时或者定时全量的同步到另外一个地方。
 
 比如，一个公司的C部门的系统，需要用到A、B部门产生的数据，这时候避免不了进行全量或者增量的数据同步。再比如，数据库中的数据我要实时同步到elasticsearch、redis等等中进行搜索。
 
-数据同步的应用场景在日常的分布式系统开发中非常常见，而且非常重要，一旦数据同步出现问题，将会导致数据不一致，引起其他异常。
+数据同步的应用场景在日常的分布式系统开发中非常常见，而且非常重要，一旦数据同步出现问题，将会导致数据不一致，引起其他严重的异常。
 
 目前小公司的做法是在业务程序系统里修改代码，往目标数据源中写入数据，上点规模的公司的做法是，各个部门开发一套自己的同步小程序，没有管理，更可能没有监控，来一个需求开发一个、非常浪费资源，稳定性也得不到保障，而大公司则是有一套数据迁移平台（如阿里的精卫）。
 
@@ -73,7 +69,7 @@ MyDataHarbor在这种场景需求下应用而生！
 
  ### 🚩自由组合
 
-   MyDataHarbor支持从不同的插件中复用各种组件，形一个新的pipline管道，并且这些都是可以通过可视化的方式进行。
+   MyDataHarbor支持从不同的插件中复用各种组件，形一个新的pipeline管道，并且这些都是可以通过可视化的方式进行。
 
  ### 🚩任务监控
 
@@ -87,29 +83,25 @@ MyDataHarbor在这种场景需求下应用而生！
 
    对于DataSource无法多线程并发拉取的情况下（如jdbc游标取数据），内部引入forkjoin并发处理模型开启多线程处理，并且灵活的事务控制，让速度飞快的同时保证数据迁移的稳定、不丢失，汽车变高铁。
 
-## 宏观设计
+## 设计
 
 MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataharbor-console、mydataharbor-server
-
-- mydataharbor-console
-
-  该应用是一个springboot应用，内部实现了对整个集群的管理，插件仓库服务/管理，可视化任务管理。该应用内部默认使用了H2数据库记录插件仓库信息，所以只能单机部署，如果后面有需要的话可以把插件仓库服务独立部署，或者使用mysql等独立的数据库服务器。
-
-- mydataharbor-server
-
-  该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
+   ![集群设计](./doc/image/cluster-design.png)
+   ![节点任务设计](./doc/image/node-design.png)
 
 ## 支持的插件
 
 | 中间件/协议        | 数据源（DataSource） | 写入源（Sink）   |作者	|备注	 |
 | ------------- | -------------------- | ---------------- |-----------|----------|
-| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor(1053618636@qq.com)||
-| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor(1053618636@qq.com)||
-| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x<br>✅6.8.x✅6.5.x✅6.6.x<br>✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor(1053618636@qq.com)||
-| http          | 暂不考虑          | ✅                |
-| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor(1053618636@qq.com)|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
-| MongoDB       | 计划中          | 计划中                ||
-| binlog       | 计划中          | ×                ||
+| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor||
+| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor|支持连接单机，主从，哨兵，cluster模式的各种redis服务端<br/>目前支持string数据格式的操作<br/>有需要可以联系作者扩展：list、set、zset、hash|
+| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x<br>✅6.8.x✅6.5.x✅6.6.x<br>✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor||
+| http          | 暂不考虑          | ✅                |MyDataHarbor||
+| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
+| MongoDB       | 计划中          | 计划中                |虚位以待	|	|
+| binlog       | 计划中          | ×                |虚位以待			|		|
+| rabbitMQ | 计划中 | 计划中 |虚位以待	|	|
+| RocketMQ | 计划中 | 计划中 |虚位以待	|	|
 
 
 ## 快速开始
@@ -123,7 +115,7 @@ MyDataHarbor的安装非常简单（启动前请先准备好zookeeper集群）�
 
       mydataharbor-console-xxx-bin.tar.gz
       mydataharbor-server-xxx-bin.tar.gz
-      
+
 > xxx是发行的版本号
 
 ### mydataharbor-console 
@@ -182,9 +174,9 @@ Linux系统下运行 start.sh  关闭stop.sh
  ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
-demo运行实例：http://118.25.5.236:8083/
+demo运行实例：http://mydataharbor.com:8080/
 
-交流社区：https://bbs.mydataharbor.com
+插件市场：https://www.mydataharbor.com/user/info.html
 
 文档(语雀)：http://doc.mydataharbor.com
 
@@ -192,5 +184,3 @@ demo运行实例：http://118.25.5.236:8083/
 
 ![QQ群](./doc/image/qq-discuz.png)
 
-#### 微信群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
-![wchat群](./doc/image/wchat-discuz.png)
