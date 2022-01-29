@@ -1,4 +1,4 @@
 zk: ["127.0.0.1:2181"]
 port: 1299
-group: biz001
+group: biz002
 pluginRepository: http://127.0.0.1:8080

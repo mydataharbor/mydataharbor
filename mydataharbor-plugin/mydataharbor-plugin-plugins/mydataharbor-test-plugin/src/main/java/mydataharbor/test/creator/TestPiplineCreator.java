@@ -2,12 +2,11 @@ package mydataharbor.test.creator;
 
 import lombok.Data;
 import mydataharbor.IDataPipline;
-import mydataharbor.IDataSinkCreator;
 import mydataharbor.classutil.classresolver.MyDataHarborMarker;
 import mydataharbor.convertor.data.OriginalDataConvertor;
 import mydataharbor.convertor.protocal.OriginalProtocalDataConvertor;
 import mydataharbor.pipline.CommonDataPipline;
-import mydataharbor.plugin.base.util.JsonUtil;
+import mydataharbor.plugin.base.creator.AbstractAutoScanPiplineCreator;
 import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.test.datasource.TestDataSource;
 import mydataharbor.test.sink.TestSink;
@@ -18,12 +17,12 @@ import org.pf4j.ExtensionPoint;
  * Created by xulang on 2021/8/10.
  */
 @Extension
-public class TestPiplineCreator implements IDataSinkCreator<TestPiplineCreator.TestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
+public class TestPiplineCreator extends AbstractAutoScanPiplineCreator<TestPiplineCreator.TestPiplineCretorConfig, BaseSettingContext> implements  ExtensionPoint {
 
 
   @Override
   public String type() {
-    return "test管道创建器";
+    return "随机产生数据到丢弃写入器";
   }
 
   @Override
@@ -39,8 +38,8 @@ public class TestPiplineCreator implements IDataSinkCreator<TestPiplineCreator.T
   }
 
   @Override
-  public <T> T parseJson(String json, Class<T> clazz) {
-    return JsonUtil.jsonToObject(json, clazz);
+  public String scanPackage() {
+    return "mydataharbor.test";
   }
 
   @Data

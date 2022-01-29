@@ -24,6 +24,7 @@
     <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
     <plugin.group></plugin.group>
     <plugin.group.logo></plugin.group.logo>
+    <plugin.update.info></plugin.update.info>
     <plugin.dependencies/>
   </properties>
 
@@ -56,6 +57,7 @@
               <Plugin-Group>${plugin.group}</Plugin-Group>
               <Plugin-Group-Logo>${plugin.group.logo}</Plugin-Group-Logo>
               <Mydataharbor-Version>${mydataharbor.version}</Mydataharbor-Version>
+              <Plugin-Update-Info>${plugin.update.info}</Plugin-Update-Info>
             </manifestEntries>
           </archive>
         </configuration>

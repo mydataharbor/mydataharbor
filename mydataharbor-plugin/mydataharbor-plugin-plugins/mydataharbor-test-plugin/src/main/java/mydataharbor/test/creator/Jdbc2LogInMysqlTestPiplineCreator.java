@@ -1,4 +1,3 @@
-/*
 package mydataharbor.test.creator;
 
 import mydataharbor.sink.jdbc.config.JdbcSinkConfig;
@@ -18,10 +17,6 @@ import mydataharbor.setting.BaseSettingContext;
 import mydataharbor.source.jdbc.config.JdbcDataSourceConfig;
 import mydataharbor.test.sink.ObjectSink;
 
-*/
-/**
- * Created by xulang on 2021/8/10.
- *//*
 
 @Extension
 public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2LogInMysqlTestPiplineCreator.MysqlTestPiplineCretorConfig, BaseSettingContext>, ExtensionPoint {
@@ -29,7 +24,7 @@ public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2
 
   @Override
   public String type() {
-    return "mysql test管道创建器";
+    return "mysql到空写入器测试";
   }
 
   @Override
@@ -55,11 +50,7 @@ public class Jdbc2LogInMysqlTestPiplineCreator implements IDataSinkCreator<Jdbc2
     @MyDataHarborMarker(title = "数据库数据源信息")
     private JdbcDataSourceConfig jdbcDataSourceConfig;
 
-    @MyDataHarborMarker(title = "数据库写入源信息")
-    private JdbcSinkConfig jdbcSinkConfig;
-
   }
 
 }
 
-*/

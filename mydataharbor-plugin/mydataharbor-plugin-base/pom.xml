@@ -12,6 +12,13 @@
   <artifactId>mydataharbor-plugin-base</artifactId>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
 
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License v3.0</name>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+    </license>
+  </licenses>
+
   <dependencies>
 
     <!-- jackson -->
