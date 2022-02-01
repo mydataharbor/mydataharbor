@@ -19,17 +19,11 @@
     <maven.deploy.skip>true</maven.deploy.skip>
     <plugin.provider>xulang</plugin.provider>
     <plugin.version>1.0.7</plugin.version>
-    <plugin.dependencies>jdbc-mysql-5.1.x-plugin@*</plugin.dependencies>
+
   </properties>
 
   <dependencies>
 
-   <!-- <dependency>
-      <groupId>com.mydataharbor</groupId>
-      <artifactId>jdbc-mysql-5.1.x-plugin</artifactId>
-      <version>1.1.0</version>
-      <scope>provided</scope>
-    </dependency>-->
 
   </dependencies>
 
