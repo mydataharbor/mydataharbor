@@ -678,6 +678,8 @@
 
 package mydataharbor.monitor;
 
+import mydataharbor.pipline.PiplineState;
+
 /**
  * 每一个线程的监控
  * @auth xulang
@@ -691,6 +693,8 @@ public interface TaskExecutorMonitorMBean {
    * @return
    */
   Long getTRecordCount();
+
+  Long getTRecordUseTime();
 
   /**
    * 协议数据转换成功数
@@ -706,6 +710,8 @@ public interface TaskExecutorMonitorMBean {
    */
   Long getProtocalConventErrorCount();
 
+  Long getProtocalConventUseTime();
+
   /**
    * 检查通过记录
    *
@@ -719,6 +725,8 @@ public interface TaskExecutorMonitorMBean {
    * @return
    */
   Long getCheckerErrorCount();
+
+  Long getCheckerUseTime();
 
   /**
    * 数据转换通过记录
@@ -734,6 +742,8 @@ public interface TaskExecutorMonitorMBean {
    */
   Long getDataConventErrorCount();
 
+  Long getDataConventUseTime();
+
   /**
    * 写入成功记录
    *
@@ -747,6 +757,8 @@ public interface TaskExecutorMonitorMBean {
    * @return
    */
   Long getWriteErrorCount();
+
+  Long getWriteUseTime();
 
   /**
    * 获取最后运行时间
@@ -784,6 +796,12 @@ public interface TaskExecutorMonitorMBean {
    * @return
    */
   boolean isEnd();
+
+  /**
+   * 状态
+   * @return
+   */
+  PiplineState getPipelineSate();
 
   void addAndGettRecordCount(Long change);
 

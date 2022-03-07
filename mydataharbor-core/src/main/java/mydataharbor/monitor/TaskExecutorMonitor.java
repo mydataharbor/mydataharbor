@@ -679,6 +679,7 @@
 package mydataharbor.monitor;
 
 import lombok.extern.slf4j.Slf4j;
+import mydataharbor.pipline.PiplineState;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -716,27 +717,43 @@ public class TaskExecutorMonitor implements TaskExecutorMonitorMBean {
    */
   private boolean end = true;
 
+
   private AtomicLong tRecordCount = new AtomicLong();
+
+  private AtomicLong tRecordUseTime = new AtomicLong();
 
   private AtomicLong protocalConventSuccessCount = new AtomicLong();
 
   private AtomicLong protocalConventErrorCount = new AtomicLong();
 
+  private AtomicLong protocalConventUseTime = new AtomicLong();
+
   private AtomicLong checkerSuccessCount = new AtomicLong();
 
   private AtomicLong checkerErrorCount = new AtomicLong();
+
+  private AtomicLong checkerUseTime = new AtomicLong();
 
   private AtomicLong dataConventSuccessCount = new AtomicLong();
 
   private AtomicLong dataConventErrorCount = new AtomicLong();
 
+  private AtomicLong dataConventUseTime = new AtomicLong();
+
   private AtomicLong writeSuccessCount = new AtomicLong();
 
   private AtomicLong writeErrorCount = new AtomicLong();
 
+  private AtomicLong writeUseTime = new AtomicLong();
+
   private AtomicLong useTime = new AtomicLong();
 
   private Long lastRunTime;
+
+  /**
+   * 状态
+   */
+  private PiplineState pipelineState = PiplineState.create;
 
   private static final Map<String, TaskExecutorMonitor> TASKMONITOR_CACHE = new ConcurrentHashMap<>();
 
@@ -829,6 +846,26 @@ public class TaskExecutorMonitor implements TaskExecutorMonitorMBean {
     return useTime.addAndGet(time);
   }
 
+  public long tRecordUseTimeIncrease(long time) {
+    return tRecordUseTime.addAndGet(time);
+  }
+
+  public long protocalConventUseTimeIncrease(long time) {
+    return protocalConventUseTime.addAndGet(time);
+  }
+
+  public long checkerUseTimeIncrease(long time) {
+    return checkerUseTime.addAndGet(time);
+  }
+
+  public long dataConventUseTimeIncrease(long time) {
+    return dataConventUseTime.addAndGet(time);
+  }
+
+  public long writeUseTimeIncrease(long time) {
+    return writeUseTime.addAndGet(time);
+  }
+
   @Override
   public Long getTotal() {
     return total;
@@ -905,5 +942,40 @@ public class TaskExecutorMonitor implements TaskExecutorMonitorMBean {
 
   public void setSuspend(boolean suspend) {
     this.suspend = suspend;
+  }
+
+  @Override
+  public PiplineState getPipelineSate() {
+    return pipelineState;
+  }
+
+  public void setPipelineState(PiplineState pipelineState) {
+    this.pipelineState = pipelineState;
+  }
+
+
+  @Override
+  public Long getTRecordUseTime() {
+    return tRecordUseTime.get();
+  }
+
+  @Override
+  public Long getProtocalConventUseTime() {
+    return protocalConventUseTime.get();
+  }
+
+  @Override
+  public Long getCheckerUseTime() {
+    return checkerUseTime.get();
+  }
+
+  @Override
+  public Long getDataConventUseTime() {
+    return dataConventUseTime.get();
+  }
+
+  @Override
+  public Long getWriteUseTime() {
+    return writeUseTime.get();
   }
 }
