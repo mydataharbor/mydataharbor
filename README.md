@@ -10,7 +10,7 @@
 <p align="center" class="print-break">
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
     <a href="https://github.com/mydataharbor/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/workflow/status/mydataharbor/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
+       <img src="https://img.shields.io/github/actions/workflow/status/mydataharbor/mydataharbor/maven.yml?branch=main" alt="GitHub-CI">
     </a>
      <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/v/release/mydataharbor/mydataharbor" alt="查看发行的版本">
@@ -39,7 +39,7 @@
 
 ## 背景
 
-在微服务的大背景下，实时交易系统的数据的分散存储已经成为常态，然而有时候我们需要对这些数据进行实时或者定时全量的进行同步到另外一个地方。
+在微服务的大背景下，实时交易系统的数据的分散存储已经成为常态，然而有时候我们需要对这些数据进行实时或者定时全量的同步到另外一个地方。
 
 比如，一个公司的C部门的系统，需要用到A、B部门产生的数据，这时候避免不了进行全量或者增量的数据同步。再比如，数据库中的数据我要实时同步到elasticsearch、redis等等中进行搜索。
 
@@ -69,7 +69,7 @@ MyDataHarbor在这种场景需求下应用而生！
 
  ### 🚩自由组合
 
-   MyDataHarbor支持从不同的插件中复用各种组件，形一个新的pipline管道，并且这些都是可以通过可视化的方式进行。
+   MyDataHarbor支持从不同的插件中复用各种组件，形一个新的pipeline管道，并且这些都是可以通过可视化的方式进行。
 
  ### 🚩任务监控
 
@@ -83,17 +83,11 @@ MyDataHarbor在这种场景需求下应用而生！
 
    对于DataSource无法多线程并发拉取的情况下（如jdbc游标取数据），内部引入forkjoin并发处理模型开启多线程处理，并且灵活的事务控制，让速度飞快的同时保证数据迁移的稳定、不丢失，汽车变高铁。
 
-## 宏观设计
+## 设计
 
 MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataharbor-console、mydataharbor-server
-
-- mydataharbor-console
-
-  该应用是一个springboot应用，内部实现了对整个集群的管理，插件仓库服务/管理，可视化任务管理。
-
-- mydataharbor-server
-
-  该应用是数据搬移任务工作的具体环境，提交的任务都会分配到该节点上，该应用是一个可以大规模部署的纯java应用，依赖zookeeper做分布式协调。
+   ![集群设计](./doc/image/cluster-design.png)
+   ![节点任务设计](./doc/image/node-design.png)
 
 ## 支持的插件
 
@@ -180,6 +174,7 @@ Linux系统下运行 start.sh  关闭stop.sh
  ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
+
 demo运行实例：http://mydataharbor.com:8080/
 
 插件市场：https://www.mydataharbor.com/user/info.html
@@ -190,3 +185,18 @@ demo运行实例：http://mydataharbor.com:8080/
 
 ![QQ群](./doc/image/qq-discuz.png)
 
+
+
+## 更新日志
+
+### 2.0.0版本
+
+1、新增 mydataharbor.ITaskStorage 接口，允许各组件在运行期持久化记录数据，并提供一个zookeeper的默认实现，每秒1次准实时同步，不影响性能。
+
+2、默认将任务的监控信息通过持久化接口近乎实时的展示在管理台
+
+3、任务修改重建功能
+
+4、调整rebalance算法，新机器加入，将转移当前管道数大于任务分配节点数的任务
+
+5、鉴于1.x使用用户可能较少，由于修复了一些拼写错误，接口名称变了，不再向1.x兼容，建议大家把任务移到2.x上，请谅解

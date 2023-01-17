@@ -40,6 +40,7 @@
         <include>**/*.xml</include>
         <include>**/*.properties</include>
         <include>**/*.yml</include>
+        <include>**/*.json</include>
       </includes>
       <filtered>true</filtered><!-- 是否进行属性替换 -->
     </fileSet>

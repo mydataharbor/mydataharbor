@@ -25,6 +25,7 @@
   <modules>
     <module>mydataharbor-console</module>
     <module>mydataharbor-server</module>
+    <module>mydataharbor-ui</module>
   </modules>
 
   <build>

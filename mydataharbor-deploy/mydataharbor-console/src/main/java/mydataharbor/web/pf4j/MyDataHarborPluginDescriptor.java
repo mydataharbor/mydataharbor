@@ -21,6 +21,11 @@ public class MyDataHarborPluginDescriptor extends DefaultPluginDescriptor {
    */
   private String mydataharborVersion;
 
+  /**
+   * 插件更新信息
+   */
+  private String pluginUpdateInfo;
+
   public String getPluginGroup() {
     return pluginGroup;
   }
@@ -43,5 +48,13 @@ public class MyDataHarborPluginDescriptor extends DefaultPluginDescriptor {
 
   public String getMydataharborVersion() {
     return mydataharborVersion;
+  }
+
+  public void setPluginUpdateInfo(String pluginUpdateInfo) {
+    this.pluginUpdateInfo = pluginUpdateInfo;
+  }
+
+  public String getPluginUpdateInfo() {
+    return pluginUpdateInfo;
   }
 }

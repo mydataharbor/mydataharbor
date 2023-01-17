@@ -58,7 +58,7 @@ fi
 STDOUT_FILE=$LOGS_DIR/catalina.log
 
 # JVM Configuration
-JAVA_OPTS=" -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true "
+JAVA_OPTS=" -Dfile.encoding=utf-8 -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true "
 JAVA_DEBUG_OPTS=""
 if [ "$1" = "debug" ]; then
     JAVA_DEBUG_OPTS=" -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n "
