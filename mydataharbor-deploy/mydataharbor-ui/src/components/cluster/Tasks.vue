@@ -318,7 +318,7 @@
               <el-input v-model="recreateUpdateForm.taskId" autocomplete="off" style="width: 250px;" disabled/>
             </el-form-item>
           </el-col>
-          
+
         </el-row>
         <el-collapse v-model="collapseActiveNames">
         <el-collapse-item title="settingContextConfig" name="settingConfig">
@@ -365,13 +365,13 @@
           <vue-json-editor v-model="recreateUpdateForm.tags" :mode="'code'" lang="zh"/>
         </el-collapse-item>
 
-      </el-collapse>        
+      </el-collapse>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="recreateUpdateFormSubmit">确 定</el-button>
       </div>
-    </el-dialog>    
+    </el-dialog>
 
     <!--任务状态弹框-->
     <el-dialog :visible.sync="dialogStateVisible" title="任务状态" width="23%">
@@ -611,6 +611,7 @@ export default {
       this.taskDetailVisible = false
       this.dialogUpdateVisible = false
       this.dialogStateVisible = false
+      this.dialogRecreateUpdateVisible = false
       this.clearData()
     },
     // 选择插件
