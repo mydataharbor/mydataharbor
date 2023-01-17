@@ -10,7 +10,7 @@
 <p align="center" class="print-break">
     <a href="https://mydataharbor.com" style="display:inline-block"><words type='updated' /></a>
     <a href="https://github.com/mydataharbor/mydataharbor/actions/workflows/maven.yml" target="_blank" style="display:inline-block" class="not-print">
-       <img src="https://img.shields.io/github/workflow/status/mydataharbor/mydataharbor/Java%20CI%20with%20Maven?style=flat" alt="GitHub-CI">
+       <img src="https://img.shields.io/github/actions/workflow/status/mydataharbor/mydataharbor/maven.yml?branch=main" alt="GitHub-CI">
     </a>
      <a href="https://github.com/mydataharbor/mydataharbor/releases" target="_blank" style="display:inline-block" class="not-print">
        <img src="https://img.shields.io/github/v/release/mydataharbor/mydataharbor" alt="查看发行的版本">
