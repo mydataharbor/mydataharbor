@@ -4,8 +4,8 @@ name: MavenCentral SNAPSHOT Repo Deployment
 on:
   push:
     branches: [ test ]
-  pull_request:
-    branches: [ test ]
+#  pull_request:
+#    branches: [ test ]
 # 定义一个发行任务
 jobs:
   publish:
