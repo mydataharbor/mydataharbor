@@ -691,7 +691,7 @@ public interface IExecutorListener {
   /**
    * 创建前
    */
-  default void beforePiplineCreate(Object singleTask) {
+  default void beforePipelineCreate(Object singleTask) {
   }
 
 
@@ -700,59 +700,59 @@ public interface IExecutorListener {
    *
    * @param throwable
    */
-  void onPiplineCreate(int begin, int change, Throwable throwable);
+  void onPipelineCreate(int begin, int change, Throwable throwable);
 
   /**
    * 运行
    *
    * @param executor
    */
-  void onRun(AbstractDataExecutor executor, IDataPipline pipline);
+  void onRun(AbstractDataExecutor executor, IDataPipeline pipeline);
 
   /**
    * 暂停
    *
    * @param executor
    */
-  void onSuspend(AbstractDataExecutor executor, IDataPipline pipline, long writeTotal);
+  void onSuspend(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal);
 
   /**
    * 继续
    *
    * @param executor
    */
-  void onContinue(AbstractDataExecutor executor, IDataPipline pipline, long writeTotal);
+  void onContinue(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal);
 
   /**
    * 和平结束
    *
    * @param executor
-   * @param pipline
+   * @param pipeline
    */
-  void onSucccessEnd(AbstractDataExecutor executor, IDataPipline pipline, long writeTotal, boolean isRun);
+  void onSucccessEnd(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun);
 
 
   /**
    * 关闭
    *
    * @param executor
-   * @param pipline
+   * @param pipeline
    * @param writeTotal
    * @param isRun
    */
-  void onClose(AbstractDataExecutor executor, IDataPipline pipline, long writeTotal, boolean isRun);
+  void onClose(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun);
 
   /**
    * 异常退出
    *
    * @param executor
-   * @param pipline
+   * @param pipeline
    * @param throwable
    */
-  void onExceptionEnd(AbstractDataExecutor executor, IDataPipline pipline, Throwable throwable, long writeTotal);
+  void onExceptionEnd(AbstractDataExecutor executor, IDataPipeline pipeline, Throwable throwable, long writeTotal);
 
   /**
-   * 任务结束的时候
+   * 任务结束的时候，多实例执行的时候改方法只会调用一次，并不会每个实例都调用的
    */
   default void onTaskOver(Object distributedTask) {
   }

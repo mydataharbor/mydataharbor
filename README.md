@@ -174,6 +174,7 @@ Linux系统下运行 start.sh  关闭stop.sh
  ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
+
 demo运行实例：http://mydataharbor.com:8080/
 
 插件市场：https://www.mydataharbor.com/user/info.html
@@ -184,3 +185,18 @@ demo运行实例：http://mydataharbor.com:8080/
 
 ![QQ群](./doc/image/qq-discuz.png)
 
+
+
+## 更新日志
+
+### 2.0.0版本
+
+1、新增 mydataharbor.ITaskStorage 接口，允许各组件在运行期持久化记录数据，并提供一个zookeeper的默认实现，每秒1次准实时同步，不影响性能。
+
+2、默认将任务的监控信息通过持久化接口近乎实时的展示在管理台
+
+3、任务修改重建功能
+
+4、调整rebalance算法，新机器加入，将转移当前管道数大于任务分配节点数的任务
+
+鉴于1.x使用用户可能较少，由于修复了一些拼写错误，接口名称变了，不再向1.x兼容，建议大家把任务移到2.x上，请谅解

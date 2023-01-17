@@ -678,6 +678,8 @@
 
 package mydataharbor.monitor;
 
+import mydataharbor.pipeline.PipelineState;
+
 /**
  * 每一个线程的监控
  * @auth xulang
@@ -692,19 +694,23 @@ public interface TaskExecutorMonitorMBean {
    */
   Long getTRecordCount();
 
+  Long getTRecordUseTime();
+
   /**
    * 协议数据转换成功数
    *
    * @return
    */
-  Long getProtocalConventSuccessCount();
+  Long getProtocolConvertSuccessCount();
 
   /**
    * 协议转换失败记录
    *
    * @return
    */
-  Long getProtocalConventErrorCount();
+  Long getProtocolConvertErrorCount();
+
+  Long getProtocolConvertUseTime();
 
   /**
    * 检查通过记录
@@ -720,19 +726,23 @@ public interface TaskExecutorMonitorMBean {
    */
   Long getCheckerErrorCount();
 
+  Long getCheckerUseTime();
+
   /**
    * 数据转换通过记录
    *
    * @return
    */
-  Long getDataConventSuccessCount();
+  Long getDataConvertSuccessCount();
 
   /**
    * 数据转换失败记录
    *
    * @return
    */
-  Long getDataConventErrorCount();
+  Long getDataConvertErrorCount();
+
+  Long getDataConvertUseTime();
 
   /**
    * 写入成功记录
@@ -747,6 +757,8 @@ public interface TaskExecutorMonitorMBean {
    * @return
    */
   Long getWriteErrorCount();
+
+  Long getWriteUseTime();
 
   /**
    * 获取最后运行时间
@@ -785,19 +797,25 @@ public interface TaskExecutorMonitorMBean {
    */
   boolean isEnd();
 
+  /**
+   * 状态
+   * @return
+   */
+  PipelineState getPipelineSate();
+
   void addAndGettRecordCount(Long change);
 
-  void addAndGetProtocalConventSuccessCount(Long change);
+  void addAndGetProtocolConvertSuccessCount(Long change);
 
-  void addAndGetProtocalConventErrorCount(Long change);
+  void addAndGetProtocolConvertErrorCount(Long change);
 
   void addAndGetCheckerSuccessCount(Long change);
 
   void addAndGetCheckerErrorCount(Long change);
 
-  void addAndGetDataConventSuccessCount(Long change);
+  void addAndGetDataConvertSuccessCount(Long change);
 
-  void addAndGetDataConventErrorCount(Long change);
+  void addAndGetDataConvertErrorCount(Long change);
 
   void addAndGetWriteSuccessCount(Long change);
 

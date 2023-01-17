@@ -683,8 +683,8 @@ package mydataharbor.plugin.api.task;
  * @Date 2021/6/30
  **/
 
-import mydataharbor.pipline.PiplineState;
 import lombok.Data;
+import mydataharbor.pipeline.PipelineState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -720,12 +720,12 @@ public class TaskAssignedInfo {
     private Integer taskNum = 0;
 
     /**
-     * 每个pipline运行状态，key是线程名
+     * 每个pipeline运行状态，key是线程名
      */
-    private Map<String, PiplineState> piplineStates = new HashMap<>();
+    private Map<String, PipelineState> pipelineStates = new HashMap<>();
 
     /**
-     * 每一个pipline写入数据
+     * 每一个pipeline写入数据
      */
     private Map<String, Long> writeTotal = new HashMap<>();
 

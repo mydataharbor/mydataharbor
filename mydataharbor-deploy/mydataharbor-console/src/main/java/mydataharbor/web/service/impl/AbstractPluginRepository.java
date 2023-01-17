@@ -1,8 +1,8 @@
 package mydataharbor.web.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.PluginGroup;
+import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.IPluginRepository;
@@ -68,12 +68,10 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
   @Override
   public RepoPlugin query(String pluginId, String pluginVersion) {
     RepoPlugin repoPlugin = doQuery(pluginId, pluginVersion);
-    if (repoPlugin != null) {
-      return repoPlugin;
-    }/* else if (getNext() != null) {
+    /* else if (getNext() != null) {
       return getNext().query(pluginId, pluginVersion);
     }*/
-    return null;
+      return repoPlugin;
   }
 
 

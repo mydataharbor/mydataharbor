@@ -713,7 +713,7 @@ public class Task {
   private TaskState taskState = TaskState.created;
 
   /**
-   * 此task使用哪个plugin创建pipline
+   * 此task使用哪个plugin创建pipeline
    */
   private String pluginId;
 
@@ -743,8 +743,7 @@ public class Task {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Task task = (Task) o;
-    return Objects.equals(taskId, task.taskId) &&
-      taskState == task.taskState;
+    return Objects.equals(taskId, task.taskId) && taskState == task.taskState;
   }
 
   @Override

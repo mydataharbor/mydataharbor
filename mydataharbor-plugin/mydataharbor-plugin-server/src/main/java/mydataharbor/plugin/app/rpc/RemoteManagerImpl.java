@@ -678,6 +678,7 @@
 
 package mydataharbor.plugin.app.rpc;
 
+import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
 import mydataharbor.plugin.api.IPluginInfoManager;
 import mydataharbor.plugin.api.IPluginRemoteManager;
@@ -688,14 +689,10 @@ import mydataharbor.plugin.api.node.NodeInfo;
 import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.plugin.api.task.SingleTask;
 import mydataharbor.plugin.api.task.TaskState;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.lang3.StringUtils;
-import org.pf4j.PluginState;
-import org.pf4j.PluginWrapper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -703,6 +700,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.pf4j.PluginState;
+import org.pf4j.PluginWrapper;
 
 /**
  * @auth xulang
@@ -741,20 +742,21 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
 
   @Override
   public String loadPluginByRpc(String pluginFileName, byte[] body) {
-    //保存插件文件
-    NodeInfo nodeInfo = pluginServer.getNodeInfo();
-    String path = nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH;
-    File pluginFile = new File(path + "/" + pluginFileName);
-    if (pluginFile.exists()) {
-      log.error(pluginFile.getPath() + "该文件已经存在！");
-      throw new PluginLoadException(pluginFile.getPath() + "该文件已经存在！");
-    } else {
-      new File(path).mkdirs();
-      try {
-        pluginFile.createNewFile();
-        FileOutputStream fileOutputStream = new FileOutputStream(pluginFile);
-        fileOutputStream.write(body);
-        fileOutputStream.close();
+      //保存插件文件
+      NodeInfo nodeInfo = pluginServer.getNodeInfo();
+      String path =  nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH_WORKER;
+      File pluginFile = new File(path + "/" + pluginFileName);
+      if (pluginFile.exists()) {
+          log.error(pluginFile.getPath() + "该文件已经存在！");
+          throw new PluginLoadException(pluginFile.getPath() + "该文件已经存在！");
+      }
+      else {
+          new File(path).mkdirs();
+          try {
+              pluginFile.createNewFile();
+              FileOutputStream fileOutputStream = new FileOutputStream(pluginFile);
+              fileOutputStream.write(body);
+              fileOutputStream.close();
       } catch (IOException e) {
         log.error("插件文件数据写入失败！", e);
         throw new PluginLoadException("插件文件数据写入失败！", e);
@@ -842,7 +844,7 @@ public class RemoteManagerImpl implements IPluginRemoteManager {
 
 
   @Override
-  public String createPipline(SingleTask singleTask) {
+  public String createPipeline(SingleTask singleTask) {
     return taskManager.submitTask(singleTask);
   }
 

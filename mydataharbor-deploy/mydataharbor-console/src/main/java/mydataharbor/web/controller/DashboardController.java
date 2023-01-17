@@ -1,14 +1,16 @@
 package mydataharbor.web.controller;
 
-import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.util.VersionUtil;
+
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * 仪表盘信息输出

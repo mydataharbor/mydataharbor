@@ -679,11 +679,12 @@
 package mydataharbor.plugin.api.plugin;
 
 import lombok.Data;
-import org.pf4j.PluginDescriptor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.pf4j.PluginDescriptor;
 
 /**
  *

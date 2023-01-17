@@ -678,25 +678,42 @@
 
 package mydataharbor.plugin.app.plugin;
 
-import com.fasterxml.classmate.*;
-import com.fasterxml.classmate.members.ResolvedConstructor;
-import mydataharbor.*;
-import mydataharbor.creator.ClassInfo;
-import mydataharbor.creator.ConstructorAndArgsConfig;
+import mydataharbor.IData;
+import mydataharbor.IDataConverter;
+import mydataharbor.IDataPipelineCreator;
+import mydataharbor.IDataSink;
+import mydataharbor.IDataSource;
+import mydataharbor.IProtocolDataChecker;
+import mydataharbor.IProtocolDataConverter;
+import mydataharbor.classutil.classresolver.FieldTypeResolver;
+import mydataharbor.classutil.classresolver.MyDataHarborMarker;
+import mydataharbor.classutil.classresolver.TypeInfo;
+import mydataharbor.pipeline.creator.ClassInfo;
+import mydataharbor.pipeline.creator.ConstructorAndArgsConfig;
 import mydataharbor.plugin.api.IPluginInfoManager;
 import mydataharbor.plugin.api.IPluginServer;
 import mydataharbor.plugin.api.plugin.DataSinkCreatorInfo;
 import mydataharbor.plugin.api.plugin.PluginInfo;
-import mydataharbor.classutil.classresolver.MyDataHarborMarker;
-import mydataharbor.classutil.classresolver.FieldTypeResolver;
-import mydataharbor.classutil.classresolver.TypeInfo;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import org.jetbrains.annotations.NotNull;
 import org.pf4j.PluginWrapper;
 
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import com.fasterxml.classmate.AnnotationConfiguration;
+import com.fasterxml.classmate.AnnotationInclusion;
+import com.fasterxml.classmate.MemberResolver;
+import com.fasterxml.classmate.ResolvedType;
+import com.fasterxml.classmate.ResolvedTypeWithMembers;
+import com.fasterxml.classmate.TypeResolver;
+import com.fasterxml.classmate.members.ResolvedConstructor;
 
 /**
  * @auth xulang
@@ -714,7 +731,7 @@ public class PluginInfoManager implements IPluginInfoManager {
   /**
    * 第一层是 plugin，第二层是 class
    */
-  private Map<String, Map<String, IDataSinkCreator>> dataSinkCreatorMap = new ConcurrentHashMap<>();
+  private Map<String, Map<String, IDataPipelineCreator>> dataPipelineCreatorMap = new ConcurrentHashMap<>();
 
   private volatile List<PluginInfo> pluginInfos = new ArrayList<>();
 
@@ -730,13 +747,13 @@ public class PluginInfoManager implements IPluginInfoManager {
 
   @Override
   public void refresh() throws InstantiationException, IllegalAccessException {
-    dataSinkCreatorMap.clear();
+    dataPipelineCreatorMap.clear();
     this.pluginInfos = scanAllPluginInfo();
   }
 
   @Override
-  public Map<String, IDataSinkCreator> getDataSinkCreatorMapByPlugin(String pluginId) {
-    return dataSinkCreatorMap.get(pluginId);
+  public Map<String, IDataPipelineCreator> scanDataPipelineCreatorByPlugin(String pluginId) {
+    return dataPipelineCreatorMap.get(pluginId);
   }
 
   @Override
@@ -747,11 +764,11 @@ public class PluginInfoManager implements IPluginInfoManager {
       PluginInfo pluginInfo = new PluginInfo();
       pluginInfo.fillByPluginDescriptor(plugin.getDescriptor());
       List<DataSinkCreatorInfo> dataSinkCreatorInfos = new ArrayList<>();
-      List<Class<? extends IDataSinkCreator>> dataSinkCreatorAllClazz = plugin.getPluginManager().getExtensionClasses(IDataSinkCreator.class, plugin.getPluginId());
-      Set<Class<? extends IDataSinkCreator>> canCreator = dataSinkCreatorAllClazz.stream()
+      List<Class<? extends IDataPipelineCreator>> dataSinkCreatorAllClazz = plugin.getPluginManager().getExtensionClasses(IDataPipelineCreator.class, plugin.getPluginId());
+      Set<Class<? extends IDataPipelineCreator>> canCreator = dataSinkCreatorAllClazz.stream()
         .filter(clazz -> !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()))
         .collect(Collectors.toSet());
-      for (Class<? extends IDataSinkCreator> aClass : canCreator) {
+      for (Class<? extends IDataPipelineCreator> aClass : canCreator) {
         DataSinkCreatorInfo dataSinkCreatorInfo = creatorProcess(aClass, pluginInfo);
         dataSinkCreatorInfos.add(dataSinkCreatorInfo);
       }
@@ -761,13 +778,13 @@ public class PluginInfoManager implements IPluginInfoManager {
     return pluginInfos;
   }
 
-  public DataSinkCreatorInfo creatorProcess(Class<? extends IDataSinkCreator> aClass, PluginInfo pluginInfo) throws InstantiationException, IllegalAccessException {
-    Map<String, IDataSinkCreator> stringIDataSinkCreatorMap = dataSinkCreatorMap.get(pluginInfo.getPluginId());
+  public DataSinkCreatorInfo creatorProcess(Class<? extends IDataPipelineCreator> aClass, PluginInfo pluginInfo) throws InstantiationException, IllegalAccessException {
+    Map<String, IDataPipelineCreator> stringIDataSinkCreatorMap = dataPipelineCreatorMap.get(pluginInfo.getPluginId());
     if (stringIDataSinkCreatorMap == null) {
       stringIDataSinkCreatorMap = new ConcurrentHashMap<>();
-      dataSinkCreatorMap.put(pluginInfo.getPluginId(), stringIDataSinkCreatorMap);
+      dataPipelineCreatorMap.put(pluginInfo.getPluginId(), stringIDataSinkCreatorMap);
     }
-    IDataSinkCreator dataSinkCreator = stringIDataSinkCreatorMap.get(generateClazzInfo(aClass, pluginInfo));
+    IDataPipelineCreator dataSinkCreator = stringIDataSinkCreatorMap.get(generateClazzInfo(aClass, pluginInfo));
     if (dataSinkCreator == null) {
       dataSinkCreator = aClass.newInstance();
       stringIDataSinkCreatorMap.put(generateClazzInfo(aClass, pluginInfo), dataSinkCreator);
@@ -775,9 +792,9 @@ public class PluginInfoManager implements IPluginInfoManager {
     DataSinkCreatorInfo dataSinkCreatorInfo = new DataSinkCreatorInfo();
     dataSinkCreatorInfo.setClazz(generateClazzInfo(aClass, pluginInfo));
     dataSinkCreatorInfo.setType(dataSinkCreator.type());
-    dataSinkCreatorInfo.setCanCreatePipline(dataSinkCreator.canCreatePipline());
+    dataSinkCreatorInfo.setCanCreatePipeline(dataSinkCreator.canCreatePipeline());
     ResolvedType resolvedType = typeResolver.resolve(dataSinkCreator.getClass());
-    List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataSinkCreator.class);
+    List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataPipelineCreator.class);
     ResolvedType configResolveType = resolvedTypes.get(0);
     ResolvedType settingResolveType = resolvedTypes.get(1);
     TypeInfo configClassInfo = fieldTypeResolver.resolveClass(configResolveType);
@@ -789,19 +806,19 @@ public class PluginInfoManager implements IPluginInfoManager {
     List<ClassInfo> dataSourceClassInfo = classProcess(availableDataSource);
     dataSinkCreatorInfo.setDataSourceClassInfo(dataSourceClassInfo);
 
-    Set<Class> availableProtocalConventor = dataSinkCreator.availableProtocalDataConvertor();
-    List<ClassInfo> protocalConventorClassInfo = classProcess(availableProtocalConventor);
-    dataSinkCreatorInfo.setProtocalConvertorClassInfo(protocalConventorClassInfo);
+    Set<Class> availableProtocolConverter = dataSinkCreator.availableProtocolDataConverter();
+    List<ClassInfo> protocolConverterClassInfo = classProcess(availableProtocolConverter);
+    dataSinkCreatorInfo.setProtocolConverterClassInfo(protocolConverterClassInfo);
 
-    Set<Class> availabledataConvertor = dataSinkCreator.avaliabledataConvertor();
-    List<ClassInfo> dataConvertorClassInfo = classProcess(availabledataConvertor);
-    dataSinkCreatorInfo.setDataConvertorClassInfo(dataConvertorClassInfo);
+    Set<Class> availableDataConverter = dataSinkCreator.availableDataConverter();
+    List<ClassInfo> dataConverterClassInfo = classProcess(availableDataConverter);
+    dataSinkCreatorInfo.setDataConverterClassInfo(dataConverterClassInfo);
 
-    Set<Class> availableDataChecker = dataSinkCreator.avaliableDataChecker();
+    Set<Class> availableDataChecker = dataSinkCreator.availableDataChecker();
     List<ClassInfo> dataCheckerClassInfo = classProcess(availableDataChecker);
     dataSinkCreatorInfo.setCheckerClassInfo(dataCheckerClassInfo);
 
-    Set<Class> availableDataSink = dataSinkCreator.avaliableDataSink();
+    Set<Class> availableDataSink = dataSinkCreator.availableDataSink();
     List<ClassInfo> dataSinkClassInfo = classProcess(availableDataSink);
     dataSinkCreatorInfo.setDataSinkClassInfo(dataSinkClassInfo);
 
@@ -856,26 +873,26 @@ public class PluginInfoManager implements IPluginInfoManager {
       classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
     }
 
-    if(IProtocalDataConvertor.class.isAssignableFrom(clazz)){
-      Class tClass = IData.getTypeByClass(0, clazz, IProtocalDataConvertor.class);
-      Class pClass = IData.getTypeByClass(1, clazz, IProtocalDataConvertor.class);
-      Class sClass = IData.getTypeByClass(2, clazz, IProtocalDataConvertor.class);
+    if(IProtocolDataConverter.class.isAssignableFrom(clazz)){
+      Class tClass = IData.getTypeByClass(0, clazz, IProtocolDataConverter.class);
+      Class pClass = IData.getTypeByClass(1, clazz, IProtocolDataConverter.class);
+      Class sClass = IData.getTypeByClass(2, clazz, IProtocolDataConverter.class);
       classInfo.setTClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(tClass)));
       classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
       classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
     }
 
-    if(IProtocalDataChecker.class.isAssignableFrom(clazz)){
-      Class pClass = IData.getTypeByClass(0, clazz, IProtocalDataChecker.class);
-      Class sClass = IData.getTypeByClass(1, clazz, IProtocalDataChecker.class);
+    if(IProtocolDataChecker.class.isAssignableFrom(clazz)){
+      Class pClass = IData.getTypeByClass(0, clazz, IProtocolDataChecker.class);
+      Class sClass = IData.getTypeByClass(1, clazz, IProtocolDataChecker.class);
       classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
       classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));
     }
 
-    if(IDataConvertor.class.isAssignableFrom(clazz)){
-      Class pClass = IData.getTypeByClass(0, clazz, IDataConvertor.class);
-      Class rClass = IData.getTypeByClass(1, clazz, IDataConvertor.class);
-      Class sClass = IData.getTypeByClass(2, clazz, IDataConvertor.class);
+    if(IDataConverter.class.isAssignableFrom(clazz)){
+      Class pClass = IData.getTypeByClass(0, clazz, IDataConverter.class);
+      Class rClass = IData.getTypeByClass(1, clazz, IDataConverter.class);
+      Class sClass = IData.getTypeByClass(2, clazz, IDataConverter.class);
       classInfo.setPClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(pClass)));
       classInfo.setRClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(rClass)));
       classInfo.setSClassInfo(fieldTypeResolver.resolveClass(typeResolver.resolve(sClass)));

@@ -710,7 +710,7 @@ public class ReflectUtil {
   }
 
   private static Type findType(List<Type> allGenericInterfaces, List<Type> allGenericClazz, ParameterizedType genericInterface, int index, String flag) {
-    Type actualTypeArgument = ((ParameterizedType) genericInterface).getActualTypeArguments()[index];
+    Type actualTypeArgument = genericInterface.getActualTypeArguments()[index];
     if (actualTypeArgument.getTypeName().equals(flag)) {
       TypeVariable typeVariable = (TypeVariable) actualTypeArgument;
       GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();

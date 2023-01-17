@@ -687,6 +687,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 平均Rebalance算法
@@ -729,16 +730,17 @@ public class CommonRebalance implements IRebalance {
   private TaskAssignedInfo changeNodeOnNodeJoin(List<NodeInfo> liveNodes, DistributedTask distributedTask, NodeInfo joinNode) {
     //机器加入
     TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
-    Integer totalNumberOfPipline = distributedTask.getTotalNumberOfPipline();
-    if (totalNumberOfPipline > 2 * distributedTask.getTaskAssignedInfo().getAssignedInfoMap().keySet().size() || liveNodes.size() == 1) {
-      //任务数是目前机器数的2倍再转移
+    Integer totalNumberOfPipeline = distributedTask.getTotalNumberOfPipeline();
+    if (totalNumberOfPipeline > distributedTask.getTaskAssignedInfo().getAssignedInfoMap().values().stream().filter(nodeAssignedInfo -> nodeAssignedInfo.getTaskNum() > 0).collect(Collectors.toList()).size()
+            || liveNodes.size() == 1) {
+      //设置管道数大于目前运行该任务节点数再转移
       List<NodeInfo> newLiveNodes = new ArrayList<>(liveNodes);
       //到排序
       newLiveNodes.sort((o1, o2) -> Long.valueOf(o2.getTaskNum().longValue()).compareTo(o1.getTaskNum().longValue()));
       //每台理想状态下的任务数
-      int avg = totalNumberOfPipline / liveNodes.size();
+      int avg = totalNumberOfPipeline / liveNodes.size();
       avg = avg == 0 ? 1 : avg;
-      int notDistribution = totalNumberOfPipline;
+      int notDistribution = totalNumberOfPipeline;
       for (NodeInfo newLiveNode : newLiveNodes) {
         if (notDistribution > 0) {
           TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(newLiveNode.getNodeName());

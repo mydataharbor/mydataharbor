@@ -709,5 +709,5 @@ public enum TaskState {
   /**
    * 结束
    */
-  over;
+  over
 }

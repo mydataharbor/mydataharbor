@@ -675,7 +675,6 @@
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
 
-
 package mydataharbor.server;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -685,9 +684,10 @@ import lombok.extern.slf4j.Slf4j;
 import mydataharbor.plugin.api.IPluginServer;
 import mydataharbor.plugin.app.pluginserver.PluginServerImpl;
 import mydataharbor.util.VersionUtil;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
+
+import org.slf4j.LoggerFactory;
 
 /**
  * 数据港口基座服务
@@ -696,41 +696,43 @@ import java.io.File;
  */
 @Slf4j
 public class MyDataHarborServerBoot {
-  public static void main(String[] args) {
-    System.out.println("\n" +
-      "--      __  ___             ____            __             __  __                    __                 \n" +
-      "--     /  |/  /   __  __   / __ \\  ____ _  / /_  ____ _   / / / /  ____ _   _____   / /_   ____    _____\n" +
-      "--    / /|_/ /   / / / /  / / / / / __ `/ / __/ / __ `/  / /_/ /  / __ `/  / ___/  / __ \\ / __ \\  / ___/\n" +
-      "--   / /  / /   / /_/ /  / /_/ / / /_/ / / /_  / /_/ /  / __  /  / /_/ /  / /     / /_/ // /_/ / / /    \n" +
-      "--  /_/  /_/    \\__, /  /_____/  \\__,_/  \\__/  \\__,_/  /_/ /_/   \\__,_/  /_/     /_.___/ \\____/ /_/     \n" +
-      "--             /____/                                                                                   \n");
-    System.out.println(" :: MyDataHarbor ::        (" + (VersionUtil.getVersion() == null ? "dev" : VersionUtil.getVersion()) + ")" + "\n");
-    initLog();
-    IPluginServer pluginServer = new PluginServerImpl(MyDataHarborServerBoot.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-    try {
-      pluginServer.start();
-    } catch (Throwable throwable) {
-      log.error("启动时发生错误！", throwable);
-      System.exit(-1);
+    public static void main(String[] args) {
+        log.info("\n" +
+                "--      __  ___             ____            __             __  __                    __                 \n" +
+                "--     /  |/  /   __  __   / __ \\  ____ _  / /_  ____ _   / / / /  ____ _   _____   / /_   ____    _____\n" +
+                "--    / /|_/ /   / / / /  / / / / / __ `/ / __/ / __ `/  / /_/ /  / __ `/  / ___/  / __ \\ / __ \\  / ___/\n" +
+                "--   / /  / /   / /_/ /  / /_/ / / /_/ / / /_  / /_/ /  / __  /  / /_/ /  / /     / /_/ // /_/ / / /    \n" +
+                "--  /_/  /_/    \\__, /  /_____/  \\__,_/  \\__/  \\__,_/  /_/ /_/   \\__,_/  /_/     /_.___/ \\____/ /_/     \n" +
+                "--             /____/                                                                                   \n");
+        log.info(" :: MyDataHarbor ::        (" + (VersionUtil.getVersion() == null ? "dev" : VersionUtil.getVersion()) + ")" + "\n");
+        initLog();
+        IPluginServer pluginServer = new PluginServerImpl(MyDataHarborServerBoot.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        try {
+            pluginServer.start();
+        }
+        catch (Throwable throwable) {
+            log.error("启动时发生错误！", throwable);
+            System.exit(-1);
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> pluginServer.stop()));
+        pluginServer.startDaemonAwaitThread();
+        log.info("系统启动成功！");
     }
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> pluginServer.stop()));
-    pluginServer.startDaemonAwaitThread();
-    log.info("系统启动成功！");
-  }
 
-  private static void initLog() {
-    File logbackFile = new File("./config/logback.xml");
-    if (logbackFile.exists()) {
-      LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-      JoranConfigurator configurator = new JoranConfigurator();
-      configurator.setContext(lc);
-      lc.reset();
-      try {
-        configurator.doConfigure(logbackFile);
-      } catch (JoranException e) {
-        e.printStackTrace(System.err);
-        System.exit(-1);
-      }
+    private static void initLog() {
+        File logbackFile = new File("./config/logback.xml");
+        if (logbackFile.exists()) {
+            LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(lc);
+            lc.reset();
+            try {
+                configurator.doConfigure(logbackFile);
+            }
+            catch (JoranException e) {
+                e.printStackTrace(System.err);
+                System.exit(-1);
+            }
+        }
     }
-  }
 }

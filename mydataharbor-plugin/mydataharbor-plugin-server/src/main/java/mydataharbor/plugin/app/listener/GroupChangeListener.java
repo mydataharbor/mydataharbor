@@ -690,14 +690,19 @@ import mydataharbor.plugin.api.task.SingleTask;
 import mydataharbor.plugin.api.task.TaskAssignedInfo;
 import mydataharbor.plugin.api.task.TaskState;
 import mydataharbor.rpc.util.JsonUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.framework.recipes.cache.NodeCacheListener;
-
-import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * @auth xulang
@@ -774,7 +779,7 @@ public class GroupChangeListener implements NodeCacheListener {
             taskManager.manageTask(distributedTask.getTaskId(), TaskState.over);
           } else {
             SingleTask singleTask = JsonUtil.deserialize(JsonUtil.serialize(distributedTask), SingleTask.class);
-            singleTask.setNumberOfPipline(nodeAssignedInfo.getTaskNum());
+            singleTask.setNumberOfPipeline(nodeAssignedInfo.getTaskNum());
             newTaskMap.put(singleTask.getTaskId(), singleTask);
           }
 
@@ -784,62 +789,59 @@ public class GroupChangeListener implements NodeCacheListener {
 
     Map<String, SingleTask> runningTaskMap = taskManager.lisTask().stream().collect(Collectors.toMap(SingleTask::getTaskId, o -> o, (ke1, ke2) -> ke1));
     //本机增加任务
-    for (Map.Entry<String, SingleTask> stringSingleTaskEntry : newTaskMap.entrySet()) {
+    for (Map.Entry<String, SingleTask> newTaskEntry : newTaskMap.entrySet()) {
       try {
-        if (runningTaskMap.get(stringSingleTaskEntry.getKey()) == null
-          && !stringSingleTaskEntry.getValue().getTaskState().equals(TaskState.over)) {
-          log.info("增加任务:{}", stringSingleTaskEntry.getValue());
-          taskManager.submitTask(stringSingleTaskEntry.getValue());
+        if (runningTaskMap.get(newTaskEntry.getKey()) == null  && !newTaskEntry.getValue().getTaskState().equals(TaskState.over)) {
+          log.info("增加任务:{}", newTaskEntry.getValue());
+          taskManager.submitTask(newTaskEntry.getValue());
           //当前本机状态是created
-          TaskState taskState = stringSingleTaskEntry.getValue().getTaskState();
+          TaskState taskState = newTaskEntry.getValue().getTaskState();
           switch (taskState) {
             case created:
               //啥也不做，因为初始状态就是create
               break;
             case started:
             case continued:
-              taskManager.manageTask(stringSingleTaskEntry.getKey(), TaskState.started);
+              taskManager.manageTask(newTaskEntry.getKey(), TaskState.started);
               break;
             case suspend:
               //先启动，再暂停
-              taskManager.pauseAndStart(stringSingleTaskEntry.getKey());
+              taskManager.pauseAndStart(newTaskEntry.getKey());
               break;
           }
-
         }
       } catch (Exception e) {
-        log.error("增加任务:{},异常", stringSingleTaskEntry.getValue(), e);
+        log.error("增加任务:{},异常", newTaskEntry.getValue(), e);
       }
 
     }
 
-    for (Map.Entry<String, SingleTask> stringSingleTaskEntry : runningTaskMap.entrySet()) {
+    for (Map.Entry<String, SingleTask> runningTaskEntry : runningTaskMap.entrySet()) {
       try {
-        SingleTask newSingleTask = newTaskMap.get(stringSingleTaskEntry.getKey());
+        SingleTask newSingleTask = newTaskMap.get(runningTaskEntry.getKey());
         if (newSingleTask == null) {
           //删除任务
-          log.info("删除任务:{}", stringSingleTaskEntry.getKey());
-          taskManager.manageTask(stringSingleTaskEntry.getKey(), TaskState.over);
+          log.info("删除任务:{}", runningTaskEntry.getKey());
+          taskManager.manageTask(runningTaskEntry.getKey(), TaskState.over);
         } else {
-          if (!newSingleTask.equals(stringSingleTaskEntry.getValue())) {
+          if (!newSingleTask.equals(runningTaskEntry.getValue())) {
             //任务修改
             //状态修改
-            log.info("任务状态修改:{},{}", stringSingleTaskEntry.getKey(), newSingleTask.getTaskState());
-            taskManager.manageTask(stringSingleTaskEntry.getKey(), newSingleTask.getTaskState());
+            log.info("任务状态修改:{},{}", runningTaskEntry.getKey(), newSingleTask.getTaskState());
+            taskManager.manageTask(runningTaskEntry.getKey(), newSingleTask.getTaskState());
             if (newSingleTask.getTaskState().equals(TaskState.over)) {
               continue;
             }
             //任务数修改
-            log.info("任务数修改:{},新任务数:{}", stringSingleTaskEntry.getKey(), newSingleTask.getNumberOfPipline());
-            taskManager.editTaskNum(stringSingleTaskEntry.getKey(), newSingleTask.getNumberOfPipline(), newSingleTask);
+            log.info("任务数修改:{},新任务数:{}", runningTaskEntry.getKey(), newSingleTask.getNumberOfPipeline());
+            taskManager.editTaskNum(runningTaskEntry.getKey(), newSingleTask.getNumberOfPipeline(), newSingleTask);
           }
         }
       } catch (Exception e) {
-        log.error("任务修改发生异常！:{}", stringSingleTaskEntry.getValue(), e);
+        log.error("任务修改发生异常！:{}", runningTaskEntry.getValue(), e);
       }
 
     }
-
 
   }
 
@@ -867,10 +869,14 @@ public class GroupChangeListener implements NodeCacheListener {
     for (PluginInfo installedPlugin : groupInfo.getInstalledPlugins()) {
       if (allPluginInfoMap.get(installedPlugin.getPluginId()) == null) {
         //安装
-        String loadedPlugin = pluginRemoteManager.loadPluginByRepository(installedPlugin.getPluginId(), installedPlugin.getVersion());
-        if (loadedPlugin != null) {
-          loadedPlugins.add(loadedPlugin);
-        }
+          try {
+              String loadedPlugin = pluginRemoteManager.loadPluginByRepository(installedPlugin.getPluginId(), installedPlugin.getVersion());
+              if (loadedPlugin != null) {
+                  loadedPlugins.add(loadedPlugin);
+              }
+          }catch (Throwable e){
+              log.error("加载插件失败",e);
+          }
       }
     }
     for (String loadedPlugin : loadedPlugins) {

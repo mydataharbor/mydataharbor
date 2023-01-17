@@ -699,10 +699,10 @@ public class BaseSettingContext {
   }
 
   /**
-   * 对于每一个pipline是否开启并行处理
+   * 对于每一个pipeline是否开启并行处理
    */
   @Builder.Default
-  @MyDataHarborMarker(title = "对于每一个pipline是否开启并行处理", defaultValue = "false")
+  @MyDataHarborMarker(title = "对于每一个pipeline是否开启并行处理", defaultValue = "false")
   private boolean parallel = false;
 
   /**

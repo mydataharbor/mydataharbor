@@ -678,9 +678,9 @@
 
 package mydataharbor.plugin.api.group;
 
+import lombok.Data;
 import mydataharbor.plugin.api.node.NodeInfo;
 import mydataharbor.plugin.api.plugin.PluginInfo;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.HashSet;

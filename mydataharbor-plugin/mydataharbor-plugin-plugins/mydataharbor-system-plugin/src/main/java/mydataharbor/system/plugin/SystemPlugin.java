@@ -678,6 +678,8 @@
 
 package mydataharbor.system.plugin;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.pf4j.Plugin;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
@@ -687,6 +689,7 @@ import org.pf4j.PluginWrapper;
  *
  * @author xulang
  */
+@Slf4j
 public class SystemPlugin extends Plugin {
 
   private static PluginManager pluginManager;
@@ -702,12 +705,12 @@ public class SystemPlugin extends Plugin {
 
   @Override
   public void start() {
-    System.out.println("SystemPlugin.start()");
+      log.info("SystemPlugin.start()");
   }
 
   @Override
   public void stop() {
-    System.out.println("SystemPlugin.stop()");
+      log.info("SystemPlugin.stop()");
   }
 
 }

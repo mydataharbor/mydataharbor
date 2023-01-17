@@ -680,8 +680,6 @@ package mydataharbor.rpc.client;
 
 import mydataharbor.rpc.codec.RpcRequest;
 import mydataharbor.rpc.codec.RpcResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -689,6 +687,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.ReentrantLock;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RpcFuture implements Future<Object> {
     private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
@@ -813,11 +814,7 @@ public class RpcFuture implements Future<Object> {
         @Override
         protected boolean tryRelease(int arg) {
             if (getState() == pending) {
-                if (compareAndSetState(pending, done)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return compareAndSetState(pending, done);
             } else {
                 return true;
             }

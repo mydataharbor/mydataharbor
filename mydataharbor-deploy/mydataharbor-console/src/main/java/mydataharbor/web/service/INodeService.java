@@ -678,15 +678,16 @@
 
 package mydataharbor.web.service;
 
-import mydataharbor.plugin.api.group.GroupInfo;
-import mydataharbor.plugin.api.plugin.PluginInfo;
-import mydataharbor.plugin.api.node.NodeInfo;
 import mydataharbor.plugin.api.IPluginRemoteManager;
+import mydataharbor.plugin.api.group.GroupInfo;
+import mydataharbor.plugin.api.node.NodeInfo;
+import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.web.entity.RepoPlugin;
-import org.apache.curator.framework.CuratorFramework;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.curator.framework.CuratorFramework;
 
 /**
  * @auth xulang
