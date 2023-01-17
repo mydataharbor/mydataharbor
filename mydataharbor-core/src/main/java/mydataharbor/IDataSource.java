@@ -699,6 +699,13 @@ public interface IDataSource<T, S extends BaseSettingContext> extends Closeable,
    */
   String dataSourceType();
 
+    /**
+     * 在执行线程里调用，插件可以在此方法中初始化一些变量
+     * 包括但不限于从永久存储里获取任务之前执行的状态数据等
+     * @param settingContext
+     */
+  default void init(S settingContext){}
+
   /**
    * 获取数据，循环调用
    * 当数据处理完成时，该方法将抛出

@@ -678,16 +678,17 @@
 
 package mydataharbor.plugin.app.listener;
 
+import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
 import mydataharbor.plugin.api.node.NodeInfo;
-import lombok.extern.slf4j.Slf4j;
+import mydataharbor.rpc.util.JsonUtil;
+
+import java.util.function.Consumer;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
-import mydataharbor.rpc.util.JsonUtil;
-
-import java.util.function.Consumer;
 
 /**
  * @auth xulang

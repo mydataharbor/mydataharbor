@@ -1,7 +1,5 @@
 package mydataharbor.web.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
 import mydataharbor.exception.DataSinkCommonException;
@@ -13,20 +11,39 @@ import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.IPluginRepository;
-import okhttp3.*;
-import org.apache.commons.io.FileUtils;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Repository;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import java.io.*;
-import java.security.Key;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * 官方插件仓库，链条的最后一个节点，相当于maven的中央仓库
@@ -224,11 +241,11 @@ public class MyDataHarborPluginRepository implements IPluginRepository {
     }
     try {
       InputStream inputStream = fetchPlugin(repoPlugin.getPluginId(), repoPlugin.getVersion());
-      File reporsitoryPath = FileUtils.getFile(Constant.PLUGIN_PATH);
-      if (!reporsitoryPath.exists()) {
-        reporsitoryPath.mkdirs();
+      File repositoryPath = FileUtils.getFile(Constant.PLUGIN_PATH);
+      if (!repositoryPath.exists()) {
+        repositoryPath.mkdirs();
       }
-      File pluginFile = new File(reporsitoryPath, repoPlugin.getFileName());
+      File pluginFile = new File(repositoryPath, repoPlugin.getFileName());
       if (pluginFile.exists()) {
         pluginFile.delete();
       }

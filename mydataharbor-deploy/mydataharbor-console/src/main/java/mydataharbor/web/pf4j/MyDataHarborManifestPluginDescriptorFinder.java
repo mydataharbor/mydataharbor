@@ -1,11 +1,11 @@
 package mydataharbor.web.pf4j;
 
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
 import org.pf4j.DefaultPluginDescriptor;
 import org.pf4j.ManifestPluginDescriptorFinder;
 import org.pf4j.PluginDescriptor;
-
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 public class MyDataHarborManifestPluginDescriptorFinder extends ManifestPluginDescriptorFinder {
 

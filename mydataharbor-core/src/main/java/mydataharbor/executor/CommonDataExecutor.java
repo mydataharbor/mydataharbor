@@ -678,7 +678,7 @@
 
 package mydataharbor.executor;
 
-import mydataharbor.IDataPipline;
+import mydataharbor.IDataPipeline;
 
 /**
  * 通用执行器
@@ -687,7 +687,7 @@ import mydataharbor.IDataPipline;
  * @Date 2021/5/8
  **/
 public class CommonDataExecutor extends AbstractDataExecutor {
-  public CommonDataExecutor(IDataPipline dataPipline, String threadName) {
-    super(dataPipline, threadName);
+  public CommonDataExecutor(IDataPipeline dataPipeline, String threadName) {
+    super(dataPipeline, threadName);
   }
 }

@@ -681,9 +681,10 @@ package mydataharbor.plugin.api;
 import mydataharbor.plugin.api.plugin.PluginInfo;
 import mydataharbor.plugin.api.task.SingleTask;
 import mydataharbor.plugin.api.task.TaskState;
-import org.pf4j.PluginState;
 
 import java.util.List;
+
+import org.pf4j.PluginState;
 
 /**
  * 远程操作接口
@@ -746,12 +747,12 @@ public interface IPluginRemoteManager {
 
 
   /**
-   * 创建pipline
+   * 创建pipeline
    *
    * @param singleTask 任务信息
    * @return taskid
    */
-  String createPipline(SingleTask singleTask);
+  String createPipeline(SingleTask singleTask);
 
   /**
    * 管理task

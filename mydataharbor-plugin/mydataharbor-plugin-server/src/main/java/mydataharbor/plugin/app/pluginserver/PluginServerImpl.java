@@ -680,7 +680,11 @@ package mydataharbor.plugin.app.pluginserver;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
-import mydataharbor.plugin.api.*;
+import mydataharbor.plugin.api.IPluginInfoManager;
+import mydataharbor.plugin.api.IPluginRemoteManager;
+import mydataharbor.plugin.api.IPluginServer;
+import mydataharbor.plugin.api.IRebalance;
+import mydataharbor.plugin.api.ITaskManager;
 import mydataharbor.plugin.api.exception.PluginServerCreateException;
 import mydataharbor.plugin.api.node.NodeInfo;
 import mydataharbor.plugin.api.plugin.PluginServerConfig;
@@ -692,10 +696,15 @@ import mydataharbor.plugin.app.rebalance.CommonRebalance;
 import mydataharbor.plugin.app.rpc.RemoteManagerImpl;
 import mydataharbor.plugin.app.task.TaskManager;
 import mydataharbor.rpc.server.IRpcServer;
-import mydataharbor.rpc.server.NettyRpcRpcServer;
+import mydataharbor.rpc.server.NettyRpcServer;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.util.VersionUtil;
-import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
+
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -708,14 +717,8 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginManager;
-import org.pf4j.util.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * @auth xulang
@@ -776,45 +779,11 @@ public class PluginServerImpl implements IPluginServer {
       throw new PluginServerCreateException("pluginserver创建失败：无法读取配置文件", e);
     }
     nodeInfo.setRunJarPath(runJarPath);
-    String path = nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH;
+      String path =  nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH_WORKER;
     log.info("plugins path: {}", path);
     pluginManager = new DefaultPluginManager(Paths.get(new File(path).getAbsolutePath()));
     this.pluginInfoManager = new PluginInfoManager(this);
     this.rebalance = new CommonRebalance();
-  }
-
-  /**
-   * 解析系统配置
-   *
-   * @param pluginServerConfig
-   */
-  private void resolveSystemConfig(PluginServerConfig pluginServerConfig) {
-    String group = System.getProperty("group");
-    if (group != null) {
-      pluginServerConfig.setGroup(group);
-    }
-    String nodeName = System.getProperty("nodeName");
-    if (nodeName != null) {
-      pluginServerConfig.setNodeName(nodeName);
-    }
-    String ip = System.getProperty("ip");
-    if (ip != null) {
-      pluginServerConfig.setIp(ip);
-    }
-    if (System.getProperty("port") != null) {
-      Integer port = Integer.valueOf(System.getProperty("port"));
-      if (port != null) {
-        pluginServerConfig.setPort(port);
-      }
-    }
-    String zk = System.getProperty("zk");
-    if (zk != null) {
-      pluginServerConfig.setZk(JsonUtil.jsonToObject(zk, List.class));
-    }
-    String pluginRepository = System.getProperty("pluginRepository");
-    if (pluginRepository != null) {
-      pluginServerConfig.setPluginRepository(pluginRepository);
-    }
   }
 
   @Override
@@ -822,10 +791,9 @@ public class PluginServerImpl implements IPluginServer {
     initPluginFramework();
     initRpcServer();
     initRemoteManager();
-    if (pluginServerConfig.getZk() != null && pluginServerConfig.getZk().size() > 0) {
+    if (pluginServerConfig.getZk() != null ) {
       RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 30);
-      String zkAddress = StringUtils.join(pluginServerConfig.getZk(), ",");
-      client = CuratorFrameworkFactory.newClient(zkAddress, retryPolicy);
+      client = CuratorFrameworkFactory.newClient(pluginServerConfig.getZk(), retryPolicy);
       client.start();
       this.taskManager = new TaskManager(pluginInfoManager, client, this);
       initZkNodeInfo();
@@ -833,8 +801,42 @@ public class PluginServerImpl implements IPluginServer {
     }
   }
 
+    /**
+     * 解析系统配置
+     *
+     * @param pluginServerConfig
+     */
+    private void resolveSystemConfig(PluginServerConfig pluginServerConfig) {
+        String group = System.getProperty("group");
+        if (group != null) {
+            pluginServerConfig.setGroup(group);
+        }
+        String nodeName = System.getProperty("nodeName");
+        if (nodeName != null) {
+            pluginServerConfig.setNodeName(nodeName);
+        }
+        String ip = System.getProperty("ip");
+        if (ip != null) {
+            pluginServerConfig.setIp(ip);
+        }
+        if (System.getProperty("port") != null) {
+            Integer port = Integer.valueOf(System.getProperty("port"));
+            if (port != null) {
+                pluginServerConfig.setPort(port);
+            }
+        }
+        String zk = System.getProperty("zk");
+        if (zk != null) {
+            pluginServerConfig.setZk(zk);
+        }
+        String pluginRepository = System.getProperty("pluginRepository");
+        if (pluginRepository != null) {
+            pluginServerConfig.setPluginRepository(pluginRepository);
+        }
+    }
+
   private void initRpcServer() {
-    this.rpcServer = new NettyRpcRpcServer(nodeInfo.getIp() + ":" + nodeInfo.getPort());
+    this.rpcServer = new NettyRpcServer(nodeInfo.getIp() + ":" + nodeInfo.getPort());
     try {
       rpcServer.start();
     } catch (InterruptedException e) {
@@ -897,6 +899,7 @@ public class PluginServerImpl implements IPluginServer {
     client.close();
     stop = true;
     pluginManager.stopPlugins();
+    taskManager.close();
     rpcServer.stop();
     log.info("jvm退出，关闭实例");
   }

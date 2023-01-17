@@ -731,8 +731,13 @@ public interface ITaskManager {
    * 修改任务数量
    *
    * @param taskId
-   * @param numberOfPipline 目标
+   * @param numberOfPipeline 目标
    * @param newSingleTask
    */
-  void editTaskNum(String taskId, Integer numberOfPipline, SingleTask newSingleTask);
+  void editTaskNum(String taskId, Integer numberOfPipeline, SingleTask newSingleTask);
+
+    /**
+     * 关闭
+     */
+  void close();
 }

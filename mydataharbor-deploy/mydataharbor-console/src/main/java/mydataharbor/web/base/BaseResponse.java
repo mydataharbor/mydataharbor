@@ -698,7 +698,15 @@ public class BaseResponse<T> {
     this.msg = msg;
   }
 
+  public static BaseResponse success() {
+    return new BaseResponse(0, null, "ok");
+  }
+
   public static BaseResponse success(Object data) {
     return new BaseResponse(0, data, "ok");
+  }
+
+  public static BaseResponse fail(int code, String message) {
+    return new BaseResponse(code, null, message);
   }
 }

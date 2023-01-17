@@ -678,7 +678,7 @@
 
 package mydataharbor.plugin.api;
 
-import mydataharbor.IDataSinkCreator;
+import mydataharbor.IDataPipelineCreator;
 import mydataharbor.plugin.api.plugin.PluginInfo;
 
 import java.util.List;
@@ -711,7 +711,7 @@ public interface IPluginInfoManager {
    * @param pluginId
    * @return
    */
-  Map<String, IDataSinkCreator> getDataSinkCreatorMapByPlugin(String pluginId);
+  Map<String, IDataPipelineCreator> scanDataPipelineCreatorByPlugin(String pluginId);
 
   /**
    * 扫描这个jvm下的所有插件及其内部信息

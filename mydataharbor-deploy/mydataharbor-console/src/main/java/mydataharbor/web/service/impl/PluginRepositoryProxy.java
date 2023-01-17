@@ -13,13 +13,6 @@ import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.exception.ReconfigException;
 import mydataharbor.web.service.INodeService;
 import mydataharbor.web.service.IPluginRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.curator.framework.recipes.cache.NodeCache;
-import org.apache.curator.framework.recipes.cache.NodeCacheListener;
-import org.apache.zookeeper.data.Stat;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +20,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.zookeeper.data.Stat;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 插件存储库，代理
@@ -216,7 +216,7 @@ public class PluginRepositoryProxy implements IPluginRepository, InitializingBea
         newRepositoryConfigs.add(config);
       }
     }
-    nodeService.getClient().setData().forPath(Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME,JsonUtil.serialize(newRepositoryConfigs));
+    nodeService.getClient().setData().forPath(Constant.NODE_PREFIX + "/" + Constant.CONFIG_FILE_PATH + "/" + Constant.PLUGIN_REPOSITORY_CONFIG_FILE_NAME, JsonUtil.serialize(newRepositoryConfigs));
     return true;
   }
 

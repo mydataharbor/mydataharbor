@@ -1,7 +1,7 @@
 package mydataharbor.web.service;
 
-import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.PluginGroup;
+import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 

@@ -675,24 +675,32 @@
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
 
-
 package mydataharbor.web.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import mydataharbor.plugin.api.task.DistributedTask;
 import mydataharbor.plugin.api.task.TaskAssignedInfo;
 import mydataharbor.plugin.api.task.TaskState;
 import mydataharbor.web.base.BaseResponse;
+import mydataharbor.web.dto.resp.TaskMonitorInfo;
+import mydataharbor.web.entity.RecreateTaskRequest;
 import mydataharbor.web.entity.TaskEditRequest;
 import mydataharbor.web.service.ITaskService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @auth xulang
@@ -703,61 +711,73 @@ import java.util.Objects;
 @RequestMapping("/mydataharbor/task/")
 public class TaskController {
 
-  @Autowired
-  private ITaskService taskService;
+    @Autowired
+    private ITaskService taskService;
 
-  @PostMapping("submit")
-  @ApiOperation("向集群提交任务")
-  @ResponseBody
-  public BaseResponse<TaskAssignedInfo> submitTask(@ApiParam("任务信息") @RequestBody DistributedTask distributedTask) {
-    distributedTask.setTaskState(TaskState.created);
-    distributedTask.setCreateTime(System.currentTimeMillis());
-    distributedTask.setLastUpdateTime(System.currentTimeMillis());
-    return BaseResponse.success(taskService.submitTask(distributedTask));
-  }
-
-
-  @PostMapping("manageTaskState")
-  @ApiOperation("管理任务状态")
-  @ResponseBody
-  public BaseResponse<Boolean> manageTaskState(@ApiParam("taskId") @RequestParam("taskId") String taskId, @ApiParam("taskState") @RequestParam("taskState") TaskState taskState) {
-    taskService.manageTaskState(taskId, taskState);
-    return BaseResponse.success(true);
-  }
-
-
-  @PostMapping("listTaskByGroup")
-  @ApiOperation("依据分组列出集群任务")
-  @ResponseBody
-  public BaseResponse<Map<String, DistributedTask>> listTask(@ApiParam("taskId") @RequestParam("groupName") String groupName) {
-    Map<String, DistributedTask> taskMap = taskService.listTasks();
-    Map<String, DistributedTask> result = new HashMap<>();
-    for (Map.Entry<String, DistributedTask> taskEntry : taskMap.entrySet()) {
-      if (Objects.equals(taskEntry.getValue().getGroupName(), groupName)) {
-        result.put(taskEntry.getKey(), taskEntry.getValue());
-      }
+    @PostMapping("submit")
+    @ApiOperation("向集群提交任务")
+    @ResponseBody
+    public BaseResponse<TaskAssignedInfo> submitTask(@ApiParam("任务信息") @RequestBody DistributedTask distributedTask) {
+        distributedTask.setTaskState(TaskState.created);
+        distributedTask.setCreateTime(System.currentTimeMillis());
+        distributedTask.setLastUpdateTime(System.currentTimeMillis());
+        return BaseResponse.success(taskService.submitTask(distributedTask));
     }
-    return BaseResponse.success(result);
-  }
 
-  @PostMapping("listTask")
-  @ApiOperation("列出集群任务")
-  @ResponseBody
-  public BaseResponse<Map<String, DistributedTask>> listTask() {
-    return BaseResponse.success(taskService.listTasks());
-  }
+    @PostMapping("manageTaskState")
+    @ApiOperation("管理任务状态")
+    @ResponseBody
+    public BaseResponse<Boolean> manageTaskState(@ApiParam("taskId") @RequestParam("taskId") String taskId, @ApiParam("taskState") @RequestParam("taskState") TaskState taskState) {
+        taskService.manageTaskState(taskId, taskState);
+        return BaseResponse.success(true);
+    }
 
-  @PostMapping("editTask")
-  @ApiOperation("修改任务")
-  @ResponseBody
-  public BaseResponse<Boolean> editTask(@ApiParam("修改请求参数") @RequestBody TaskEditRequest taskEditRequest) {
-    return BaseResponse.success(taskService.editTask(taskEditRequest));
-  }
+    @PostMapping("listTaskByGroup")
+    @ApiOperation("依据分组列出集群任务")
+    @ResponseBody
+    public BaseResponse<Map<String, DistributedTask>> listTask(@ApiParam("groupName") @RequestParam("groupName") String groupName) {
+        Map<String, DistributedTask> taskMap = taskService.listTasks();
+        Map<String, DistributedTask> result = new HashMap<>();
+        for (Map.Entry<String, DistributedTask> taskEntry : taskMap.entrySet()) {
+            if (Objects.equals(taskEntry.getValue().getGroupName(), groupName)) {
+                result.put(taskEntry.getKey(), taskEntry.getValue());
+            }
+        }
+        return BaseResponse.success(result);
+    }
 
-  @PostMapping("deleteTask")
-  @ApiOperation("删除任务")
-  @ResponseBody
-  public BaseResponse<Boolean> deleteTask(@ApiParam("taskId") @RequestParam("taskId") String taskId) {
-    return BaseResponse.success(taskService.deleteTask(taskId));
-  }
+    @PostMapping("listTask")
+    @ApiOperation("列出集群任务")
+    @ResponseBody
+    public BaseResponse<Map<String, DistributedTask>> listTask() {
+        return BaseResponse.success(taskService.listTasks());
+    }
+
+    @GetMapping("getTaskMonitorInfo")
+    @ApiOperation("获取任务监控信息")
+    @ResponseBody
+    public BaseResponse<TaskMonitorInfo> getTaskMonitorInfo(@ApiParam("taskId或者外部task id") @RequestParam("taskId") String taskId) {
+        return BaseResponse.success(taskService.getTaskMonitorInfo(taskId));
+    }
+
+    @PostMapping("editTask")
+    @ApiOperation("修改任务")
+    @ResponseBody
+    public BaseResponse<Boolean> editTask(@ApiParam("修改请求参数") @RequestBody TaskEditRequest taskEditRequest) {
+        return BaseResponse.success(taskService.editTask(taskEditRequest));
+    }
+
+    @PostMapping("recreateTask")
+    @ApiOperation("重建任务")
+    @ResponseBody
+    public BaseResponse<Boolean> recreateTask(@ApiParam("修改请求参数") @RequestBody RecreateTaskRequest recreateTaskRequest) {
+        return BaseResponse.success(taskService.recreateTask(recreateTaskRequest));
+    }
+
+    @PostMapping("deleteTask")
+    @ApiOperation("删除任务")
+    @ResponseBody
+    public BaseResponse<Boolean> deleteTask(@ApiParam("taskId") @RequestParam("taskId") String taskId) {
+        return BaseResponse.success(taskService.deleteTask(taskId));
+    }
 }

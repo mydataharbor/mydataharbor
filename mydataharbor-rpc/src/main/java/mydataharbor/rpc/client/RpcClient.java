@@ -678,15 +678,13 @@
 
 package mydataharbor.rpc.client;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Proxy;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RpcClient {
   private static final Logger logger = LoggerFactory.getLogger(RpcClient.class);

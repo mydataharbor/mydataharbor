@@ -689,7 +689,7 @@ import java.util.List;
 @Data
 public class PluginServerConfig {
 
-  private List<String> zk;
+  private String zk;
 
   /**
    * rmi 远程通信ip（用户可用指定，不指定的话自动获取）

@@ -678,12 +678,12 @@
 
 package mydataharbor;
 
-import mydataharbor.exception.ResetException;
-import mydataharbor.setting.BaseSettingContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mydataharbor.exception.ResetException;
+import mydataharbor.setting.BaseSettingContext;
 
 import java.io.Closeable;
 import java.lang.reflect.Type;
@@ -696,6 +696,12 @@ import java.util.List;
  * @Date 2021/4/29
  **/
 public interface IDataSink<R, S extends BaseSettingContext> extends Closeable, IData {
+    /**
+     * 在执行线程里调用，插件可以在此方法中初始化一些变量
+     * 包括但不限于从永久存储里获取任务之前执行的状态数据等
+     * @param settingContext
+     */
+    default void init(S settingContext){}
 
   /**
    * sink名称
@@ -737,7 +743,7 @@ public interface IDataSink<R, S extends BaseSettingContext> extends Closeable, I
   @Builder
   @AllArgsConstructor
   @NoArgsConstructor
-  public static class WriterResult {
+  class WriterResult {
 
     /**
      * 是否成功

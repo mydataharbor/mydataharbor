@@ -678,9 +678,9 @@
 
 package mydataharbor.plugin.api.plugin;
 
-import mydataharbor.creator.ClassInfo;
-import mydataharbor.classutil.classresolver.TypeInfo;
 import lombok.Data;
+import mydataharbor.classutil.classresolver.TypeInfo;
+import mydataharbor.pipeline.creator.ClassInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -707,9 +707,9 @@ public class DataSinkCreatorInfo implements Serializable {
   private TypeInfo configClassInfo;
 
   /**
-   * 该creator是否可以创建pipline
+   * 该creator是否可以创建pipeline
    */
-  private boolean canCreatePipline;
+  private boolean canCreatePipeline;
 
   /**
    * 数据源信息
@@ -719,7 +719,7 @@ public class DataSinkCreatorInfo implements Serializable {
   /**
    * 协议转换器信息
    */
-  private List<ClassInfo> protocalConvertorClassInfo;
+  private List<ClassInfo> protocolConverterClassInfo;
 
   /**
    * 校验器信息
@@ -729,7 +729,7 @@ public class DataSinkCreatorInfo implements Serializable {
   /**
    * 数据转换器信息
    */
-  private List<ClassInfo> dataConvertorClassInfo;
+  private List<ClassInfo> dataConverterClassInfo;
 
   /**
    * 写入器信息

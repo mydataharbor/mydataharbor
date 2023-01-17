@@ -690,16 +690,23 @@ import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.INodeService;
 import mydataharbor.web.service.impl.PluginRepositoryProxy;
-import org.apache.commons.io.IOUtils;
-import org.pf4j.CompoundPluginDescriptorFinder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.pf4j.CompoundPluginDescriptorFinder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "node")
 @RestController

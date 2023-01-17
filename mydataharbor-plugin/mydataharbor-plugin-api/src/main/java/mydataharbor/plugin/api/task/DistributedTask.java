@@ -678,9 +678,9 @@
 
 package mydataharbor.plugin.api.task;
 
+import lombok.Data;
 import mydataharbor.constant.Constant;
 import mydataharbor.util.RandomStringUtil;
-import lombok.Data;
 
 /**
  * 分布式情况下的task元信息
@@ -696,18 +696,18 @@ public class DistributedTask extends Task {
    */
   private String groupName;
 
-  /**
-   * 是否支持再平衡
-   * 如果为true，同一个组中的机器增加或者减少，都会停止所有的任务，并且重新分配，然后启动
-   * 如果设置为false，只有当运行任务的机器挂了并且changeNodeWhenCrash为true，才会把属于这台机器的任务分配到其它机器
-   */
+    /**
+     * 是否支持再平衡
+     * 如果为true，同一个组中的机器增加或者减少，并且满足再平衡的条件就会进行任务的重新分配
+     * 如果设置为false，则任务不会再平衡，机器意外宕机任务不会转移，但是会有监控信息输出到jmx，用户可以用来告警
+     */
   private boolean enableRebalance = true;
 
 
   /**
-   * pipline条数
+   * pipeline条数
    */
-  private Integer totalNumberOfPipline = 1;
+  private Integer totalNumberOfPipeline = 1;
   /**
    * 任务分配信息
    */

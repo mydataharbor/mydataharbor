@@ -678,16 +678,17 @@
 
 package mydataharbor.datasource;
 
-import com.google.common.util.concurrent.RateLimiter;
+import lombok.extern.slf4j.Slf4j;
 import mydataharbor.IDataSource;
 import mydataharbor.exception.DataSinkCommonException;
 import mydataharbor.exception.TheEndException;
 import mydataharbor.setting.BaseSettingContext;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.google.common.util.concurrent.RateLimiter;
 
 /**
  * 带单机限流功能的数据源

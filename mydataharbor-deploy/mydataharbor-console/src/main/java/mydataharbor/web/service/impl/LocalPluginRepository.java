@@ -677,16 +677,28 @@
 
 package mydataharbor.web.service.impl;
 
-import com.github.zafarkhaja.semver.Version;
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
-import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.PluginGroup;
 import mydataharbor.web.entity.PluginId;
+import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.pf4j.MyDataHarborPluginDescriptor;
 import mydataharbor.web.service.IPluginRepository;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -696,16 +708,11 @@ import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginDescriptorFinder;
-import org.pf4j.VersionManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.*;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import com.github.zafarkhaja.semver.Version;
 
 /**
  * 本地存储库

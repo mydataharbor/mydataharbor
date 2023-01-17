@@ -681,6 +681,8 @@ package mydataharbor.web.service;
 import mydataharbor.plugin.api.task.DistributedTask;
 import mydataharbor.plugin.api.task.TaskAssignedInfo;
 import mydataharbor.plugin.api.task.TaskState;
+import mydataharbor.web.dto.resp.TaskMonitorInfo;
+import mydataharbor.web.entity.RecreateTaskRequest;
 import mydataharbor.web.entity.TaskEditRequest;
 
 import java.util.Map;
@@ -722,9 +724,24 @@ public interface ITaskService {
    */
   Boolean editTask(TaskEditRequest taskEditRequest);
 
+    /**
+     * 任务重建
+     * @param recreateTaskRequest
+     * @return
+     */
+    Boolean recreateTask(RecreateTaskRequest recreateTaskRequest);
+
   /**
    * 删除任务
    * @return
    */
   Boolean deleteTask(String taskId);
+
+    /**
+     * 获取任务监控信息
+     * @param taskId
+     * @return
+     */
+  TaskMonitorInfo getTaskMonitorInfo(String taskId);
+
 }

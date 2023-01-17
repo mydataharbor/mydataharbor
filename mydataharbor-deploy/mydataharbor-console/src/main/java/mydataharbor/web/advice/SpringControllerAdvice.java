@@ -678,16 +678,14 @@
 
 package mydataharbor.web.advice;
 
-import mydataharbor.web.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import mydataharbor.web.base.BaseResponse;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ControllerAdvice
 @Slf4j

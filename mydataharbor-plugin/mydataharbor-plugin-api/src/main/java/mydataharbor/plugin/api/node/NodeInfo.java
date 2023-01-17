@@ -678,18 +678,19 @@
 
 package mydataharbor.plugin.api.node;
 
-import mydataharbor.plugin.api.plugin.PluginServerConfig;
-import mydataharbor.plugin.api.exception.RenameException;
-import mydataharbor.util.NetworkUtil;
-import mydataharbor.util.RandomStringUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import mydataharbor.plugin.api.exception.RenameException;
+import mydataharbor.plugin.api.plugin.PluginServerConfig;
+import mydataharbor.util.NetworkUtil;
+import mydataharbor.util.RandomStringUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 机器节点信息
