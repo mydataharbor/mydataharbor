@@ -91,18 +91,7 @@ MyDataHarbor唯一依赖的中间件是zookeeper，共有两个组件：mydataha
 
 ## 支持的插件
 
-| 中间件/协议        | 数据源（DataSource） | 写入源（Sink）   |作者	|备注	 |
-| ------------- | -------------------- | ---------------- |-----------|----------|
-| kafka         | ✅全部版本        | ✅全部版本           |MyDataHarbor||
-| redis         | 暂不考虑          | ✅全部版本            |MyDataHarbor|支持连接单机，主从，哨兵，cluster模式的各种redis服务端<br/>目前支持string数据格式的操作<br/>有需要可以联系作者扩展：list、set、zset、hash|
-| elasticsearch | 计划中            |✅5.6.x✅6.4.x✅6.0.x<br>✅6.8.x✅6.5.x✅6.6.x<br>✅6.7.x✅7.7.x✅7.13.x |MyDataHarbor||
-| http          | 暂不考虑          | ✅                |MyDataHarbor||
-| jdbc          | ✅mysql全部版本<br>✅oracle全部版本<br>✅hive全部版本<br>PostgrcSQL计划中   | ✅mysql全部版本<br>✅oracle全部版本<br>PostgrcSQL计划中           |MyDataHarbor|三种模式(全量/增量/先全量再增量)<br>❗ 此种方式无法同步删除的数据|
-| MongoDB       | 计划中          | 计划中                |虚位以待	|	|
-| binlog       | 计划中          | ×                |虚位以待			|		|
-| rabbitMQ | 计划中 | 计划中 |虚位以待	|	|
-| RocketMQ | 计划中 | 计划中 |虚位以待	|	|
-
+详见  https://mydataharbor.yuque.com/staff-tzwgrd/uqew9p/pckin3
 
 ## 快速开始
 
