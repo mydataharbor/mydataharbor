@@ -21,7 +21,8 @@
     MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的数据同步中间件。
     ## 更新日志
     ### 2.0.1版本
-    1、
+    1、优化pipeline可视化创建，通过UI的方式自由组合各组件创建pipeline，无需自定义DataPipelineCreator
+    2、引入定时任务，解决周期性任务触发问题（无需依赖外围）
   </description>
   <properties>
     <revision>2.0.1-SNAPSHOT</revision>
