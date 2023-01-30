@@ -1012,9 +1012,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
    */
   protected void doForEach(IDataSource<T, S> dataProvider, IProtocolDataConverter<T, P, S> protocolDataConverter, IProtocolDataChecker checker, IDataConverter<P, R, S> dataConverter, IDataSink<R, S> writer, List<P> protocolConvertSuccess, List<ErrorRecord<T, Object>> protocolConvertError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocolDataChecker.CheckResult>> checkerError, List<R> dataConvertSuccess, List<ErrorRecord<P, Object>> dataConvertError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConvertSuccess, T tRecord) {
     //协议转换
-      long protocolConvertUseTimeStart = System.currentTimeMillis();
+    long protocolConvertUseTimeStart = System.currentTimeMillis();
     P protocolData = protocolConvert(protocolDataConverter, protocolConvertSuccess, protocolConvertError, tRecord);
-      taskMonitor.protocolConvertUseTimeIncrease(System.currentTimeMillis() - protocolConvertUseTimeStart);
+    taskMonitor.protocolConvertUseTimeIncrease(System.currentTimeMillis() - protocolConvertUseTimeStart);
     if (protocolData == null) {
       //协议转换失败
       return;
@@ -1172,12 +1172,14 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
   private List<R> dataConvert(IDataConverter<P, R, S> dataConverter, List<R> dataConvertSuccess, List<ErrorRecord<P, Object>> dataConvertError, P protocolData) {
     try {
       Object record = dataConverter.convert(protocolData, settingContext);
-      if (record instanceof List) {
-        dataConvertSuccess.addAll((List) record);
-        return (List) record;
+      if(record!=null) {
+          if (record instanceof List) {
+              dataConvertSuccess.addAll((List) record);
+              return (List) record;
+          }
+          dataConvertSuccess.add((R) record);
+          return Collections.singletonList((R) record);
       }
-      dataConvertSuccess.add((R) record);
-      return Collections.singletonList((R) record);
     } catch (Exception e) {
       log.error("数据转换异常！", e);
       dataConvertError.add(ErrorRecord.<P, Object>builder()
@@ -1213,7 +1215,8 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
   private P protocolConvert(IProtocolDataConverter<T, P, S> protocolDataConverter, List<P> protocolConvertSuccess, List<ErrorRecord<T, Object>> protocolConvertError, T tRecord) {
     try {
       P protocolData = protocolDataConverter.convert(tRecord, settingContext);
-      protocolConvertSuccess.add(protocolData);
+      if(protocolData!=null)
+          protocolConvertSuccess.add(protocolData);
       return protocolData;
     } catch (Exception e) {
       log.error("协议转换失败！", e);

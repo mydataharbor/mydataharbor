@@ -694,9 +694,9 @@ public class Constant {
 
     public static final String CONFIG_FILE_NAME = "system.yml";
 
-    public static final String PLUGIN_PATH = "nfsdata/data-harbor-console/plugins/";
+    public static final String PLUGIN_PATH = "mydataharbor-console-plugins/";
   
-    public static final String PLUGIN_PATH_WORKER = "plugins/";
+    public static final String PLUGIN_PATH_WORKER = "mydataharbor-server-plugins/";
 
     public static final String PLUGIN_DOWNLOAD_PATH = "/mydataharbor/plugin/downloadPlugin";
 
