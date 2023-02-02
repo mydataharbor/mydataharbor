@@ -690,15 +690,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JsonUtil {
     private static ObjectMapper objMapper = new ObjectMapper();
 
     static {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         objMapper.setDateFormat(dateFormat);
-        objMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objMapper.registerModule(new JavaTimeModule());
         objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
         objMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
