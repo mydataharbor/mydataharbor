@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mydataharbor-plugin-plugins</artifactId>
+        <groupId>com.mydataharbor</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mydataharbor-mysql2redis-demo-plugin</artifactId>
+
+    <description>
+        mysql2redis 测试demo插件
+        plugin.dependencies 只依赖了jdbc-mysql-8.0.x-plugin,redis-6.1.x-plugin 这些具体版本的插件，因为这些具体版本的插件会依赖其基础插件，所以无需重复依赖
+        使用该插件需要先安装 jdbc-plugin redis-plugin jdbc-mysql-8.0.x-plugin redis-6.1.x-plugin 四个插件
+    </description>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <plugin.provider>mydataharbor</plugin.provider>
+        <plugin.version>1.0.0-SNAPSHOT</plugin.version>
+        <plugin.group>demo</plugin.group>
+        <plugin.dependencies>jdbc-mysql-8.0.x-plugin,redis-6.1.x-plugin</plugin.dependencies>
+    </properties>
+    <dependencies>
+
+        <dependency>
+            <groupId>com.mydataharbor</groupId>
+            <artifactId>jdbc-plugin</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mydataharbor</groupId>
+            <artifactId>jdbc-mysql-8.0.x-plugin</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mydataharbor</groupId>
+            <artifactId>redis-plugin</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mydataharbor</groupId>
+            <artifactId>redis-6.1.x-plugin</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+</project>
