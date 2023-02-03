@@ -716,7 +716,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.pf4j.DefaultPluginManager;
+import org.pf4j.DefaultVersionManager;
 import org.pf4j.PluginManager;
+import org.pf4j.VersionManager;
 import org.yaml.snakeyaml.Yaml;
 
 
@@ -781,7 +783,21 @@ public class PluginServerImpl implements IPluginServer {
     nodeInfo.setRunJarPath(runJarPath);
       String path =  nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH_WORKER;
     log.info("plugins path: {}", path);
-    pluginManager = new DefaultPluginManager(Paths.get(new File(path).getAbsolutePath()));
+    pluginManager = new DefaultPluginManager(Paths.get(new File(path).getAbsolutePath())){
+        @Override
+        protected VersionManager createVersionManager() {
+            return new DefaultVersionManager(){
+                @Override
+                public boolean checkVersionConstraint(String version, String constraint) {
+                    try {
+                       return super.checkVersionConstraint(version, constraint);
+                    }catch (Exception e){
+                        return true;
+                    }
+                }
+            };
+        }
+    };
     this.pluginInfoManager = new PluginInfoManager(this);
     this.rebalance = new CommonRebalance();
   }
