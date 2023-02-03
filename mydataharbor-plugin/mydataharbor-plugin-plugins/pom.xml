@@ -14,15 +14,16 @@
   <name>mydataharbor-plugin-plugins</name>
   <description>MyDataHarbor是一个致力于解决任意数据源到任意数据端的分布式、高扩展性、高性能、事务级的中间件。</description>
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Override below properties in each plugin's pom.xml -->
     <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version>1.1.0</plugin.version>
+    <plugin.version>${project.version}</plugin.version>
     <plugin.provider>MyDataHarbor(www.mydataharbor.com)</plugin.provider>
     <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
-    <plugin.group></plugin.group>
+    <plugin.group>无分组</plugin.group>
     <plugin.group.logo></plugin.group.logo>
     <plugin.update.info></plugin.update.info>
     <plugin.dependencies/>

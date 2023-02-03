@@ -18,9 +18,6 @@
     </description>
 
     <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <plugin.provider>mydataharbor</plugin.provider>
-        <plugin.version>1.0.0-SNAPSHOT</plugin.version>
         <plugin.group>demo</plugin.group>
         <plugin.dependencies>jdbc-mysql-8.0.x-plugin,redis-6.1.x-plugin</plugin.dependencies>
     </properties>
