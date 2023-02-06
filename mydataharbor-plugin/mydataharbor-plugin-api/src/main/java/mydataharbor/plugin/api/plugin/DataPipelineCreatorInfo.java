@@ -690,7 +690,7 @@ import java.util.List;
  * @Date 2021/6/20
  **/
 @Data
-public class DataSinkCreatorInfo implements Serializable {
+public class DataPipelineCreatorInfo implements Serializable {
   /**
    * 类全限定名
    */

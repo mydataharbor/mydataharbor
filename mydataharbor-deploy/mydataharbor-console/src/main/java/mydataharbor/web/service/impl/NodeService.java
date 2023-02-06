@@ -851,7 +851,7 @@ public class NodeService implements INodeService, InitializingBean {
         //插件安装失败
         continue;
       }
-      installedPlugin.setDataSinkCreatorInfos(pluginInfo.getDataSinkCreatorInfos());
+      installedPlugin.setDataPipelineCreatorInfos(pluginInfo.getDataPipelineCreatorInfos());
     }
     return installedPlugins;
   }

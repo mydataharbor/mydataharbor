@@ -620,8 +620,8 @@ export default {
       this.form.mydataharborCreatorClazz = ''
       this.pluginInstallList.forEach(plugin => {
         if (plugin.pluginId == value) {
-          if (plugin.dataSinkCreatorInfos != null) {
-            plugin.dataSinkCreatorInfos.forEach(dataSink => {
+          if (plugin.dataPipelineCreatorInfos != null) {
+            plugin.dataPipelineCreatorInfos.forEach(dataSink => {
               if (dataSink.canCreatePipeline) { this.clazzList.push({ 'clazz': dataSink.clazz, 'type': dataSink.type }) }
             })
           }
@@ -635,7 +635,7 @@ export default {
       if (val != '') {
         this.pluginInstallList.forEach((pluginInfo) => {
           if (pluginInfo.pluginId == this.form.pluginId) {
-            pluginInfo.dataSinkCreatorInfos.forEach((creatorInfo) => {
+            pluginInfo.dataPipelineCreatorInfos.forEach((creatorInfo) => {
               if (creatorInfo.clazz == val) {
                 creatorInfo.settingClassInfo.fieldName = 'root'
                 creatorInfo.configClassInfo.fieldName = 'root'
