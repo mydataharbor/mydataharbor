@@ -785,21 +785,21 @@ public class PluginInfoManager implements IPluginInfoManager {
   }
 
   public DataPipelineCreatorInfo creatorProcess(Class<? extends IDataPipelineCreator> aClass, PluginInfo pluginInfo) throws InstantiationException, IllegalAccessException {
-    Map<String, IDataPipelineCreator> stringIDataSinkCreatorMap = dataPipelineCreatorMap.get(pluginInfo.getPluginId());
-    if (stringIDataSinkCreatorMap == null) {
-      stringIDataSinkCreatorMap = new ConcurrentHashMap<>();
-      dataPipelineCreatorMap.put(pluginInfo.getPluginId(), stringIDataSinkCreatorMap);
+    Map<String, IDataPipelineCreator> dataPipelineCreatorMap = this.dataPipelineCreatorMap.get(pluginInfo.getPluginId());
+    if (dataPipelineCreatorMap == null) {
+      dataPipelineCreatorMap = new ConcurrentHashMap<>();
+      this.dataPipelineCreatorMap.put(pluginInfo.getPluginId(), dataPipelineCreatorMap);
     }
-    IDataPipelineCreator dataSinkCreator = stringIDataSinkCreatorMap.get(generateClazzInfo(aClass, pluginInfo));
-    if (dataSinkCreator == null) {
-      dataSinkCreator = aClass.newInstance();
-      stringIDataSinkCreatorMap.put(generateClazzInfo(aClass, pluginInfo), dataSinkCreator);
+    IDataPipelineCreator dataPipelineCreator = dataPipelineCreatorMap.get(generateClazzInfo(aClass, pluginInfo));
+    if (dataPipelineCreator == null) {
+      dataPipelineCreator = aClass.newInstance();
+      dataPipelineCreatorMap.put(generateClazzInfo(aClass, pluginInfo), dataPipelineCreator);
     }
     DataPipelineCreatorInfo dataPipelineCreatorInfo = new DataPipelineCreatorInfo();
     dataPipelineCreatorInfo.setClazz(generateClazzInfo(aClass, pluginInfo));
-    dataPipelineCreatorInfo.setType(dataSinkCreator.type());
-    dataPipelineCreatorInfo.setCanCreatePipeline(dataSinkCreator.canCreatePipeline());
-    ResolvedType resolvedType = typeResolver.resolve(dataSinkCreator.getClass());
+    dataPipelineCreatorInfo.setType(dataPipelineCreator.type());
+    dataPipelineCreatorInfo.setCanCreatePipeline(dataPipelineCreator.canCreatePipeline());
+    ResolvedType resolvedType = typeResolver.resolve(dataPipelineCreator.getClass());
     List<ResolvedType> resolvedTypes = resolvedType.typeParametersFor(IDataPipelineCreator.class);
     ResolvedType configResolveType = resolvedTypes.get(0);
     ResolvedType settingResolveType = resolvedTypes.get(1);
@@ -808,23 +808,23 @@ public class PluginInfoManager implements IPluginInfoManager {
     dataPipelineCreatorInfo.setConfigClassInfo(configClassInfo);
     dataPipelineCreatorInfo.setSettingClassInfo(settingClassInfo);
 
-    Set<Class> availableDataSource = dataSinkCreator.availableDataSource();
+    Set<Class> availableDataSource = dataPipelineCreator.availableDataSource();
     List<ClassInfo> dataSourceClassInfo = classProcess(availableDataSource);
     dataPipelineCreatorInfo.setDataSourceClassInfo(dataSourceClassInfo);
 
-    Set<Class> availableProtocolConverter = dataSinkCreator.availableProtocolDataConverter();
+    Set<Class> availableProtocolConverter = dataPipelineCreator.availableProtocolDataConverter();
     List<ClassInfo> protocolConverterClassInfo = classProcess(availableProtocolConverter);
     dataPipelineCreatorInfo.setProtocolConverterClassInfo(protocolConverterClassInfo);
 
-    Set<Class> availableDataConverter = dataSinkCreator.availableDataConverter();
+    Set<Class> availableDataConverter = dataPipelineCreator.availableDataConverter();
     List<ClassInfo> dataConverterClassInfo = classProcess(availableDataConverter);
     dataPipelineCreatorInfo.setDataConverterClassInfo(dataConverterClassInfo);
 
-    Set<Class> availableDataChecker = dataSinkCreator.availableDataChecker();
+    Set<Class> availableDataChecker = dataPipelineCreator.availableDataChecker();
     List<ClassInfo> dataCheckerClassInfo = classProcess(availableDataChecker);
     dataPipelineCreatorInfo.setCheckerClassInfo(dataCheckerClassInfo);
 
-    Set<Class> availableDataSink = dataSinkCreator.availableDataSink();
+    Set<Class> availableDataSink = dataPipelineCreator.availableDataSink();
     List<ClassInfo> dataSinkClassInfo = classProcess(availableDataSink);
     dataPipelineCreatorInfo.setDataSinkClassInfo(dataSinkClassInfo);
 
