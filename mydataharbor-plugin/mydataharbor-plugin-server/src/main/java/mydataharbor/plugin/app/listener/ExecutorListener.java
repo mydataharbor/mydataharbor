@@ -733,6 +733,7 @@ public class ExecutorListener implements IExecutorListener {
             }
           } else {
             //创建成功
+              nodeAssignedInfo.setCreateException("");
             for (int i = begin; i < change + begin; i++) {
               nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create);
             }
