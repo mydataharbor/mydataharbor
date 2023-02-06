@@ -692,7 +692,8 @@ public class PipelineStateUtil {
   public static boolean pipelineIsDone(PipelineState pipelineState) {
       return pipelineState == PipelineState.crash_done
               || pipelineState == PipelineState.success_done
-              || pipelineState == PipelineState.schedule_done;
+              || pipelineState == PipelineState.schedule_done
+              || pipelineState == PipelineState.create_error;
   }
 
 
