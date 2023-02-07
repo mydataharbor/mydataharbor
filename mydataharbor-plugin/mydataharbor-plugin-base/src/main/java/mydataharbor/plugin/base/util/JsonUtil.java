@@ -699,7 +699,6 @@ public class JsonUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         objMapper.setDateFormat(dateFormat);
         objMapper.registerModule(new JavaTimeModule());
-        objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
         objMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
         objMapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
