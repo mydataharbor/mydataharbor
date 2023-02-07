@@ -746,7 +746,7 @@ public class CommonRebalance implements IRebalance {
           TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(newLiveNode.getNodeName());
           if (nodeAssignedInfo == null) {
             nodeAssignedInfo = new TaskAssignedInfo.NodeAssignedInfo();
-            nodeAssignedInfo.setNodeName(joinNode.getNodeName());
+            nodeAssignedInfo.setNodeName(newLiveNode.getNodeName());
             taskAssignedInfo.getAssignedInfoMap().put(newLiveNode.getNodeName(), nodeAssignedInfo);
           }
           nodeAssignedInfo.setTaskNum(avg);
