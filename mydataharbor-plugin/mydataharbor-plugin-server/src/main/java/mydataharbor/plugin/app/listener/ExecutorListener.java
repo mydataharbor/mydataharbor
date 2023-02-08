@@ -691,6 +691,8 @@ import mydataharbor.plugin.api.task.TaskState;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.util.PipelineStateUtil;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
@@ -727,7 +729,7 @@ public class ExecutorListener implements IExecutorListener {
           TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(nodeInfo.getNodeName());
           if (throwable != null) {
             //创建失败
-            nodeAssignedInfo.setCreateException(throwable.getMessage());
+            nodeAssignedInfo.setCreateException(StringUtils.join(ExceptionUtils.getThrowables(throwable), " --> "));
             for (int i = begin; i < change + begin; i++) {
               nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create_error);
             }
