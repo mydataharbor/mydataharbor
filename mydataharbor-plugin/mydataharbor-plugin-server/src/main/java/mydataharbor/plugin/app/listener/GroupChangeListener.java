@@ -878,7 +878,7 @@ public class GroupChangeListener implements NodeCacheListener {
           }catch (Throwable e){
               log.error("加载插件失败",e);
           }
-      }else if(!nowInstallPluginInfo.getVersion().equals(installedPlugin.getVersion())){
+      } else if(!nowInstallPluginInfo.getVersion().equals(installedPlugin.getVersion())){
             //版本变更，先卸载再安装
             pluginRemoteManager.uninstallPlugin(nowInstallPluginInfo.getPluginId());
             //安装

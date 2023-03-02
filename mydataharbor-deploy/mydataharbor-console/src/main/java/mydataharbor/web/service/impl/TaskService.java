@@ -745,6 +745,10 @@ public class TaskService implements ITaskService, InitializingBean {
                     distributedTask.setEnableRebalance(taskEditRequest.getEnableRebalance());
                     hasEdit = true;
                 }
+                if (taskEditRequest.getEnableLoadBalance() != null && !taskEditRequest.getEnableLoadBalance().equals(distributedTask.isEnableLoadBalance())) {
+                    distributedTask.setEnableLoadBalance(taskEditRequest.getEnableLoadBalance());
+                    hasEdit = true;
+                }
                 if (taskEditRequest.getTotalNumberOfPipeline() != null && !taskEditRequest.getTotalNumberOfPipeline().equals(distributedTask.getTotalNumberOfPipeline())) {
                     if (taskEditRequest.getTotalNumberOfPipeline() < 0) {
                         throw new TaskManageException("任务数不能小于0！");
@@ -841,6 +845,7 @@ public class TaskService implements ITaskService, InitializingBean {
         taskEditRequest.setTaskId(distributedTask.getTaskId());
         taskEditRequest.setTotalNumberOfPipeline(0);
         taskEditRequest.setEnableRebalance(distributedTask.isEnableRebalance());
+        taskEditRequest.setEnableLoadBalance(distributedTask.isEnableLoadBalance());
         taskEditRequest.setTaskName(distributedTask.getTaskName());
         Boolean destroyTaskResult = editTask(taskEditRequest);
         if (destroyTaskResult) {

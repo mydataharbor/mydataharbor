@@ -697,11 +697,17 @@ public class DistributedTask extends Task {
   private String groupName;
 
     /**
-     * 是否支持再平衡
-     * 如果为true，同一个组中的机器增加或者减少，并且满足再平衡的条件就会进行任务的重新分配
-     * 如果设置为false，则任务不会再平衡，机器意外宕机任务不会转移，但是会有监控信息输出到jmx，用户可以用来告警
+     * 是否支持故障转移
+     * 值为false，节点停机，任务将不会自动转移！但是会有告警信息发出，适合不能重复运行的任务
+     * 值为true，当节点异常停机的时候，任务将会自动转移到其他节点运行
      */
   private boolean enableRebalance = true;
+
+    /**
+     * 负载均衡
+     * 当集群内有节点加入是，负载均衡的任务有可能会被重新分配到其他节点（任务会被有中断的过程），以便分散压力，如果不希望任务随意被停止转移请设置为false
+     */
+  private boolean enableLoadBalance = true;
 
 
   /**

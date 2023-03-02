@@ -781,7 +781,7 @@ public class PluginServerImpl implements IPluginServer {
       throw new PluginServerCreateException("pluginserver创建失败：无法读取配置文件", e);
     }
     nodeInfo.setRunJarPath(runJarPath);
-      String path =  nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH_WORKER;
+    String path =  nodeInfo.getRunJarPath() + Constant.PLUGIN_PATH_WORKER;
     log.info("plugins path: {}", path);
     pluginManager = new DefaultPluginManager(Paths.get(new File(path).getAbsolutePath())){
         @Override

@@ -31,9 +31,15 @@
       <el-table-column :show-overflow-tooltip="true" prop="pluginId" label="插件ID" width="250"/>
       <el-table-column :show-overflow-tooltip="true" prop="mydataharborCreatorClazz" label="创建器"/>
       <!--   <el-table-column prop="groupName" label="组名" width="100"></el-table-column>-->
-      <el-table-column label="负载均衡" width="120">
+      <el-table-column label="故障转移" width="120">
         <template #default="scope">
           <el-tag v-if="scope.row.enableRebalance" size="small">true</el-tag>
+          <el-tag v-else size="small" type="warning">false</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="负载均衡" width="120">
+        <template #default="scope">
+          <el-tag v-if="scope.row.enableLoadBalance" size="small">true</el-tag>
           <el-tag v-else size="small" type="warning">false</el-tag>
         </template>
       </el-table-column>
@@ -83,18 +89,40 @@
     <el-dialog :title="dialogName" :visible.sync="dialogFormVisible" width="80%">
       <el-form :model="form" label-position="left" label-width="70px">
         <el-row>
-          <el-col :span="11">
+          <el-col :span="8">
             <el-form-item label="组名">
               <el-input v-model="form.groupName" autocomplete="off" size="small" style="width: 80%" disabled/>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="任务名">
+              <el-input
+                v-model="form.taskName"
+                placeholder="请输入任务名"
+                autocomplete="off"
+                size="small"
+                style="width: 80%"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="管道数">
+              <el-input
+                v-model="form.totalNumberOfPipeline"
+                autocomplete="off"
+                size="small"
+                style="width: 80%"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+
           <el-col :span="12">
             <el-form-item label="插件ID" prop="pluginId">
               <el-select
                 v-model="form.pluginId"
                 placeholder="请选择组件ID"
                 size="small"
-                style="width: 100%"
+                style="width: 90%"
                 @change="selectPluginId">
                 <el-option
                   v-for="item in pluginInstallList"
@@ -104,24 +132,13 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="管道数">
-              <el-input
-                v-model="form.totalNumberOfPipeline"
-                autocomplete="off"
-                size="small"
-                style="width: 80%"/>
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="创建器">
               <el-select
                 v-model="form.mydataharborCreatorClazz"
                 placeholder="请选择CreatorClazz"
                 size="small"
-                style="width: 100%"
+                style="width: 90%"
                 @change="creatorClazzChange">
                 <el-option
                   v-for="item in clazzList"
@@ -133,24 +150,24 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11">
-            <el-form-item label="任务名">
-              <el-input
-                v-model="form.taskName"
-                placeholder="请输入任务名"
-                autocomplete="off"
-                size="small"
-                style="width: 80%"/>
-            </el-form-item>
-          </el-col>
+         
           <el-col :span="12">
-            <el-form-item label="负载均衡">
-              <el-select v-model="form.enableRebalance" placeholder="请选择是否负载均衡" size="small" style="width: 100%">
+            <el-form-item label="故障转移">
+              <el-select v-model="form.enableRebalance" placeholder="请选择是否设置故障转移" size="small" style="width: 90%">
                 <el-option label="true" value="true"/>
                 <el-option label="false" value="false"/>
               </el-select>
             </el-form-item>
-            <el-alert title="值为false，节点停机，任务将不会自动转移！" type="info" show-icon style="margin-top: -20px"/>
+            <el-alert title="值为false，节点停机，任务将不会自动转移！但是会有告警信息发出，适合不能重复运行的任务" type="info" show-icon style="margin-top: -20px"/>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="负载均衡">
+              <el-select v-model="form.enableLoadBalance" placeholder="请选择是否设置负载均衡" size="small" style="width: 90%">
+                <el-option label="true" value="true"/>
+                <el-option label="false" value="false"/>
+              </el-select>
+            </el-form-item>
+            <el-alert title="当集群内有节点加入时，开启负载均衡的任务有可能会被重新分配到其他节点（任务会被有中断的过程），以便分散压力，如果不希望任务随意被停止转移请设置为false" type="info" show-icon style="margin-top: -20px"/>
           </el-col>
         </el-row>
       </el-form>
@@ -218,9 +235,15 @@
         <el-table-column :show-overflow-tooltip="true" prop="pluginId" label="插件ID"/>
         <el-table-column prop="mydataharborCreatorClazz" label="创建器"/>
         <el-table-column prop="totalNumberOfPipeline" label="管道数"/>
-        <el-table-column label="负载均衡">
+        <el-table-column label="故障转移">
           <template #default="scope">
             <el-tag v-if="scope.row.enableRebalance" size="small">true</el-tag>
+            <el-tag v-else size="small" type="warning">false</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="负载均衡">
+          <template #default="scope">
+            <el-tag v-if="scope.row.enableLoadBalance" size="small">true</el-tag>
             <el-tag v-else size="small" type="warning">false</el-tag>
           </template>
         </el-table-column>
@@ -294,8 +317,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="故障转移" label-width="70px" prop="version">
+              <el-select v-model="updateForm.enableRebalance" placeholder="请选择是否故障转移" style="width: 250px">
+                <el-option label="true" value="true"/>
+                <el-option label="false" value="false"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="负载均衡" label-width="70px" prop="version">
-              <el-select v-model="updateForm.enableRebalance" placeholder="请选择是否负载均衡" style="width: 250px">
+              <el-select v-model="updateForm.enableLoadBalance" placeholder="请选择是否负载均衡" style="width: 250px">
                 <el-option label="true" value="true"/>
                 <el-option label="false" value="false"/>
               </el-select>
@@ -426,6 +457,7 @@ export default {
         mydataharborCreatorClazz: '',
         totalNumberOfPipeline: 1,
         enableRebalance: true,
+        enableLoadBalance: true,
         settingJsonConfig: {},
         configJson: {},
         tags: {}
@@ -467,6 +499,7 @@ export default {
       // 修改数据
       updateForm: {
         enableRebalance: true,
+        enableLoadBalance: true,
         taskId: '',
         taskName: '',
         totalNumberOfPipeline: 0
@@ -557,6 +590,7 @@ export default {
         mydataharborCreatorClazz: '',
         totalNumberOfPipeline: 1,
         enableRebalance: true,
+        enableLoadBalance: true,
         settingJsonConfig: {},
         configJson: {}
       }
@@ -687,6 +721,7 @@ export default {
       this.updateForm.taskName = task.taskName
       this.updateForm.totalNumberOfPipeline = task.totalNumberOfPipeline
       this.updateForm.enableRebalance = task.enableRebalance
+      this.updateForm.enableLoadBalance = task.enableLoadBalance
       this.updateForm.tags = task.tags
       this.dialogUpdateVisible = true
     },
