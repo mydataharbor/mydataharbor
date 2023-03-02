@@ -92,6 +92,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.mydataharbor</groupId>
+      <artifactId>mydataharbor-ui</artifactId>
+      <version>${mydataharbor.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -141,6 +147,35 @@
               <goal>repackage</goal>
             </goals>
           </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy static</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/main/resources/static</outputDirectory>
+              <overwrite>true</overwrite>
+              <resources>
+                <resource>
+                  <!--因为vue-cli打包的目录在项目的根目录，所以从这里复制-->
+                  <directory>${project.parent.basedir}/mydataharbor-ui/dist</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
       <plugin>
