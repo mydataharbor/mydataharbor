@@ -129,6 +129,7 @@
 
 
   <build>
+    <finalName>hawt-app/${artifactId}-${project.version}.jar</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
