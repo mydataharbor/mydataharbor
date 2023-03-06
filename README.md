@@ -163,8 +163,7 @@ Linux系统下运行 start.sh  关闭stop.sh
  ![image-20210812143819918](./doc/image/demo.png)
 
 ## 其它
-
-demo运行实例：http://mydataharbor.com:8080/
+demo运行实例：http://demo.mydataharbor.com
 
 插件市场：https://www.mydataharbor.com/user/info.html
 
