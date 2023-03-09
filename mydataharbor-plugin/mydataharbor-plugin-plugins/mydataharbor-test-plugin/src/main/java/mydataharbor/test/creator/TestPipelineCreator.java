@@ -8,6 +8,7 @@ import mydataharbor.converter.protocol.OriginalProtocolDataConverter;
 import mydataharbor.pipeline.CommonDataPipeline;
 import mydataharbor.plugin.base.creator.AbstractAutoScanPipelineCreator;
 import mydataharbor.setting.BaseSettingContext;
+import mydataharbor.test.checkers.TestPassChecker1;
 import mydataharbor.test.datasource.TestDataSource;
 import mydataharbor.test.sink.TestSink;
 
@@ -31,6 +32,7 @@ public class TestPipelineCreator extends AbstractAutoScanPipelineCreator<TestPip
     CommonDataPipeline commonDataPipeline = CommonDataPipeline.builder()
       .dataSource(new TestDataSource(config.total))
       .protocolDataConverter(new OriginalProtocolDataConverter())
+      .checker(new TestPassChecker1("test"))
       .dataConverter(new OriginalDataConverter())
       .sink(new TestSink())
       .settingContext(settingContext)

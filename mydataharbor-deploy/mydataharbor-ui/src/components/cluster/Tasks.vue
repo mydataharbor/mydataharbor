@@ -60,7 +60,7 @@
           <span v-else>null</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="480">
+      <el-table-column label="操作" align="center" fixed="right" width="380">
         <template #default="scope">
           <el-button-group>
             <el-button type="primary" @click="taskDetail(scope.row)" size="mini">详情</el-button>
@@ -150,7 +150,7 @@
           </el-col>
         </el-row>
         <el-row>
-         
+
           <el-col :span="12">
             <el-form-item label="故障转移">
               <el-select v-model="form.enableRebalance" placeholder="请选择是否设置故障转移" size="small" style="width: 90%">
@@ -196,7 +196,143 @@
 
           <el-tabs v-model="taskConfigDefaultActiveModel">
 
-            <el-tab-pane label="json" name="json">
+            <el-tab-pane label="pipeline可视化配置" name="viewForm" v-if="form.mydataharborCreatorClazz=='mydataharbor.system.plugin.creator.CommonPipelineCreator'">
+              <el-steps :active="viewFormActiveIndex">
+                <el-step title="配置输入源" description="选择并配置数据源和相应的协议转换器"></el-step>
+                <el-step title="配置检查器" description="可以配置多个检查器将不符合要求的协议数据过滤掉"></el-step>
+                <el-step title="配置输出源" description="选择要写入的目标数据源并配置参数"></el-step>
+                <el-step title="配置数据转换器" description="选择合适的数据转换器，这个步骤大部分是需要自己写代码的地方，当然也可以选择通用的数据转换器比如GroovyDataConverter"></el-step>
+              </el-steps>
+              <div v-show="viewFormActiveIndex==1" style="margin-top: 10px;">
+                <el-form ref="form" label-width="100px">
+                  <el-form-item label="选择数据源">
+                    <el-select v-model="selectedDataSourceName" placeholder="请选择数据源" style="width: 90%" @change="dataSourceChange">
+                      <el-option
+                        v-for="dataSource in installDataSourceList"
+                        :key="dataSource.name"
+                        :label="dataSource.name"
+                        :value="dataSource.name"/>
+                    </el-select>
+                    <el-tabs v-model="dataSourceActiveModel">
+                      <el-tab-pane label="json" name="json">
+                         <vue-json-editor v-model="selectedDataSourceConfigJson" :mode="'code'" lang="zh"/>
+                      </el-tab-pane>
+                      <el-tab-pane label="参数说明" name="form">
+                        <el-tree
+                          :data="selectedDataSourceConfigJsonTreeData"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"
+                          empty-text="无需配置"
+                          />
+                      </el-tab-pane>
+                      <el-tab-pane label="输出说明" name="tClassInfo">
+                        <el-tree
+                          :data="selectedDataSourceTclassInfoTreeData"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"/>
+                      </el-tab-pane>
+                    </el-tabs>
+                    
+                  </el-form-item>
+
+
+                  <el-form-item label="协议转换器">
+                    <el-select v-model="selectedProtocolDataConverterName" placeholder="请选择协议转换器" style="width: 90%" @change="protocolDataConverterChange">
+                      <el-option
+                        v-for="protocolDataConverter in installProtocolDataConverterList"
+                        :key="protocolDataConverter.name"
+                        :label="protocolDataConverter.name"
+                        :value="protocolDataConverter.name"/>
+                    </el-select>
+                    <el-tabs v-model="protocolDataConverterActiveModel">
+                      <el-tab-pane label="json" name="json">
+                         <vue-json-editor v-model="selectedProtocolDataConverterConfigJson" :mode="'code'" lang="zh"/>
+                      </el-tab-pane>
+                      <el-tab-pane label="参数说明" name="form">
+                        <el-tree
+                          :data="selectedProtocolDataConverterConfigJsonTreeData"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"
+                          empty-text="无需配置"/>
+                      </el-tab-pane>
+
+                      <el-tab-pane label="输入说明" name="tClassInfo">
+                        <el-tree
+                          :data="selectedProtocolDataConverterTclassInfoTreeData"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"/>
+                      </el-tab-pane>
+
+                      <el-tab-pane label="输出说明" name="pClassInfo">
+                        <el-tree
+                          :data="selectedProtocolDataConverterPclassInfoTreeData"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"/>
+                      </el-tab-pane>
+                     
+                    </el-tabs>
+                  </el-form-item>
+            
+                </el-form>
+
+              </div>
+              <div v-show="viewFormActiveIndex==2" style="margin-top: 10px;">
+                <el-form ref="form" label-width="100px">
+                  <el-form-item>
+                    <el-button type="primary" plain @click="addChecker">添加</el-button>
+                  </el-form-item>
+                 
+                  <el-form-item :label="'过滤器'+(index+1)" v-for="(item, index) in selectedCheckerNames" :key="index">
+                   
+                    <el-select v-model="selectedCheckerNames[index]" placeholder="请选择过滤器" style="width: 90%" @change="checkerChange($event,index)">  
+                      <el-option
+                          v-for="checker in installCheckers"
+                          :key="checker.name"
+                          :label="checker.name"
+                          :value="checker.name"/>
+                    </el-select>
+                    <el-button type="danger" icon="el-icon-delete" circle style="margin-left: 10px;" @click="deleteChecker(index)"></el-button>
+                    <el-tabs v-model="checkersActiveModel[index]">
+                      <el-tab-pane label="json" name="json">
+                         <vue-json-editor v-model="selectedCheckerConfigJsons[index]" :mode="'code'" lang="zh"/>
+                      </el-tab-pane>
+                      <el-tab-pane label="参数说明" name="form">
+                        <el-tree
+                          :data="selectedCheckerConfigJsonTreeDatas[index]"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"
+                          empty-text="无需配置"/>
+                      </el-tab-pane>
+
+                      <el-tab-pane label="输入说明" name="tClassInfo">
+                        <el-tree
+                          :data="selectedCheckerPclassInfoTreeDatas[index]"
+                          :props="defaultProps"
+                          :default-expand-all="true"
+                          :render-content="renderTreeContent"/>
+                      </el-tab-pane>
+                     
+                    </el-tabs>
+                  </el-form-item>
+               
+                </el-form>
+              </div>
+              <div v-show="viewFormActiveIndex==3" style="margin-top: 10px;"><p>哈哈</p></div>
+              <div v-show="viewFormActiveIndex==4" style="margin-top: 10px;"><p>哈哈</p></div>
+              <div style="text-align: center">
+                <el-button style="margin-top: 12px;" @click="viewFormPre" v-show="viewFormActiveIndex>1">上一步</el-button>
+                <el-button style="margin-top: 12px;" @click="viewFormNext" v-show="viewFormActiveIndex<4">下一步</el-button>
+              </div>
+
+            </el-tab-pane>
+
+            <el-tab-pane label="json配置" name="json">
               <vue-json-editor v-model="form.configJson" :mode="'code'" lang="zh"/>
             </el-tab-pane>
 
@@ -355,18 +491,16 @@
         <el-collapse-item title="settingContextConfig" name="settingConfig">
           <el-tabs v-model="defaultActiveModel">
 
-            <el-tab-pane label="json" name="json">
+            <el-tab-pane label="json配置" name="json">
               <vue-json-editor v-model="recreateUpdateForm.settingJsonConfig" :mode="'code'" lang="zh"/>
             </el-tab-pane>
 
             <el-tab-pane label="参数说明" name="form">
-
               <el-tree
                 :data="settingConfigJsonTreeData"
                 :props="defaultProps"
                 :default-expand-all="true"
                 :render-content="renderTreeContent"/>
-
             </el-tab-pane>
 
           </el-tabs>
@@ -426,6 +560,7 @@
 
 <script>
 import vueJsonEditor from 'vue-json-editor'
+import { parseTime, formatTime } from "@/utils/index"
 
 export default {
   inject: ['reload'],
@@ -534,6 +669,11 @@ export default {
       collapseActiveNames: ['settingConfig', 'taskConfig', 'tagConfig'],
       defaultActiveModel: 'json',
       taskConfigDefaultActiveModel: 'json',
+      dataSourceActiveModel: 'json',
+      protocolDataConverterActiveModel: 'json',
+      checkersActiveModel: ['json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json','json'],
+      dataConverterActiveModel: 'json',
+      dataSinkActiveModel: 'json',
 
       settingConfigJsonTreeData: [],
 
@@ -544,7 +684,38 @@ export default {
         label: 'fieldName'
       },
 
-      taskMonitorInfos: []// 任务监控信息
+      taskMonitorInfos: [],// 任务监控信息
+      viewFormActiveIndex: 1,//可视化表单当前激活项
+      
+      installDataSourceList:[],//所有安装的数据源
+      selectedDataSourceName:"",//当前选中的数据源
+      selectedDataSource:{},//当前选中的数据源对象
+      selectedDataSourceConfigJson:[],//输入源json配置
+      selectedDataSourceConfigJsonTreeData:[],//输入源json配置说明
+      selectedDataSourceTclassInfoTreeData:[],//输出类型
+
+      installProtocolDataConverterList:[],//所有安装的协议数据转换器
+      selectedProtocolDataConverterName:"",//选中的协议转换器
+      selectedProtocolDataConverter:{},//选中的协议转换器对象
+      selectedProtocolDataConverterConfigJson:[],//协议转换器json配置
+      selectedProtocolDataConverterConfigJsonTreeData:[],//协议转换器json配置说明
+      selectedProtocolDataConverterTclassInfoTreeData:[],//协议转换器 输入类型
+      selectedProtocolDataConverterPclassInfoTreeData:[],//协议转换器 输出类型
+      
+      installCheckers:[],//所有安装的数据检查器
+      selectedCheckerNames:[],//选中的校验器，数组
+      selectedCheckers:[],//选中的校验器对象，数组
+      selectedCheckerConfigJsons:[],//校验器json配置
+      selectedCheckerConfigJsonTreeDatas:[],//校验器json配置说明
+      selectedCheckerPclassInfoTreeDatas:[],//校验器 输入类型
+      
+      installDataConverters:[],//所有安装的数据转换器
+      selectedDataConverterName:"",//选中的数据转换器
+      selectedDataConverter:{},//选中的数据转换器对象
+      
+      installDataSinkList:[],//所有安装的数据目标源
+      selectedDataSinkName:"",//选中的目标数据源
+      selectedDataSink:{}//选中的目标数据源对象
 
     }
   },
@@ -559,7 +730,87 @@ export default {
     this.getTasksByGroupName()
   },
   methods: {
+    //校验器变化
+    checkerChange(val, index){
+      //寻找选中的校验器
+      for(var checker of this.installCheckers){
+        if(checker.name == val){
+          this.selectedCheckers[index] = checker;
+        }
+      }
+      if (this.selectedCheckers[index] != null) {
+        this.selectedCheckerConfigJsonTreeDatas[index] = this.selectedCheckers[index].argsTypeInfo;
+        this.selectedCheckerPclassInfoTreeDatas[index] = [this.selectedCheckers[index].pclassInfo];
+        if(this.selectedCheckers[index].argsTypeInfo!=null)
+          this.selectedCheckerConfigJsons[index] = this.buildArgsTypeInfo(this.selectedCheckers[index].argsTypeInfo);
+      }
+     // console.log(this.selectedCheckers[index])
+    },
 
+    //删除校验器
+    deleteChecker(index){
+      this.selectedCheckerNames.splice(index, 1);
+      this.selectedCheckers.splice(index, 1);
+      this.selectedCheckerConfigJsons.splice(index, 1);
+      this.selectedCheckerConfigJsonTreeDatas.splice(index, 1);
+      this.selectedCheckerPclassInfoTreeDatas.splice(index, 1);
+    },
+    //添加校验器
+    addChecker(){
+      this.selectedCheckerNames.push("");
+      this.selectedCheckers.push({})
+      this.selectedCheckerConfigJsons.push([]),
+      this.selectedCheckerConfigJsonTreeDatas.push([]),
+      this.selectedCheckerPclassInfoTreeDatas.push([])
+
+    },
+
+    //可视化创建数据源变更
+    dataSourceChange(val){
+      //寻找选中的数据源
+      for(var dataSource of this.installDataSourceList){
+        if(dataSource.name == val){
+          this.selectedDataSource = dataSource;
+        }
+      }
+      if (this.selectedDataSource != null) {
+        this.selectedDataSourceConfigJsonTreeData = this.selectedDataSource.argsTypeInfo;
+        this.selectedDataSourceTclassInfoTreeData = [this.selectedDataSource.tclassInfo];
+        if(this.selectedDataSource.argsTypeInfo!=null)
+          this.selectedDataSourceConfigJson = this.buildArgsTypeInfo(this.selectedDataSource.argsTypeInfo);
+      }
+      console.log(this.selectedDataSource)
+    },
+    //可视化协议转换器变更
+    protocolDataConverterChange(val){
+      if(this.selectedDataSourceName==""){
+        this.$message('请先选择输入源');
+        this.selectedProtocolDataConverterName = "";
+        return;
+      }
+      for(var protocolDataConverter of this.installProtocolDataConverterList){
+          if(protocolDataConverter.name == val){
+            this.selectedProtocolDataConverter = protocolDataConverter;
+          }
+      }
+      if(this.selectedProtocolDataConverter!=null){
+        if(this.selectedProtocolDataConverter.tclassInfo.clazzStr!=this.selectedDataSource.tclassInfo.clazzStr){
+          this.$message({
+            message: '协议转换器接受的数据类型和当前选中的输入源输入的数据类型不一致，请确保'+this.selectedProtocolDataConverter.tclassInfo.clazzStr+"是"+this.selectedDataSource.tclassInfo.clazzStr+"的子类，否则任务将无法执行!",
+            type: 'warning',
+            duration: 0,
+            showClose: true,
+          });
+        }
+        this.selectedProtocolDataConverterConfigJsonTreeData = this.selectedProtocolDataConverter.argsTypeInfo;
+        this.selectedProtocolDataConverterTclassInfoTreeData = [this.selectedProtocolDataConverter.tclassInfo];
+        this.selectedProtocolDataConverterPclassInfoTreeData = [this.selectedProtocolDataConverter.pclassInfo];
+        if(this.selectedProtocolDataConverter.argsTypeInfo!=null)
+          this.selectedProtocolDataConverterConfigJson = this.buildArgsTypeInfo(this.selectedProtocolDataConverter.argsTypeInfo);
+      }
+  
+      console.log(this.selectedProtocolDataConverter)
+    },
     dateFormat(row, column) {
       if (row.lastRunTime != 0) {
         const date = new Date(row.lastRunTime)
@@ -573,7 +824,6 @@ export default {
       }
       return '暂无'
     },
-
     compare(property) {
       return function(a, b) {
         var value1 = a[property]
@@ -581,7 +831,6 @@ export default {
         return value2 - value1
       }
     },
-
     // 清空
     clearData() {
       this.form = {
@@ -621,9 +870,80 @@ export default {
     getTasksByGroupName() {
       this.getRequest('/mydataharbor/node/plugin?groupName=' + this.groupName).then(res => {
         this.pluginInstallList = res.data
-        console.log(this.pluginInstallList)
+        this.initInstallComponentList();
       })
     },
+
+    //初始化所有安装组件的信息
+    initInstallComponentList() {
+      for (const key in this.pluginInstallList) {
+        var pluginInfo = this.pluginInstallList[key];
+        for (const key2 in pluginInfo.dataPipelineCreatorInfos) {
+          var dataPipelineCreatorInfo = pluginInfo.dataPipelineCreatorInfos[key2];
+          if (dataPipelineCreatorInfo.dataSourceClassInfo != null){
+            //数据源
+            for (const key3 in dataPipelineCreatorInfo.dataSourceClassInfo) {
+              var dataSource = dataPipelineCreatorInfo.dataSourceClassInfo[key3];
+              for (const key4 in dataSource.constructorAndArgsConfigs) {
+                var constructor = dataSource.constructorAndArgsConfigs[key4];
+                this.installDataSourceList.push({ "name": dataSource.clazz+"("+dataSource.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataSource.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": dataSource.tclassInfo });
+              }
+            }
+          }
+          if(dataPipelineCreatorInfo.protocolConverterClassInfo != null){
+            //协议转换器
+            for( const key3 in dataPipelineCreatorInfo.protocolConverterClassInfo){
+               var protocolConvertor = dataPipelineCreatorInfo.protocolConverterClassInfo[key3];
+               for(const key4 in protocolConvertor.constructorAndArgsConfigs){
+                var constructor = protocolConvertor.constructorAndArgsConfigs[key4];
+                this.installProtocolDataConverterList.push({ "name": protocolConvertor.clazz+"("+protocolConvertor.title +")"+ "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": protocolConvertor.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": protocolConvertor.tclassInfo,"pclassInfo": protocolConvertor.pclassInfo });
+               }
+            }
+           
+          }
+
+          if(dataPipelineCreatorInfo.checkerClassInfo != null){
+            //过滤器
+            for( const key3 in dataPipelineCreatorInfo.checkerClassInfo){
+               var checker = dataPipelineCreatorInfo.checkerClassInfo[key3];
+               for(const key4 in checker.constructorAndArgsConfigs){
+                var constructor = checker.constructorAndArgsConfigs[key4];
+                this.installCheckers.push({ "name": checker.clazz+"("+checker.title +")"+ "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": checker.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": checker.pclassInfo });
+               }
+            }
+          }
+
+          if(dataPipelineCreatorInfo.dataConverterClassInfo != null){
+            //数据转换器
+            for( const key3 in dataPipelineCreatorInfo.dataConverterClassInfo){
+               var dataConverter = dataPipelineCreatorInfo.dataConverterClassInfo[key3];
+               for(const key4 in dataConverter.constructorAndArgsConfigs){
+                var constructor = dataConverter.constructorAndArgsConfigs[key4];
+                this.installDataConverters.push({ "name": dataConverter.clazz+"("+dataConverter.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataConverter.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": dataConverter.pclassInfo,"rclassInfo":dataConverter.rclassInfo });
+               }
+            }
+          }
+
+          if(dataPipelineCreatorInfo.dataSinkClassInfo != null){
+            //写入器
+            for( const key3 in dataPipelineCreatorInfo.dataSinkClassInfo){
+               var dataSink = dataPipelineCreatorInfo.dataSinkClassInfo[key3];
+               for(const key4 in dataSink.constructorAndArgsConfigs){
+                var constructor = dataSink.constructorAndArgsConfigs[key4];
+                this.installDataSinkList.push({ "name": dataSink.clazz+"("+dataSink.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataSink.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo,"rclassInfo":dataSink.rclassInfo });
+               }
+            }
+          }
+          
+        }
+      }
+      console.log(this.installDataSourceList);
+      console.log(this.installProtocolDataConverterList)
+      console.log(this.installCheckers)
+      console.log(this.installDataConverters)
+      console.log(this.installDataSinkList)
+    },
+    
     // 提交任务
     submit() {
       this.dialogFormVisible = false
@@ -656,7 +976,9 @@ export default {
         if (plugin.pluginId == value) {
           if (plugin.dataPipelineCreatorInfos != null) {
             plugin.dataPipelineCreatorInfos.forEach(dataSink => {
-              if (dataSink.canCreatePipeline) { this.clazzList.push({ 'clazz': dataSink.clazz, 'type': dataSink.type }) }
+              if (dataSink.canCreatePipeline) {
+                 this.clazzList.push({ 'clazz': dataSink.clazz, 'type': dataSink.type })
+                }
             })
           }
         }
@@ -898,7 +1220,36 @@ export default {
           }
         }
       }
-    }
+    },
+    
+    buildArgsTypeInfo(argsTypeInfo){
+      var configJson = [];
+      for (var argsTypeInfoItem of argsTypeInfo) {
+          var obj = {};
+          if (argsTypeInfoItem.array) {
+            obj = []
+          } else if (argsTypeInfoItem.map) {
+            obj = {}
+          } else if (argsTypeInfoItem.baseType) {
+            obj = argsTypeInfoItem.defaultValue==null?"":argsTypeInfoItem.defaultValue
+          }
+          if (argsTypeInfoItem.fieldInfos != null && argsTypeInfoItem.fieldInfos.length > 0) {
+            for (const subFieldInfo of argsTypeInfoItem.fieldInfos) {
+              this.fillField(obj, subFieldInfo)
+            }
+          }
+          configJson.push(obj);
+        }
+        return configJson;
+    },
+    //可视化界面下一步
+    viewFormNext() {
+        this.viewFormActiveIndex++
+      },
+    //可视化界面上一步
+    viewFormPre() {
+        this.viewFormActiveIndex--;
+      }
   }
 }
 </script>
