@@ -205,7 +205,7 @@
               </el-steps>
               <div v-show="viewFormActiveIndex==1" style="margin-top: 10px;">
                 <el-form ref="form" label-width="100px">
-                  <el-form-item label="选择数据源">
+                  <el-form-item label="选择输入源">
                     <el-select v-model="selectedDataSourceName" placeholder="请选择数据源" style="width: 90%" @change="dataSourceChange">
                       <el-option
                         v-for="dataSource in installDataSourceList"
@@ -217,7 +217,7 @@
                       <el-tab-pane label="json" name="json">
                          <vue-json-editor v-model="selectedDataSourceConfigJson" :mode="'code'" lang="zh"/>
                       </el-tab-pane>
-                      <el-tab-pane label="参数说明" name="form">
+                      <el-tab-pane label="组件参数说明" name="form">
                         <el-tree
                           :data="selectedDataSourceConfigJsonTreeData"
                           :props="defaultProps"
@@ -226,7 +226,7 @@
                           empty-text="无需配置"
                           />
                       </el-tab-pane>
-                      <el-tab-pane label="输出说明" name="tClassInfo">
+                      <el-tab-pane label="组件输出说明" name="tClassInfo">
                         <el-tree
                           :data="selectedDataSourceTclassInfoTreeData"
                           :props="defaultProps"
@@ -244,13 +244,20 @@
                         v-for="protocolDataConverter in installProtocolDataConverterList"
                         :key="protocolDataConverter.name"
                         :label="protocolDataConverter.name"
-                        :value="protocolDataConverter.name"/>
+                        :value="protocolDataConverter.name">
+                                <span style="float: left">{{ protocolDataConverter.name }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">
+                                  <span v-if="selectedDataSource.tclassInfo!=null && protocolDataConverter.tclassInfo.clazzStr == selectedDataSource.tclassInfo.clazzStr">
+                                     类型完全匹配√
+                                  </span>
+                                </span>                       
+                      </el-option>
                     </el-select>
                     <el-tabs v-model="protocolDataConverterActiveModel">
                       <el-tab-pane label="json" name="json">
                          <vue-json-editor v-model="selectedProtocolDataConverterConfigJson" :mode="'code'" lang="zh"/>
                       </el-tab-pane>
-                      <el-tab-pane label="参数说明" name="form">
+                      <el-tab-pane label="组件参数说明" name="form">
                         <el-tree
                           :data="selectedProtocolDataConverterConfigJsonTreeData"
                           :props="defaultProps"
@@ -259,7 +266,7 @@
                           empty-text="无需配置"/>
                       </el-tab-pane>
 
-                      <el-tab-pane label="输入说明" name="tClassInfo">
+                      <el-tab-pane label="组件输入说明" name="tClassInfo">
                         <el-tree
                           :data="selectedProtocolDataConverterTclassInfoTreeData"
                           :props="defaultProps"
@@ -267,7 +274,7 @@
                           :render-content="renderTreeContent"/>
                       </el-tab-pane>
 
-                      <el-tab-pane label="输出说明" name="pClassInfo">
+                      <el-tab-pane label="组件输出说明" name="pClassInfo">
                         <el-tree
                           :data="selectedProtocolDataConverterPclassInfoTreeData"
                           :props="defaultProps"
@@ -294,14 +301,22 @@
                           v-for="checker in installCheckers"
                           :key="checker.name"
                           :label="checker.name"
-                          :value="checker.name"/>
+                          :value="checker.name">
+                            
+                                <span style="float: left">{{ checker.name }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">
+                                  <span v-if="selectedProtocolDataConverter.pclassInfo!=null && checker.pclassInfo.clazzStr == selectedProtocolDataConverter.pclassInfo.clazzStr">
+                                     类型完全匹配√
+                                  </span>
+                                </span>
+                        </el-option>
                     </el-select>
                     <el-button type="danger" icon="el-icon-delete" circle style="margin-left: 10px;" @click="deleteChecker(index)"></el-button>
                     <el-tabs v-model="checkersActiveModel[index]">
                       <el-tab-pane label="json" name="json">
                          <vue-json-editor v-model="selectedCheckerConfigJsons[index]" :mode="'code'" lang="zh"/>
                       </el-tab-pane>
-                      <el-tab-pane label="参数说明" name="form">
+                      <el-tab-pane label="组件参数说明" name="form">
                         <el-tree
                           :data="selectedCheckerConfigJsonTreeDatas[index]"
                           :props="defaultProps"
@@ -310,7 +325,7 @@
                           empty-text="无需配置"/>
                       </el-tab-pane>
 
-                      <el-tab-pane label="输入说明" name="tClassInfo">
+                      <el-tab-pane label="组件输入说明" name="tClassInfo">
                         <el-tree
                           :data="selectedCheckerPclassInfoTreeDatas[index]"
                           :props="defaultProps"
@@ -323,16 +338,100 @@
                
                 </el-form>
               </div>
-              <div v-show="viewFormActiveIndex==3" style="margin-top: 10px;"><p>哈哈</p></div>
-              <div v-show="viewFormActiveIndex==4" style="margin-top: 10px;"><p>哈哈</p></div>
+                <div v-show="viewFormActiveIndex == 3" style="margin-top: 10px;">
+                    <el-form ref="form" label-width="100px">
+                      <el-form-item label="输出源">
+                          <el-select v-model="selectedDataSinkName" placeholder="请选择输出源" style="width: 90%" @change="dataSinkChange">
+                            <el-option
+                              v-for="dataSink in installDataSinkList"
+                              :key="dataSink.name"
+                              :label="dataSink.name"
+                              :value="dataSink.name"/>
+                          </el-select>
+                          <el-tabs v-model="dataSinkActiveModel">
+                            <el-tab-pane label="json" name="json">
+                              <vue-json-editor v-model="selectedDataSinkConfigJson" :mode="'code'" lang="zh"/>
+                            </el-tab-pane>
+                            <el-tab-pane label="组件参数说明" name="form">
+                              <el-tree
+                                :data="selectedDataSinkConfigJsonTreeData"
+                                :props="defaultProps"
+                                :default-expand-all="true"
+                                :render-content="renderTreeContent"
+                                empty-text="无需配置"
+                                />
+                            </el-tab-pane>
+                            <el-tab-pane label="组件输入说明" name="pClassInfo">
+                              <el-tree
+                                :data="selectedDataSinkRclassInfoTreeData"
+                                :props="defaultProps"
+                                :default-expand-all="true"
+                                :render-content="renderTreeContent"/>
+                            </el-tab-pane>
+                          </el-tabs>
+                        </el-form-item>
+                      </el-form>
+                </div>
+              <div v-show="viewFormActiveIndex==4" style="margin-top: 10px;">
+                <el-form ref="form" label-width="100px">
+                      <el-form-item label="数据转换器">
+                          <el-select v-model="selectedDataConverterName" placeholder="请选择数据转换器" style="width: 90%" @change="dataConverterChange">
+                            <el-option
+                              v-for="dataConverter in installDataConverters"
+                              :key="dataConverter.name"
+                              :label="dataConverter.name"
+                              :value="dataConverter.name">
+                              <span style="float: left">{{ dataConverter.name }}</span>
+                              <span style="float: right; color: #8492a6; font-size: 13px">
+                                <span v-if="selectedProtocolDataConverter.pclassInfo!=null && selectedDataSink.rclassInfo!=null && dataConverter.pclassInfo.clazzStr==selectedProtocolDataConverter.pclassInfo.clazzStr && dataConverter.rclassInfo.clazzStr==selectedDataSink.rclassInfo.clazzStr">
+                                    类型完全匹配
+                                </span>
+                               
+                              </span>
+                            </el-option>
+                          </el-select>
+                          <el-tabs v-model="dataConverterActiveModel">
+                            <el-tab-pane label="json" name="json">
+                              <vue-json-editor v-model="selectedDataConverterConfigJson" :mode="'code'" lang="zh"/>
+                            </el-tab-pane>
+                            <el-tab-pane label="组件参数说明" name="form">
+                              <el-tree
+                                :data="selectedDataConverterConfigJsonTreeData"
+                                :props="defaultProps"
+                                :default-expand-all="true"
+                                :render-content="renderTreeContent"
+                                empty-text="无需配置"/>
+                            </el-tab-pane>
+
+                            <el-tab-pane label="组件输入说明" name="pClassInfo">
+                              <el-tree
+                                :data="selectedDataConverterPclassInfoTreeData"
+                                :props="defaultProps"
+                                :default-expand-all="true"
+                                :render-content="renderTreeContent"/>
+                            </el-tab-pane>
+
+                            <el-tab-pane label="组件输出说明" name="rClassInfo">
+                              <el-tree
+                                :data="selectedDataConverterRclassInfoTreeData"
+                                :props="defaultProps"
+                                :default-expand-all="true"
+                                :render-content="renderTreeContent"/>
+                            </el-tab-pane>
+                          
+                          </el-tabs>
+                        </el-form-item>
+                      </el-form>
+              </div>
               <div style="text-align: center">
                 <el-button style="margin-top: 12px;" @click="viewFormPre" v-show="viewFormActiveIndex>1">上一步</el-button>
                 <el-button style="margin-top: 12px;" @click="viewFormNext" v-show="viewFormActiveIndex<4">下一步</el-button>
+                <el-button style="margin-top: 12px;" @click="viewFormConfirm" v-show="viewFormActiveIndex==4" type="primary" plain>生成json</el-button>
               </div>
 
             </el-tab-pane>
 
-            <el-tab-pane label="json配置" name="json">
+            <el-tab-pane label="json" name="json">
               <vue-json-editor v-model="form.configJson" :mode="'code'" lang="zh"/>
             </el-tab-pane>
 
@@ -712,10 +811,17 @@ export default {
       installDataConverters:[],//所有安装的数据转换器
       selectedDataConverterName:"",//选中的数据转换器
       selectedDataConverter:{},//选中的数据转换器对象
+      selectedDataConverterConfigJson:[],//数据转换器json配置
+      selectedDataConverterConfigJsonTreeData:[],//数据转换器json配置说明
+      selectedDataConverterPclassInfoTreeData:[],//数据转换器输入类型
+      selectedDataConverterRclassInfoTreeData:[],//数据转换器输出类型
       
-      installDataSinkList:[],//所有安装的数据目标源
-      selectedDataSinkName:"",//选中的目标数据源
-      selectedDataSink:{}//选中的目标数据源对象
+      installDataSinkList:[],//所有安装的输出源
+      selectedDataSinkName:"",//选中的目标输出源
+      selectedDataSink:{},//选中的目标输出源
+      selectedDataSinkConfigJson:[],//输出源json配置
+      selectedDataSinkConfigJsonTreeData:[],//输出源json配置说明
+      selectedDataSinkRclassInfoTreeData:[],//输出源输入类型
 
     }
   },
@@ -730,8 +836,122 @@ export default {
     this.getTasksByGroupName()
   },
   methods: {
+    initAllComponent(){
+      this.initSelectedDataSource();
+      this.initselectedProtocolDataConverter();
+      this.initSelectedCheckers();
+      this.initSelectedDataConverter();
+      this.initSelectedDataSink();
+    },
+    initSelectedDataSource(){
+      this.selectedDataSourceName = "";
+      this.selectedDataSource = {};
+      this.selectedDataSourceConfigJson = [];
+      this.selectedDataSourceConfigJsonTreeData = [];
+      this.selectedDataSourceTclassInfoTreeData = [];
+    },
+    initselectedProtocolDataConverter(){
+      this.selectedProtocolDataConverterName="";//选中的协议转换器
+      this.selectedProtocolDataConverter={};//选中的协议转换器对象
+      this.selectedProtocolDataConverterConfigJson=[];//协议转换器json配置
+      this.selectedProtocolDataConverterConfigJsonTreeData=[];//协议转换器json配置说明
+      this.selectedProtocolDataConverterTclassInfoTreeData=[];//协议转换器 输入类型
+      this.selectedProtocolDataConverterPclassInfoTreeData=[];//协议转换器 输出类型
+    },
+    initSelectedCheckers(){
+      this.selectedCheckerNames=[];//选中的校验器，数组
+      this.selectedCheckers=[];//选中的校验器对象，数组
+      this.selectedCheckerConfigJsons=[];//校验器json配置
+      this.selectedCheckerConfigJsonTreeDatas=[];//校验器json配置说明
+      this.selectedCheckerPclassInfoTreeDatas=[];//校验器 输入类型
+    },
+    initSelectedDataConverter(){
+      this.selectedDataConverterName="";//选中的数据转换器
+      this.selectedDataConverter={};//选中的数据转换器对象
+      this.selectedDataConverterConfigJson=[];//数据转换器json配置
+      this.selectedDataConverterConfigJsonTreeData=[];//数据转换器json配置说明
+      this.selectedDataConverterPclassInfoTreeData=[];//数据转换器输入类型
+      this.selectedDataConverterRclassInfoTreeData=[];//数据转换器输出类型
+    },
+    initSelectedDataSink(){
+      this.selectedDataSinkName="";//选中的目标输出源
+      this.selectedDataSink={};//选中的目标输出源
+      this.selectedDataSinkConfigJson=[];//输出源json配置
+      this.selectedDataSinkConfigJsonTreeData=[];//输出源json配置说明
+      this.selectedDataSinkRclassInfoTreeData=[];//输出源输入类型
+    },
+    //可视化数据转换器变更
+    async  dataConverterChange(val){
+      if(this.selectedProtocolDataConverterName==""){
+        this.$message('请先选择协议转换器');
+        this.selectedDataConverterName = "";
+        return;
+      }
+      if(this.selectedDataSinkName==""){
+        this.$message('请先选择输出源');
+        this.selectedDataConverterName = "";
+        return;
+      }
+      for(var dataConverter of this.installDataConverters){
+          if(dataConverter.name == val){
+            this.selectedDataConverter = dataConverter;
+          }
+      }
+      if(this.selectedDataConverter!=null){
+        if(this.selectedDataConverter.pclassInfo.clazzStr!=this.selectedProtocolDataConverter.pclassInfo.clazzStr){
+          await   this.$message({
+            message: '选中的数据转换器输入的数据类型和当前选中的协议转换器输出的数据类型不一致，请确保'+this.selectedDataConverter.pclassInfo.clazzStr+"是"+this.selectedProtocolDataConverter.pclassInfo.clazzStr+"的子类，否则任务将无法执行!",
+            type: 'warning',
+            duration: 10000,
+            showClose: true,
+          });
+        }
+        if(this.selectedDataConverter.rclassInfo.clazzStr!=this.selectedDataSink.rclassInfo.clazzStr){
+          await   this.$message({
+            message: '选中的数据转换器输出的数据类型和当前选中的输出源输入的数据类型不一致，请确保'+this.selectedDataSink.rclassInfo.clazzStr+"是"+this.selectedDataConverter.rclassInfo.clazzStr+"的子类，否则任务将无法执行!",
+            type: 'warning',
+            duration: 10000,
+            showClose: true,
+          });
+        }
+        this.selectedDataConverterConfigJsonTreeData = this.selectedDataConverter.argsTypeInfo;
+        this.selectedDataConverterTclassInfoTreeData = [this.selectedDataConverter.tclassInfo];
+        this.selectedDataConverterPclassInfoTreeData = [this.selectedDataConverter.pclassInfo];
+        if(this.selectedDataConverter.argsTypeInfo!=null)
+          this.selectedDataConverterConfigJson = this.buildArgsTypeInfo(this.selectedDataConverter.argsTypeInfo);
+        else
+          this.selectedDataConverterConfigJson = [];
+      }
+  
+      console.log(this.selectedDataConverter)
+    },
+    //输出源变更
+    dataSinkChange(val){
+       //寻找选中的数据源
+      for(var dataSink of this.installDataSinkList){
+        if(dataSink.name == val){
+          this.selectedDataSink = dataSink;
+        }
+      }
+      if (this.selectedDataSink != null) {
+        this.selectedDataSinkConfigJsonTreeData = this.selectedDataSink.argsTypeInfo;
+        this.selectedDataSinkRclassInfoTreeData = [this.selectedDataSink.rclassInfo];
+        if(this.selectedDataSink.argsTypeInfo!=null){
+          this.selectedDataSinkConfigJson = this.buildArgsTypeInfo(this.selectedDataSink.argsTypeInfo);
+        } else {
+          this.selectedDataSinkConfigJson = [];
+        }
+        this.initSelectedDataConverter();
+      }
+      console.log(this.selectedDataSink)     
+    },
     //校验器变化
     checkerChange(val, index){
+      if(this.selectedProtocolDataConverterName==""){
+        this.$message('请先选择协议转换器');
+        this.selectedCheckerNames[index] = "";
+        return;
+      }
       //寻找选中的校验器
       for(var checker of this.installCheckers){
         if(checker.name == val){
@@ -739,12 +959,22 @@ export default {
         }
       }
       if (this.selectedCheckers[index] != null) {
+        if(this.selectedCheckers[index].pclassInfo.clazzStr!=this.selectedProtocolDataConverter.pclassInfo.clazzStr){
+          this.$message({
+            message: '选中的校验器器输入的数据类型和当前选中的协议转换器输出的数据类型不一致，请确保'+this.selectedCheckers[index].pclassInfo.clazzStr+"是"+this.selectedProtocolDataConverter.pclassInfo.clazzStr+"的子类，否则任务将无法执行!",
+            type: 'warning',
+            duration: 10000,
+            showClose: true,
+          });
+        }
         this.selectedCheckerConfigJsonTreeDatas[index] = this.selectedCheckers[index].argsTypeInfo;
         this.selectedCheckerPclassInfoTreeDatas[index] = [this.selectedCheckers[index].pclassInfo];
         if(this.selectedCheckers[index].argsTypeInfo!=null)
           this.selectedCheckerConfigJsons[index] = this.buildArgsTypeInfo(this.selectedCheckers[index].argsTypeInfo);
+        else
+          this.selectedCheckerConfigJsons[index] = [];
       }
-     // console.log(this.selectedCheckers[index])
+     console.log(this.selectedCheckers[index])
     },
 
     //删除校验器
@@ -778,6 +1008,9 @@ export default {
         this.selectedDataSourceTclassInfoTreeData = [this.selectedDataSource.tclassInfo];
         if(this.selectedDataSource.argsTypeInfo!=null)
           this.selectedDataSourceConfigJson = this.buildArgsTypeInfo(this.selectedDataSource.argsTypeInfo);
+        else
+        this.selectedDataSourceConfigJson = [];
+        this.initselectedProtocolDataConverter();
       }
       console.log(this.selectedDataSource)
     },
@@ -798,7 +1031,7 @@ export default {
           this.$message({
             message: '协议转换器接受的数据类型和当前选中的输入源输入的数据类型不一致，请确保'+this.selectedProtocolDataConverter.tclassInfo.clazzStr+"是"+this.selectedDataSource.tclassInfo.clazzStr+"的子类，否则任务将无法执行!",
             type: 'warning',
-            duration: 0,
+            duration: 10000,
             showClose: true,
           });
         }
@@ -807,6 +1040,10 @@ export default {
         this.selectedProtocolDataConverterPclassInfoTreeData = [this.selectedProtocolDataConverter.pclassInfo];
         if(this.selectedProtocolDataConverter.argsTypeInfo!=null)
           this.selectedProtocolDataConverterConfigJson = this.buildArgsTypeInfo(this.selectedProtocolDataConverter.argsTypeInfo);
+        else
+          this.selectedProtocolDataConverterConfigJson = [];
+        this.initSelectedCheckers();
+        this.initSelectedDataConverter();
       }
   
       console.log(this.selectedProtocolDataConverter)
@@ -1244,11 +1481,119 @@ export default {
     },
     //可视化界面下一步
     viewFormNext() {
+        if(this.viewFormActiveIndex==1){
+            if(this.selectedDataSourceName == ""){
+              this.$message({
+                message: '请选择输入源',
+                type: 'warning',
+                duration: 2000,
+                showClose: true,
+              });
+              return;
+            }
+            if(this.selectedProtocolDataConverterName == ""){
+              this.$message({
+                message: '请选择协议转换器',
+                type: 'warning',
+                duration: 2000,
+                showClose: true,
+              });
+              return;
+            }
+        } else if(this.viewFormActiveIndex==2){
+            console.log(this.selectedCheckerNames)
+            for(var name of this.selectedCheckerNames){
+                if(name == ""){
+                  this.$message({
+                    message: '请配置过滤器，如不需要请删除',
+                    type: 'warning',
+                    duration: 2000,
+                    showClose: true,
+                  });
+                  return;
+              }
+            }
+        } else if(this.viewFormActiveIndex==3){
+          if(this.selectedDataSinkName == ""){
+              this.$message({
+                message: '请选择输出源',
+                type: 'warning',
+                duration: 2000,
+                showClose: true,
+              });
+              return;
+            }
+        }
         this.viewFormActiveIndex++
       },
     //可视化界面上一步
-    viewFormPre() {
+      viewFormPre() {
         this.viewFormActiveIndex--;
+      },
+      //可视化配置生成json
+      viewFormConfirm(){
+        if(this.selectedDataConverterName == ""){
+              this.$message({
+                message: '请选择数据转换器',
+                type: 'warning',
+                duration: 2000,
+                showClose: true,
+              });
+              return;
+            }
+        //从选中的组件中生成json
+        console.log(this.selectedDataSource)
+        var newConfigJson = JSON.parse(JSON.stringify(this.form.configJson));
+        newConfigJson.dataSource.pluginId = this.selectedDataSource.pluginId;
+        newConfigJson.dataSource.clazz = this.selectedDataSource.clazz
+        newConfigJson.dataSource.argsType = this.selectedDataSource.argsType== null?[]:this.selectedDataSource.argsType;
+        newConfigJson.dataSource.argsJsonValue = [];
+        for(var obj of this.selectedDataSourceConfigJson){
+          newConfigJson.dataSource.argsJsonValue.push(JSON.stringify(obj));
+        }
+
+        newConfigJson.protocolDataConverter.pluginId = this.selectedProtocolDataConverter.pluginId;
+        newConfigJson.protocolDataConverter.clazz = this.selectedProtocolDataConverter.clazz
+        newConfigJson.protocolDataConverter.argsType = this.selectedProtocolDataConverter.argsType== null?[]:this.selectedProtocolDataConverter.argsType;
+        newConfigJson.protocolDataConverter.argsJsonValue = [];
+        for(var obj of this.selectedProtocolDataConverterConfigJson){
+          newConfigJson.protocolDataConverter.argsJsonValue.push(JSON.stringify(obj));
+        }
+
+        for(var i=0;i<this.selectedCheckers.length;i++){
+          var  selectedChecker = this.selectedCheckers[i];
+          var checkerArgsJsonValue = [];
+          for(var obj of this.selectedCheckerConfigJsons[i]){
+            checkerArgsJsonValue.push(JSON.stringify(obj));
+          }
+          newConfigJson.dataCheckers.push({
+            pluginId: selectedChecker.pluginId,
+            clazz: selectedChecker.clazz,
+            argsType: selectedChecker.argsType==null?[]:selectedChecker.argsType,
+            argsJsonValue:checkerArgsJsonValue
+          });
+        }
+
+
+        newConfigJson.dataConverter.pluginId = this.selectedDataConverter.pluginId;
+        newConfigJson.dataConverter.clazz = this.selectedDataConverter.clazz
+        newConfigJson.dataConverter.argsType = this.selectedDataConverter.argsType== null?[]:this.selectedDataConverter.argsType;
+        newConfigJson.dataConverter.argsJsonValue = [];
+        for(var obj of this.selectedDataConverterConfigJson){
+          newConfigJson.dataConverter.argsJsonValue.push(JSON.stringify(obj));
+        }
+
+        newConfigJson.dataSink.pluginId = this.selectedDataSink.pluginId;
+        newConfigJson.dataSink.clazz = this.selectedDataSink.clazz
+        newConfigJson.dataSink.argsType = this.selectedDataSink.argsType== null?[]:this.selectedDataSink.argsType;
+        newConfigJson.dataSink.argsJsonValue = [];
+        for(var obj of this.selectedDataSinkConfigJson){
+          newConfigJson.dataSink.argsJsonValue.push(JSON.stringify(obj));
+        }
+
+
+        this.form.configJson = newConfigJson;
+        this.taskConfigDefaultActiveModel = "json"
       }
   }
 }
