@@ -1123,7 +1123,13 @@ export default {
               var dataSource = dataPipelineCreatorInfo.dataSourceClassInfo[key3];
               for (const key4 in dataSource.constructorAndArgsConfigs) {
                 var constructor = dataSource.constructorAndArgsConfigs[key4];
-                this.installDataSourceList.push({ "name": dataSource.clazz+"("+dataSource.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataSource.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": dataSource.tclassInfo });
+                var name = pluginInfo.pluginId+"["+dataSource.clazz+"("+dataSource.title+")]" + "constructor-" + key4;
+                var contain = false;
+                for(var obj of this.installDataSourceList){
+                  if(obj.name == name) contain = true;
+                }
+                if(!contain)
+                  this.installDataSourceList.push({ "name": name, "pluginId": pluginInfo.pluginId, "clazz": dataSource.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": dataSource.tclassInfo });
               }
             }
           }
@@ -1133,7 +1139,13 @@ export default {
                var protocolConvertor = dataPipelineCreatorInfo.protocolConverterClassInfo[key3];
                for(const key4 in protocolConvertor.constructorAndArgsConfigs){
                 var constructor = protocolConvertor.constructorAndArgsConfigs[key4];
-                this.installProtocolDataConverterList.push({ "name": protocolConvertor.clazz+"("+protocolConvertor.title +")"+ "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": protocolConvertor.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": protocolConvertor.tclassInfo,"pclassInfo": protocolConvertor.pclassInfo });
+                var name = pluginInfo.pluginId+"["+protocolConvertor.clazz+"("+protocolConvertor.title +")]"+ "constructor-" + key4;
+                var contain = false;
+                for(var obj of this.installProtocolDataConverterList){
+                  if(obj.name == name) contain = true;
+                }
+                if(!contain)
+                  this.installProtocolDataConverterList.push({ "name": name, "pluginId": pluginInfo.pluginId, "clazz": protocolConvertor.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "tclassInfo": protocolConvertor.tclassInfo,"pclassInfo": protocolConvertor.pclassInfo });
                }
             }
            
@@ -1145,7 +1157,13 @@ export default {
                var checker = dataPipelineCreatorInfo.checkerClassInfo[key3];
                for(const key4 in checker.constructorAndArgsConfigs){
                 var constructor = checker.constructorAndArgsConfigs[key4];
-                this.installCheckers.push({ "name": checker.clazz+"("+checker.title +")"+ "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": checker.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": checker.pclassInfo });
+                var name = pluginInfo.pluginId+"["+checker.clazz+"("+checker.title +")]"+ "constructor-" + key4;
+                var contain = false;
+                for(var obj of this.installCheckers){
+                  if(obj.name == name) contain = true;
+                }
+                if(!contain)
+                  this.installCheckers.push({ "name": name, "pluginId": pluginInfo.pluginId, "clazz": checker.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": checker.pclassInfo });
                }
             }
           }
@@ -1156,7 +1174,13 @@ export default {
                var dataConverter = dataPipelineCreatorInfo.dataConverterClassInfo[key3];
                for(const key4 in dataConverter.constructorAndArgsConfigs){
                 var constructor = dataConverter.constructorAndArgsConfigs[key4];
-                this.installDataConverters.push({ "name": dataConverter.clazz+"("+dataConverter.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataConverter.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": dataConverter.pclassInfo,"rclassInfo":dataConverter.rclassInfo });
+                var name = pluginInfo.pluginId+"["+dataConverter.clazz+"("+dataConverter.title+")]" + "constructor-" + key4;
+                var contain = false;
+                for(var obj of this.installDataConverters){
+                  if(obj.name == name) contain = true;
+                }
+                if(!contain)
+                  this.installDataConverters.push({ "name": name, "pluginId": pluginInfo.pluginId, "clazz": dataConverter.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo, "pclassInfo": dataConverter.pclassInfo,"rclassInfo":dataConverter.rclassInfo });
                }
             }
           }
@@ -1167,7 +1191,13 @@ export default {
                var dataSink = dataPipelineCreatorInfo.dataSinkClassInfo[key3];
                for(const key4 in dataSink.constructorAndArgsConfigs){
                 var constructor = dataSink.constructorAndArgsConfigs[key4];
-                this.installDataSinkList.push({ "name": dataSink.clazz+"("+dataSink.title+")" + "constructor-" + key4, "pluginId": pluginInfo.pluginId, "clazz": dataSink.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo,"rclassInfo":dataSink.rclassInfo });
+                var name = pluginInfo.pluginId+"["+dataSink.clazz+"("+dataSink.title+")]" + "constructor-" + key4;
+                var contain = false;
+                for(var obj of this.installDataSinkList){
+                  if(obj.name == name) contain = true;
+                }
+                if(!contain)
+                  this.installDataSinkList.push({ "name": name, "pluginId": pluginInfo.pluginId, "clazz": dataSink.clazz, "argsType": constructor.argsType, "argsTypeInfo": constructor.argsTypeInfo,"rclassInfo":dataSink.rclassInfo });
                }
             }
           }
