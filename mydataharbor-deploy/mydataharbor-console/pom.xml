@@ -91,11 +91,11 @@
       <version>${mydataharbor.version}</version>
     </dependency>
 
-<!--    <dependency>
+    <dependency>
       <groupId>com.mydataharbor</groupId>
       <artifactId>mydataharbor-ui</artifactId>
       <version>${mydataharbor.version}</version>
-    </dependency>-->
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
