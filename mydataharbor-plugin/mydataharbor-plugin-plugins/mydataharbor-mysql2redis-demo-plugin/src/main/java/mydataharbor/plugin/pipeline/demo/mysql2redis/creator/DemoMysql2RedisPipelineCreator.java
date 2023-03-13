@@ -8,11 +8,12 @@ import mydataharbor.common.jdbc.source.config.JdbcDataSourceConfig;
 import mydataharbor.pipeline.CommonDataPipeline;
 import mydataharbor.plugin.base.util.JsonUtil;
 import mydataharbor.plugin.jdbc.mysql.source.JdbcMysql80xDataSource;
+import mydataharbor.plugin.jdbc.source.protocol.JdbcProtocolConvertor;
 import mydataharbor.plugin.pipeline.demo.mysql2redis.dataconverter.DemoMysql2RedisDataConverter;
-import mydataharbor.plugin.redis.sink.RedisSinkOfString;
-import mydataharbor.redis.common.sink.RedisSinkConfig;
+import mydataharbor.plugin.redis.common.RedisDataSinkConfig;
+import mydataharbor.plugin.redis.common.RedisOfStringDataSinkReq;
+import mydataharbor.plugin.redis.sink.RedisOfStringDataSink;
 import mydataharbor.setting.BaseSettingContext;
-import mydataharbor.source.jdbc.protocol.JdbcProtocolConvertor;
 
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
@@ -34,7 +35,7 @@ public class DemoMysql2RedisPipelineCreator implements IDataPipelineCreator<Demo
                 .dataSource(new JdbcMysql80xDataSource(config.jdbcDataSourceConfig))
                 .protocolDataConverter(new JdbcProtocolConvertor())
                 .dataConverter(new DemoMysql2RedisDataConverter())
-                .sink(new RedisSinkOfString(config.redisSinkConfig))
+                .sink(new RedisOfStringDataSink(config.redisSinkConfig))
                 .settingContext(settingContext)
                 .build();
         return commonDataPipeline;
@@ -51,7 +52,7 @@ public class DemoMysql2RedisPipelineCreator implements IDataPipelineCreator<Demo
         @MyDataHarborMarker(title = "数据源配置")
         private JdbcDataSourceConfig jdbcDataSourceConfig;
         @MyDataHarborMarker(title = "写入源配置")
-        private RedisSinkConfig redisSinkConfig;
+        private RedisDataSinkConfig redisSinkConfig;
 
     }
 
