@@ -36,7 +36,7 @@ public class DemoMysql2RedisDataConverter implements IDataConverter<JdbcProtocol
             values.add(record.getJdbcResult().getPrimaryKeysValues().get(primaryKeyName).toString());
         }
         String key = StringUtils.join(values, converterConfig.separator);
-        redisSinkReqOfString.setKey(key);
+        redisSinkReqOfString.setKey(converterConfig.keyPrefix+key);
         redisSinkReqOfString.setValue(JsonUtil.objectToJson(record.getJdbcResult()));
         return redisSinkReqOfString;
     }
