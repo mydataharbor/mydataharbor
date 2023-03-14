@@ -11,7 +11,6 @@ import mydataharbor.plugin.jdbc.mysql.source.JdbcMysql80xDataSource;
 import mydataharbor.plugin.jdbc.source.protocol.JdbcProtocolConvertor;
 import mydataharbor.plugin.pipeline.demo.mysql2redis.dataconverter.DemoMysql2RedisDataConverter;
 import mydataharbor.plugin.redis.common.RedisDataSinkConfig;
-import mydataharbor.plugin.redis.common.RedisOfStringDataSinkReq;
 import mydataharbor.plugin.redis.sink.RedisOfStringDataSink;
 import mydataharbor.setting.BaseSettingContext;
 
