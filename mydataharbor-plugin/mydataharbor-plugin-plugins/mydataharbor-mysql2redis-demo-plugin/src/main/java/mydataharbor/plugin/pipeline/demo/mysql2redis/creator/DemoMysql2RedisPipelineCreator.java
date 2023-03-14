@@ -33,7 +33,7 @@ public class DemoMysql2RedisPipelineCreator implements IDataPipelineCreator<Demo
         CommonDataPipeline commonDataPipeline = CommonDataPipeline.builder()
                 .dataSource(new JdbcMysql80xDataSource(config.jdbcDataSourceConfig))
                 .protocolDataConverter(new JdbcProtocolConvertor())
-                .dataConverter(new DemoMysql2RedisDataConverter())
+                .dataConverter(new DemoMysql2RedisDataConverter(config.converterConfig))
                 .sink(new RedisOfStringDataSink(config.redisSinkConfig))
                 .settingContext(settingContext)
                 .build();
@@ -52,6 +52,8 @@ public class DemoMysql2RedisPipelineCreator implements IDataPipelineCreator<Demo
         private JdbcDataSourceConfig jdbcDataSourceConfig;
         @MyDataHarborMarker(title = "写入源配置")
         private RedisDataSinkConfig redisSinkConfig;
+        @MyDataHarborMarker(title = "转换器配置")
+        private DemoMysql2RedisDataConverter.DemoMysql2RedisDataConverterConfig converterConfig;
 
     }
 
