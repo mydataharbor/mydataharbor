@@ -167,7 +167,7 @@ demo运行实例：http://demo.mydataharbor.com
 
 插件市场：https://www.mydataharbor.com/user/info.html
 
-文档(语雀)：[https://mydataharbor.yuque.com/staff-tzwgrd/uqew9p]《MyDataHarbor文档》
+文档(语雀)：[https://mydataharbor.yuque.com/staff-tzwgrd/uqew9p](https://mydataharbor.yuque.com/staff-tzwgrd/uqew9p)
 
 #### QQ群（**<u>*加群时需要验证项目star数，请star一下然后记下star数告诉管理员*</u>**）
 
