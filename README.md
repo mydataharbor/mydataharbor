@@ -194,6 +194,6 @@ demo运行实例：http://mydataharbor.com:8080/
 
     1、优化pipeline可视化创建，通过UI的方式自由组合各组件创建pipeline，无需自定义DataPipelineCreator
 
-    2、插件可以重复安装，并且更新版本
+    2、插件可以调整位置解决依赖加载顺序问题，重复安装并且更新版本
     
     3、负载均衡和故障转移可以分开设置
