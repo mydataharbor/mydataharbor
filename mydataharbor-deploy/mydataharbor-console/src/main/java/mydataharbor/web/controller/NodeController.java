@@ -689,7 +689,7 @@ import mydataharbor.web.base.BaseResponse;
 import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.INodeService;
-import mydataharbor.web.service.impl.PluginRepositoryProxy;
+import mydataharbor.web.service.impl.pluginRepository.PluginRepositoryProxy;
 
 import java.io.IOException;
 import java.io.InputStream;

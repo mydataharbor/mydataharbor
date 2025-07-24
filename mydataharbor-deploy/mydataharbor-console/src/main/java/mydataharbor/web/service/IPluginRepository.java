@@ -31,7 +31,7 @@ public interface IPluginRepository {
   Map<String, List<PluginGroup>> listPluginGroup();
 
   /**
-   * 是否存在
+   * 查询当前存储库插件信息
    *
    * @param pluginId
    * @param pluginVersion
@@ -58,7 +58,7 @@ public interface IPluginRepository {
   AuthResponse auth(String pluginId, String version);
 
   /**
-   * 下载
+   * 下载当前插件仓库的插件
    *
    * @param pluginId
    * @param version

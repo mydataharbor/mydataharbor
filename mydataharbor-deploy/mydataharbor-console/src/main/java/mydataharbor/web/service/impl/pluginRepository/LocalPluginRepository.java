@@ -675,7 +675,7 @@
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
 
-package mydataharbor.web.service.impl;
+package mydataharbor.web.service.impl.pluginRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.constant.Constant;
@@ -685,7 +685,6 @@ import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.pf4j.MyDataHarborPluginDescriptor;
-import mydataharbor.web.service.IPluginRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -777,7 +776,7 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
   }
 
   @Override
-  public RepoPlugin doQuery(String pluginId, String pluginVersion) {
+  public RepoPlugin query(String pluginId, String pluginVersion) {
     Path path = fileMap.get(pluginId + pluginVersion);
     if (path == null) {
       return null;
@@ -822,7 +821,7 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
 
   @Override
   public void upload(String fileName, String pluginId, String version, InputStream inputStream) throws IOException {
-    RepoPlugin repoPlugin = doQuery(pluginId, version);
+    RepoPlugin repoPlugin = query(pluginId, version);
     if (repoPlugin != null) {
       Version semverVersion = Version.valueOf(repoPlugin.getVersion());
       String preReleaseVersion = semverVersion.getPreReleaseVersion();
@@ -849,11 +848,6 @@ public class LocalPluginRepository extends AbstractPluginRepository implements I
       fileOutputStream.close();
       inputStream.close();
     }
-  }
-
-  @Override
-  public IPluginRepository next() {
-    return null;
   }
 
   private void updatePluginCache(File file, MyDataHarborPluginDescriptor pluginDescriptor) {

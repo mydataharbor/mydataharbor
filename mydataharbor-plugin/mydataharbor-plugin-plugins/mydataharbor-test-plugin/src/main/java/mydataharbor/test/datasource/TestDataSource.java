@@ -20,7 +20,7 @@ public class TestDataSource implements IDataSource<Long, BaseSettingContext> {
 
     private long now = 0L;
 
-    public TestDataSource(long total) {
+    public TestDataSource(Long total) {
         this.total = total;
     }
 

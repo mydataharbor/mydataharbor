@@ -1757,9 +1757,9 @@ export default {
           await this.$message({
             message:
               "选中的数据转换器输入的数据类型和当前选中的协议转换器输出的数据类型不一致，请确保" +
-              this.selectedDataConverter.pclassInfo.clazzStr +
-              "是" +
               this.selectedProtocolDataConverter.pclassInfo.clazzStr +
+              "是" +
+              this.selectedDataConverter.pclassInfo.clazzStr +
               "的子类，否则任务将无法执行!",
             type: "warning",
             duration: 10000,
@@ -1773,9 +1773,9 @@ export default {
           await this.$message({
             message:
               "选中的数据转换器输出的数据类型和当前选中的输出源输入的数据类型不一致，请确保" +
-              this.selectedDataSink.rclassInfo.clazzStr +
-              "是" +
               this.selectedDataConverter.rclassInfo.clazzStr +
+              "是" +
+              this.selectedDataSink.rclassInfo.clazzStr +
               "的子类，否则任务将无法执行!",
             type: "warning",
             duration: 10000,
@@ -1843,9 +1843,9 @@ export default {
           this.$message({
             message:
               "选中的校验器器输入的数据类型和当前选中的协议转换器输出的数据类型不一致，请确保" +
-              this.selectedCheckers[index].pclassInfo.clazzStr +
-              "是" +
               this.selectedProtocolDataConverter.pclassInfo.clazzStr +
+              "是" +
+              this.selectedCheckers[index].pclassInfo.clazzStr +
               "的子类，否则任务将无法执行!",
             type: "warning",
             duration: 10000,
@@ -1926,9 +1926,9 @@ export default {
           this.$message({
             message:
               "协议转换器接受的数据类型和当前选中的输入源输入的数据类型不一致，请确保" +
-              this.selectedProtocolDataConverter.tclassInfo.clazzStr +
-              "是" +
               this.selectedDataSource.tclassInfo.clazzStr +
+              "是" +
+              this.selectedProtocolDataConverter.tclassInfo.clazzStr +
               "的子类，否则任务将无法执行!",
             type: "warning",
             duration: 10000,
@@ -2209,9 +2209,62 @@ export default {
     // 提交任务
     submit() {
       this.dialogFormVisible = false;
-      this.form.configJson = JSON.stringify(this.form.configJson);
-      this.form.settingJsonConfig = JSON.stringify(this.form.settingJsonConfig);
-      this.postRequest("mydataharbor/task/submit", this.form).then(res => {
+
+      // 深拷贝配置对象，避免修改原始对象
+      const configJsonCopy = JSON.parse(JSON.stringify(this.form.configJson));
+      const settingJsonConfigCopy = JSON.parse(JSON.stringify(this.form.settingJsonConfig));
+
+      // 确保数据格式正确
+      if (configJsonCopy.dataSource && configJsonCopy.dataSource.argsJsonValue) {
+        configJsonCopy.dataSource.argsJsonValue = configJsonCopy.dataSource.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.protocolDataConverter && configJsonCopy.protocolDataConverter.argsJsonValue) {
+        configJsonCopy.protocolDataConverter.argsJsonValue = configJsonCopy.protocolDataConverter.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.dataCheckers && configJsonCopy.dataCheckers.length > 0) {
+        configJsonCopy.dataCheckers.forEach(checker => {
+          if (checker.argsJsonValue) {
+            checker.argsJsonValue = checker.argsJsonValue.map(item =>
+              typeof item === 'string' ? item : JSON.stringify(item)
+            );
+          }
+        });
+      }
+
+      if (configJsonCopy.dataSink && configJsonCopy.dataSink.argsJsonValue) {
+        configJsonCopy.dataSink.argsJsonValue = configJsonCopy.dataSink.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.dataConverter && configJsonCopy.dataConverter.argsJsonValue) {
+        configJsonCopy.dataConverter.argsJsonValue = configJsonCopy.dataConverter.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      // 移除可能存在的非标准字段
+      if (configJsonCopy.selectedDataSourceConfigJsonTreeData) {
+        delete configJsonCopy.selectedDataSourceConfigJsonTreeData;
+      }
+
+      if (configJsonCopy.selectedDataSourceTclassInfoTreeData) {
+        delete configJsonCopy.selectedDataSourceTclassInfoTreeData;
+      }
+
+      const submitData = {
+        ...this.form,
+        configJson: JSON.stringify(configJsonCopy),
+        settingJsonConfig: JSON.stringify(settingJsonConfigCopy)
+      };
+
+      this.postRequest("mydataharbor/task/submit", submitData).then(res => {
         if (res.code == 0) {
           this.$message.info("任务提交成功！");
           this.initData();
@@ -2352,9 +2405,21 @@ export default {
       this.recreateUpdateForm.enableRebalance = task.enableRebalance;
       this.recreateUpdateForm.enableLoadBalance = task.enableLoadBalance;
 
+      // 先选择插件ID，这会清空创建器列表
       this.selectPluginId(task.pluginId);
-      // this.creatorClazzChange(task.mydataharborCreatorClazz)
+
+      // 初始化所有组件
+      this.initAllComponent();
+
+      // 确保创建器被正确选中
       if (task.mydataharborCreatorClazz != "") {
+        // 手动设置创建器值，确保它被选中
+        this.recreateUpdateForm.mydataharborCreatorClazz = task.mydataharborCreatorClazz;
+
+        // 保存原始配置
+        const originalConfigJson = JSON.parse(JSON.stringify(this.recreateUpdateForm.configJson));
+        const originalSettingJsonConfig = JSON.parse(JSON.stringify(this.recreateUpdateForm.settingJsonConfig));
+
         this.pluginInstallList.forEach(pluginInfo => {
           if (pluginInfo.pluginId == this.recreateUpdateForm.pluginId) {
             pluginInfo.dataPipelineCreatorInfos.forEach(creatorInfo => {
@@ -2363,59 +2428,235 @@ export default {
                 creatorInfo.configClassInfo.fieldName = "root";
                 this.settingConfigJsonTreeData = [creatorInfo.settingClassInfo];
                 this.taskConfigJsonTreeData = [creatorInfo.configClassInfo];
-                for (const fieldInfo of creatorInfo.settingClassInfo
-                  .fieldInfos) {
+
+                // 先填充默认值
+                for (const fieldInfo of creatorInfo.settingClassInfo.fieldInfos) {
                   this.fillField(
                     this.recreateUpdateForm.settingJsonConfig,
                     fieldInfo
                   );
                 }
-                for (const fieldInfo of creatorInfo.configClassInfo
-                  .fieldInfos) {
+
+                for (const fieldInfo of creatorInfo.configClassInfo.fieldInfos) {
                   this.fillField(this.recreateUpdateForm.configJson, fieldInfo);
                 }
+
+                // 然后恢复原始值，确保原始配置被保留
+                this.recreateUpdateForm.configJson = this.mergeConfigs(
+                  this.recreateUpdateForm.configJson,
+                  originalConfigJson
+                );
+
+                this.recreateUpdateForm.settingJsonConfig = this.mergeConfigs(
+                  this.recreateUpdateForm.settingJsonConfig,
+                  originalSettingJsonConfig
+                );
               }
             });
           }
         });
       }
+
       this.type = "addAndDelJob";
       this.dialogRecreateUpdateVisible = true;
-      // console.log("recreateUpdateForm === " + JSON.stringify(this.recreateUpdateForm))
-      // console.log("task === " + JSON.stringify(task))
-      // console.log("configJSON === " + JSON.stringify(JSON.parse(task.configJson)))
-      //重建
-      this.recreateUpdateForm.mydataharborCreatorClazz =
-        task.mydataharborCreatorClazz;
-      this.recreateUpdateForm.configJson = JSON.parse(task.configJson);
-      //直接等于会导致使用”生成JSON“按钮的时候报错，缺少[]，手动添加进行处理，和提交表单格式保持一致
-      this.selectedDataSourceConfigJson = this.recreateUpdateForm.configJson.dataSource.argsJsonValue
-      this.selectedDataSourceConfigJson = JSON.parse("[" + this.selectedDataSourceConfigJson + "]")
-      this.selectedProtocolDataConverterConfigJson = this.recreateUpdateForm.configJson.protocolDataConverter.argsJsonValue
-      this.selectedProtocolDataConverterConfigJson = JSON.parse("[" + this.selectedProtocolDataConverterConfigJson + "]")
-      this.selectedDataSinkConfigJson = this.recreateUpdateForm.configJson.dataSink.argsJsonValue
-      this.selectedDataSinkConfigJson = JSON.parse("[" + this.selectedDataSinkConfigJson + "]")
-      this.selectedDataConverterConfigJson = this.recreateUpdateForm.configJson.dataConverter.argsJsonValue
-      this.selectedDataConverterConfigJson = JSON.parse("[" + this.selectedDataConverterConfigJson + "]")
-      this.selectedDataSourceConfigJsonTreeData = this.recreateUpdateForm.configJson.selectedDataSourceConfigJsonTreeData
-      this.selectedDataSourceTclassInfoTreeData = this.recreateUpdateForm.configJson.selectedDataSourceTclassInfoTreeData
-      this.selectedDataSourceName = this.recreateUpdateForm.configJson
-      this.selectedProtocolDataConverterName = this.recreateUpdateForm.configJson
-      this.selectedDataSinkName = this.recreateUpdateForm.configJson
-      this.selectedDataConverterName = this.recreateUpdateForm.configJson
 
+      // 处理配置数据
+      const configJson = this.recreateUpdateForm.configJson;
+
+      // 处理数据源配置
+      if (configJson.dataSource) {
+        // 查找并设置数据源名称
+        for (const dataSource of this.installDataSourceList) {
+          if (dataSource.clazz === configJson.dataSource.clazz &&
+              dataSource.pluginId === configJson.dataSource.pluginId) {
+            this.selectedDataSourceName = dataSource.name;
+            this.selectedDataSource = dataSource;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataSource.argsJsonValue && configJson.dataSource.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataSourceConfigJson = configJson.dataSource.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据源参数失败:", e);
+            this.selectedDataSourceConfigJson = [];
+          }
+        }
+      }
+
+      // 处理协议转换器配置
+      if (configJson.protocolDataConverter) {
+        // 查找并设置协议转换器名称
+        for (const converter of this.installProtocolDataConverterList) {
+          if (converter.clazz === configJson.protocolDataConverter.clazz &&
+              converter.pluginId === configJson.protocolDataConverter.pluginId) {
+            this.selectedProtocolDataConverterName = converter.name;
+            this.selectedProtocolDataConverter = converter;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.protocolDataConverter.argsJsonValue && configJson.protocolDataConverter.argsJsonValue.length > 0) {
+          try {
+            this.selectedProtocolDataConverterConfigJson = configJson.protocolDataConverter.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析协议转换器参数失败:", e);
+            this.selectedProtocolDataConverterConfigJson = [];
+          }
+        }
+      }
+
+      // 处理数据检查器配置
+      if (configJson.dataCheckers && configJson.dataCheckers.length > 0) {
+        this.selectedCheckerNames = [];
+        this.selectedCheckers = [];
+        this.selectedCheckerConfigJsons = [];
+
+        configJson.dataCheckers.forEach((checker, index) => {
+          // 查找对应的检查器
+          for (const installedChecker of this.installCheckers) {
+            if (installedChecker.clazz === checker.clazz &&
+                installedChecker.pluginId === checker.pluginId) {
+              this.selectedCheckerNames.push(installedChecker.name);
+              this.selectedCheckers.push(installedChecker);
+
+              // 处理参数JSON
+              if (checker.argsJsonValue && checker.argsJsonValue.length > 0) {
+                try {
+                  const configJson = checker.argsJsonValue.map(item =>
+                    typeof item === 'string' ? JSON.parse(item) : item
+                  );
+                  this.selectedCheckerConfigJsons.push(configJson);
+                } catch (e) {
+                  console.error("解析检查器参数失败:", e);
+                  this.selectedCheckerConfigJsons.push([]);
+                }
+              } else {
+                this.selectedCheckerConfigJsons.push([]);
+              }
+
+              break;
+            }
+          }
+        });
+      }
+
+      // 处理数据输出源配置
+      if (configJson.dataSink) {
+        // 查找并设置数据输出源名称
+        for (const sink of this.installDataSinkList) {
+          if (sink.clazz === configJson.dataSink.clazz &&
+              sink.pluginId === configJson.dataSink.pluginId) {
+            this.selectedDataSinkName = sink.name;
+            this.selectedDataSink = sink;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataSink.argsJsonValue && configJson.dataSink.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataSinkConfigJson = configJson.dataSink.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据输出源参数失败:", e);
+            this.selectedDataSinkConfigJson = [];
+          }
+        }
+      }
+
+      // 处理数据转换器配置
+      if (configJson.dataConverter) {
+        // 查找并设置数据转换器名称
+        for (const converter of this.installDataConverters) {
+          if (converter.clazz === configJson.dataConverter.clazz &&
+              converter.pluginId === configJson.dataConverter.pluginId) {
+            this.selectedDataConverterName = converter.name;
+            this.selectedDataConverter = converter;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataConverter.argsJsonValue && configJson.dataConverter.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataConverterConfigJson = configJson.dataConverter.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据转换器参数失败:", e);
+            this.selectedDataConverterConfigJson = [];
+          }
+        }
+      }
     },
     //重建任务修改
     recreateUpdateFormSubmit() {
-      this.recreateUpdateForm.configJson = JSON.stringify(
-        this.recreateUpdateForm.configJson
-      );
-      this.recreateUpdateForm.settingJsonConfig = JSON.stringify(
-        this.recreateUpdateForm.settingJsonConfig
-      );
+      // 深拷贝配置对象，避免修改原始对象
+      const configJsonCopy = JSON.parse(JSON.stringify(this.recreateUpdateForm.configJson));
+      const settingJsonConfigCopy = JSON.parse(JSON.stringify(this.recreateUpdateForm.settingJsonConfig));
+
+      // 确保数据格式正确
+      if (configJsonCopy.dataSource && configJsonCopy.dataSource.argsJsonValue) {
+        configJsonCopy.dataSource.argsJsonValue = configJsonCopy.dataSource.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.protocolDataConverter && configJsonCopy.protocolDataConverter.argsJsonValue) {
+        configJsonCopy.protocolDataConverter.argsJsonValue = configJsonCopy.protocolDataConverter.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.dataCheckers && configJsonCopy.dataCheckers.length > 0) {
+        configJsonCopy.dataCheckers.forEach(checker => {
+          if (checker.argsJsonValue) {
+            checker.argsJsonValue = checker.argsJsonValue.map(item =>
+              typeof item === 'string' ? item : JSON.stringify(item)
+            );
+          }
+        });
+      }
+
+      if (configJsonCopy.dataSink && configJsonCopy.dataSink.argsJsonValue) {
+        configJsonCopy.dataSink.argsJsonValue = configJsonCopy.dataSink.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      if (configJsonCopy.dataConverter && configJsonCopy.dataConverter.argsJsonValue) {
+        configJsonCopy.dataConverter.argsJsonValue = configJsonCopy.dataConverter.argsJsonValue.map(item =>
+          typeof item === 'string' ? item : JSON.stringify(item)
+        );
+      }
+
+      // 移除可能存在的非标准字段
+      if (configJsonCopy.selectedDataSourceConfigJsonTreeData) {
+        delete configJsonCopy.selectedDataSourceConfigJsonTreeData;
+      }
+
+      if (configJsonCopy.selectedDataSourceTclassInfoTreeData) {
+        delete configJsonCopy.selectedDataSourceTclassInfoTreeData;
+      }
+
+      const submitData = {
+        ...this.recreateUpdateForm,
+        configJson: JSON.stringify(configJsonCopy),
+        settingJsonConfig: JSON.stringify(settingJsonConfigCopy)
+      };
+
       this.postRequest(
         "mydataharbor/task/recreateTask",
-        this.recreateUpdateForm
+        submitData
       ).then(res => {
         if (res.code == 0) {
           this.$message.info("任务重建成功！");
@@ -2432,10 +2673,26 @@ export default {
       this.form = JSON.parse(JSON.stringify(task));
       this.form.configJson = JSON.parse(task.configJson);
       this.form.settingJsonConfig = JSON.parse(task.settingJsonConfig);
+
+      // 生成新的任务ID，避免冲突
+      this.form.taskId = "";
+
       this.dialogFormVisible = true;
+      // 先选择插件ID，这会清空创建器列表
       this.selectPluginId(task.pluginId);
 
+      // 初始化所有组件
+      this.initAllComponent();
+
+      // 确保创建器被正确选中
       if (task.mydataharborCreatorClazz != "") {
+        // 手动设置创建器值，确保它被选中
+        this.form.mydataharborCreatorClazz = task.mydataharborCreatorClazz;
+
+        // 保存原始配置
+        const originalConfigJson = JSON.parse(JSON.stringify(this.form.configJson));
+        const originalSettingJsonConfig = JSON.parse(JSON.stringify(this.form.settingJsonConfig));
+
         this.pluginInstallList.forEach(pluginInfo => {
           if (pluginInfo.pluginId == this.form.pluginId) {
             pluginInfo.dataPipelineCreatorInfos.forEach(creatorInfo => {
@@ -2444,19 +2701,170 @@ export default {
                 creatorInfo.configClassInfo.fieldName = "root";
                 this.settingConfigJsonTreeData = [creatorInfo.settingClassInfo];
                 this.taskConfigJsonTreeData = [creatorInfo.configClassInfo];
-                for (const fieldInfo of creatorInfo.settingClassInfo
-                  .fieldInfos) {
+
+                // 先填充默认值
+                for (const fieldInfo of creatorInfo.settingClassInfo.fieldInfos) {
                   this.fillField(this.form.settingJsonConfig, fieldInfo);
                 }
-                for (const fieldInfo of creatorInfo.configClassInfo
-                  .fieldInfos) {
+
+                for (const fieldInfo of creatorInfo.configClassInfo.fieldInfos) {
                   this.fillField(this.form.configJson, fieldInfo);
                 }
+
+                // 然后恢复原始值，确保原始配置被保留
+                this.form.configJson = this.mergeConfigs(
+                  this.form.configJson,
+                  originalConfigJson
+                );
+
+                this.form.settingJsonConfig = this.mergeConfigs(
+                  this.form.settingJsonConfig,
+                  originalSettingJsonConfig
+                );
               }
             });
           }
         });
       }
+
+      // 处理配置数据
+      const configJson = this.form.configJson;
+
+      // 处理数据源配置
+      if (configJson.dataSource) {
+        // 查找并设置数据源名称
+        for (const dataSource of this.installDataSourceList) {
+          if (dataSource.clazz === configJson.dataSource.clazz &&
+              dataSource.pluginId === configJson.dataSource.pluginId) {
+            this.selectedDataSourceName = dataSource.name;
+            this.selectedDataSource = dataSource;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataSource.argsJsonValue && configJson.dataSource.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataSourceConfigJson = configJson.dataSource.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据源参数失败:", e);
+            this.selectedDataSourceConfigJson = [];
+          }
+        }
+      }
+
+      // 处理协议转换器配置
+      if (configJson.protocolDataConverter) {
+        // 查找并设置协议转换器名称
+        for (const converter of this.installProtocolDataConverterList) {
+          if (converter.clazz === configJson.protocolDataConverter.clazz &&
+              converter.pluginId === configJson.protocolDataConverter.pluginId) {
+            this.selectedProtocolDataConverterName = converter.name;
+            this.selectedProtocolDataConverter = converter;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.protocolDataConverter.argsJsonValue && configJson.protocolDataConverter.argsJsonValue.length > 0) {
+          try {
+            this.selectedProtocolDataConverterConfigJson = configJson.protocolDataConverter.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析协议转换器参数失败:", e);
+            this.selectedProtocolDataConverterConfigJson = [];
+          }
+        }
+      }
+
+      // 处理数据检查器配置
+      if (configJson.dataCheckers && configJson.dataCheckers.length > 0) {
+        this.selectedCheckerNames = [];
+        this.selectedCheckers = [];
+        this.selectedCheckerConfigJsons = [];
+
+        configJson.dataCheckers.forEach((checker, index) => {
+          // 查找对应的检查器
+          for (const installedChecker of this.installCheckers) {
+            if (installedChecker.clazz === checker.clazz &&
+                installedChecker.pluginId === checker.pluginId) {
+              this.selectedCheckerNames.push(installedChecker.name);
+              this.selectedCheckers.push(installedChecker);
+
+              // 处理参数JSON
+              if (checker.argsJsonValue && checker.argsJsonValue.length > 0) {
+                try {
+                  const configJson = checker.argsJsonValue.map(item =>
+                    typeof item === 'string' ? JSON.parse(item) : item
+                  );
+                  this.selectedCheckerConfigJsons.push(configJson);
+                } catch (e) {
+                  console.error("解析检查器参数失败:", e);
+                  this.selectedCheckerConfigJsons.push([]);
+                }
+              } else {
+                this.selectedCheckerConfigJsons.push([]);
+              }
+
+              break;
+            }
+          }
+        });
+      }
+
+      // 处理数据输出源配置
+      if (configJson.dataSink) {
+        // 查找并设置数据输出源名称
+        for (const sink of this.installDataSinkList) {
+          if (sink.clazz === configJson.dataSink.clazz &&
+              sink.pluginId === configJson.dataSink.pluginId) {
+            this.selectedDataSinkName = sink.name;
+            this.selectedDataSink = sink;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataSink.argsJsonValue && configJson.dataSink.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataSinkConfigJson = configJson.dataSink.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据输出源参数失败:", e);
+            this.selectedDataSinkConfigJson = [];
+          }
+        }
+      }
+
+      // 处理数据转换器配置
+      if (configJson.dataConverter) {
+        // 查找并设置数据转换器名称
+        for (const converter of this.installDataConverters) {
+          if (converter.clazz === configJson.dataConverter.clazz &&
+              converter.pluginId === configJson.dataConverter.pluginId) {
+            this.selectedDataConverterName = converter.name;
+            this.selectedDataConverter = converter;
+            break;
+          }
+        }
+
+        // 处理参数JSON
+        if (configJson.dataConverter.argsJsonValue && configJson.dataConverter.argsJsonValue.length > 0) {
+          try {
+            this.selectedDataConverterConfigJson = configJson.dataConverter.argsJsonValue.map(item =>
+              typeof item === 'string' ? JSON.parse(item) : item
+            );
+          } catch (e) {
+            console.error("解析数据转换器参数失败:", e);
+            this.selectedDataConverterConfigJson = [];
+          }
+        }
+      }
+
       this.type = "add";
     },
     // 任务状态弹框
@@ -2789,6 +3197,41 @@ export default {
     },
     recreateClose() {
       this.type = "";
+    },
+
+    // 合并配置，保留原始值
+    mergeConfigs(defaultConfig, originalConfig) {
+      if (!originalConfig || typeof originalConfig !== 'object') {
+        return defaultConfig;
+      }
+
+      if (!defaultConfig || typeof defaultConfig !== 'object') {
+        return originalConfig;
+      }
+
+      const result = { ...defaultConfig };
+
+      for (const key in originalConfig) {
+        if (originalConfig.hasOwnProperty(key)) {
+          if (
+            originalConfig[key] !== null &&
+            typeof originalConfig[key] === 'object' &&
+            !Array.isArray(originalConfig[key]) &&
+            result.hasOwnProperty(key) &&
+            result[key] !== null &&
+            typeof result[key] === 'object' &&
+            !Array.isArray(result[key])
+          ) {
+            // 递归合并嵌套对象
+            result[key] = this.mergeConfigs(result[key], originalConfig[key]);
+          } else {
+            // 使用原始值覆盖默认值
+            result[key] = originalConfig[key];
+          }
+        }
+      }
+
+      return result;
     }
   }
 };

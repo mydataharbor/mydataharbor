@@ -13,7 +13,7 @@
 
     <description>
         mysql2redis 测试demo插件
-        plugin.dependencies 只依赖了jdbc-mysql-8.0.x-plugin,redis-6.1.x-plugin 这些具体版本的插件，因为这些具体版本的插件会依赖其基础插件，所以无需重复依赖
+        plugin.dependencies 只依赖了jdbc-mysql-8.0.x-plugin,redis-plugin 这些具体版本的插件，因为这些具体版本的插件会依赖其基础插件，所以无需重复依赖
         使用该插件需要先安装 jdbc-plugin redis-plugin jdbc-mysql-8.0.x-plugin  3个插件
     </description>
 

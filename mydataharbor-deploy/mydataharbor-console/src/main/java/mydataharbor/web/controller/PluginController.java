@@ -685,7 +685,7 @@ import mydataharbor.web.base.BaseResponse;
 import mydataharbor.web.entity.PluginGroup;
 import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.exception.NoAuthException;
-import mydataharbor.web.service.impl.PluginRepositoryProxy;
+import mydataharbor.web.service.impl.pluginRepository.PluginRepositoryProxy;
 
 import java.io.FileInputStream;
 import java.io.IOException;
