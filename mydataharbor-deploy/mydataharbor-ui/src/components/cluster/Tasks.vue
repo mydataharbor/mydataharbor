@@ -805,55 +805,50 @@
     </el-dialog>
 
     <!--任务修改弹框-->
-    <el-dialog :visible.sync="dialogUpdateVisible" title="任务修改" width="42%">
+    <el-dialog :visible.sync="dialogUpdateVisible" title="任务修改" width="60%">
       <el-form :model="updateForm" label-position="left">
-        <el-row>
-          <el-col :span="11">
+        <el-row :gutter="20">
+          <el-col :span="10">
             <el-form-item label="任务ID" label-width="70px">
               <el-input
                 v-model="updateForm.taskId"
                 autocomplete="off"
-                style="width: 250px;"
                 disabled
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-form-item label="管道数" label-width="70px" prop="pluginId">
               <el-input
                 v-model="updateForm.totalNumberOfPipeline"
                 autocomplete="off"
-                style="width: 250px;"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="11">
+          <el-col :span="10">
             <el-form-item label="任务名" label-width="70px" prop="pluginId">
               <el-input
                 v-model="updateForm.taskName"
                 autocomplete="off"
-                style="width: 250px;"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-form-item label="故障转移" label-width="70px" prop="version">
               <el-select
                 v-model="updateForm.enableRebalance"
                 placeholder="请选择是否故障转移"
-                style="width: 250px"
               >
                 <el-option label="true" value="true" />
                 <el-option label="false" value="false" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-form-item label="负载均衡" label-width="70px" prop="version">
               <el-select
                 v-model="updateForm.enableLoadBalance"
                 placeholder="请选择是否负载均衡"
-                style="width: 250px"
               >
                 <el-option label="true" value="true" />
                 <el-option label="false" value="false" />
