@@ -1,11 +1,35 @@
 <template>
   <div>
-    <!--提交任务-->
-    <div style="margin-bottom: 10px">
-      <el-button type="primary" size="small" @click="add()">提交任务</el-button>
-      <el-button type="danger" size="small" @click="batchDelete()"
-        >批量删除</el-button
-      >
+    <!--提交任务和搜索过滤-->
+    <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center">
+      <div>
+        <el-button type="primary" size="small" @click="add()">提交任务</el-button>
+        <el-button-group>
+          <el-button type="danger" size="small" @click="batchDelete()">批量删除</el-button>
+          <el-button type="warning" size="small" @click="batchOperation('suspend')" :disabled="!multipleSelection.length">批量暂停</el-button>
+          <el-button type="success" size="small" @click="batchOperation('started')" :disabled="!multipleSelection.length">批量启动</el-button>
+        </el-button-group>
+      </div>
+      <div style="display: flex; align-items: center">
+        <el-input
+          placeholder="搜索任务ID或名称"
+          v-model="searchQuery"
+          size="small"
+          style="width: 200px; margin-right: 10px"
+          @input="handleSearch"
+          clearable
+        >
+          <el-button slot="append" icon="el-icon-search"></el-button>
+        </el-input>
+        <el-select v-model="statusFilter" placeholder="状态过滤" size="small" @change="handleSearch" clearable>
+          <el-option
+            v-for="(value, key) in states"
+            :key="key"
+            :label="value"
+            :value="key"
+          ></el-option>
+        </el-select>
+      </div>
     </div>
     <!--表格数据-->
     <el-table
@@ -16,6 +40,8 @@
       width="100%"
       header-cell-class-name="table-header"
       @selection-change="handleSelectionChange"
+      v-loading="tableLoading"
+      element-loading-text="加载中..."
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="taskId" label="任务ID" width="240" sortable />
@@ -29,9 +55,20 @@
       </el-table-column>
       <el-table-column label="状态" width="100" prop="taskState">
         <template #default="scope">
-          <el-tag :type="taskState[scope.row.taskState].color" size="small"
-            >{{ taskState[scope.row.taskState].zh }}
-          </el-tag>
+          <el-tooltip :content="getStatusTooltip(scope.row)" placement="top">
+            <div>
+              <el-tag :type="taskState[scope.row.taskState].color" size="small">
+                {{ taskState[scope.row.taskState].zh }}
+              </el-tag>
+              <el-progress 
+                v-if="scope.row.taskState === 'started'" 
+                :percentage="getTaskProgress(scope.row)" 
+                :stroke-width="5" 
+                :show-text="false"
+                style="margin-top: 5px;"
+              ></el-progress>
+            </div>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column
@@ -79,31 +116,20 @@
           <span v-else>null</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="380">
+      <el-table-column label="操作" align="center" fixed="right" width="120">
         <template #default="scope">
-          <el-button-group>
-            <el-button type="primary" @click="taskDetail(scope.row)" size="mini"
-              >详情</el-button
-            >
-            <el-button type="primary" @click="taskUpdate(scope.row)" size="mini"
-              >修改</el-button
-            >
-            <el-button
-              type="warning"
-              @click="taskRecreateUpdate(scope.row)"
-              size="mini"
-              >重建</el-button
-            >
-            <el-button type="primary" @click="taskFork(scope.row)" size="mini"
-              >复制</el-button
-            >
-            <el-button type="primary" @click="taskStates(scope.row)" size="mini"
-              >状态管理</el-button
-            >
-            <el-button type="danger" @click="taskDelete(scope.row)" size="mini"
-              >删除</el-button
-            >
-          </el-button-group>
+          <el-dropdown split-button type="primary" size="mini" @click="taskDetail(scope.row)" @command="handleCommand($event, scope.row)">
+            详情
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="update">修改</el-dropdown-item>
+              <el-dropdown-item command="recreate" divided>重建</el-dropdown-item>
+              <el-dropdown-item command="fork">复制</el-dropdown-item>
+              <el-dropdown-item command="state" divided>状态管理</el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.taskState !== 'started'" command="start">启动</el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.taskState === 'started'" command="suspend">暂停</el-dropdown-item>
+              <el-dropdown-item command="delete" divided style="color: #F56C6C;">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -126,6 +152,7 @@
       :visible.sync="dialogFormVisible"
       width="80%"
       @close="recreateClose"
+      :close-on-click-modal="false"
     >
       <el-form :model="form" label-position="left" label-width="70px">
         <el-row>
@@ -1477,6 +1504,12 @@ export default {
       dialogUpdateVisible: false,
       dialogRecreateUpdateVisible: false,
       dialogStateVisible: false,
+      // 加载状态
+      tableLoading: false,
+      // 搜索和过滤
+      searchQuery: '',
+      statusFilter: '',
+      filteredTaskList: [],
       // 提交任务数据
       form: {
         groupName: this.groupName,
@@ -1687,6 +1720,40 @@ export default {
     add() {
       this.dialogFormVisible = true;
       this.type = "add";
+      this.formStepActive = 0;
+    },
+    
+    // 表单向导下一步
+    nextStep() {
+      if (this.formStepActive === 0) {
+        // 验证基本信息
+        if (!this.form.taskName) {
+          this.$message.warning("请输入任务名称");
+          return;
+        }
+        
+        if (!this.form.pluginId) {
+          this.$message.warning("请选择插件ID");
+          return;
+        }
+        
+        if (!this.form.mydataharborCreatorClazz) {
+          this.$message.warning("请选择创建器");
+          return;
+        }
+        
+        if (!this.form.totalNumberOfPipeline || this.form.totalNumberOfPipeline <= 0) {
+          this.$message.warning("管道数必须大于0");
+          return;
+        }
+      }
+      
+      this.formStepActive++;
+    },
+    
+    // 表单向导上一步
+    prevStep() {
+      this.formStepActive--;
     },
     initAllComponent() {
       this.initSelectedDataSource();
@@ -1998,6 +2065,7 @@ export default {
       // 获取当前组的任务名称
       this.taskList = [];
       this.multipleSelection = [];
+      this.tableLoading = true;
 
       // 获取任务
       this.postRequest(
@@ -2006,23 +2074,150 @@ export default {
         if (res.code == 0) {
           const allTask = res.data;
           for (const key in allTask) {
-            this.taskList.push(allTask[key]);
+            const task = allTask[key];
+            
+            // 获取任务监控信息
+            this.getRequest("mydataharbor/task/getTaskMonitorInfo", {
+              taskId: task.taskId
+            }).then(monitorRes => {
+              if (monitorRes.code == 0) {
+                task.taskMonitorInfo = monitorRes.data;
+              }
+            });
+            
+            this.taskList.push(task);
           }
           this.taskList.sort(this.compare("createTime"));
-          // 分页
-          this.initPageData();
+          
+          // 应用搜索和过滤
+          this.filteredTaskList = [...this.taskList];
+          if (this.searchQuery || this.statusFilter) {
+            this.handleSearch();
+          } else {
+            // 分页
+            this.initPageData();
+          }
         } else {
           this.$message.error(res.msg);
         }
+        this.tableLoading = false;
+      }).catch(() => {
+        this.tableLoading = false;
+        this.$message.error("获取任务列表失败");
       });
     },
     // 根据组名查询任务
     getTasksByGroupName() {
+      this.tableLoading = true;
       this.getRequest(
         "/mydataharbor/node/plugin?groupName=" + this.groupName
       ).then(res => {
         this.pluginInstallList = res.data;
         this.initInstallComponentList();
+        this.tableLoading = false;
+      }).catch(() => {
+        this.tableLoading = false;
+        this.$message.error("获取插件列表失败");
+      });
+    },
+    
+    // 搜索和过滤任务
+    handleSearch() {
+      if (!this.searchQuery && !this.statusFilter) {
+        this.filteredTaskList = [...this.taskList];
+      } else {
+        this.filteredTaskList = this.taskList.filter(task => {
+          const matchesSearch = !this.searchQuery || 
+            task.taskId.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+            (task.taskName && task.taskName.toLowerCase().includes(this.searchQuery.toLowerCase()));
+          
+          const matchesStatus = !this.statusFilter || task.taskState === this.statusFilter;
+          
+          return matchesSearch && matchesStatus;
+        });
+      }
+      
+      // 重新初始化分页
+      this.pageTotal = this.filteredTaskList.length;
+      this.totalPage = {};
+      
+      for (let i = 0; i < Math.ceil(this.pageTotal / this.pageSize); i++) {
+        this.totalPage[i + 1] = this.filteredTaskList.slice(
+          this.pageSize * i,
+          this.pageSize * (i + 1)
+        );
+      }
+      
+      this.handlePageChange(1);
+    },
+    
+    // 获取任务状态提示
+    getStatusTooltip(task) {
+      const state = this.states[task.taskState];
+      let tooltip = `状态: ${state}`;
+      
+      if (task.taskState === 'started') {
+        tooltip += `\n处理总数: ${this.getTaskTotalCount(task)}`;
+      }
+      
+      return tooltip;
+    },
+    
+    // 获取任务进度
+    getTaskProgress(task) {
+      if (!task || !task.taskMonitorInfo) {
+        return 0;
+      }
+      
+      const total = this.getTaskTotalCount(task);
+      if (total === 0) {
+        return 0;
+      }
+      
+      const processed = task.taskMonitorInfo ? task.taskMonitorInfo.writeSuccessCount || 0 : 0;
+      return Math.min(Math.round((processed / total) * 100), 100);
+    },
+    
+    // 获取任务总数
+    getTaskTotalCount(task) {
+      if (!task || !task.taskMonitorInfo) {
+        return 0;
+      }
+      
+      return task.taskMonitorInfo ? task.taskMonitorInfo.recordCount || 0 : 0;
+    },
+    
+    // 批量操作任务状态
+    batchOperation(state) {
+      if (this.multipleSelection.length === 0) {
+        this.$message.info("请先选择需要操作的任务！");
+        return;
+      }
+      
+      this.$confirm(`确定要将选中的${this.multipleSelection.length}个任务状态修改为${this.states[state]}吗？`, "确认信息", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const promises = this.multipleSelection.map(task => {
+          return this.postRequest(
+            `mydataharbor/task/manageTaskState?taskId=${task.taskId}&taskState=${state}`
+          );
+        });
+        
+        Promise.all(promises).then(results => {
+          const successCount = results.filter(res => res.code === 0).length;
+          if (successCount > 0) {
+            this.$message.success(`成功修改${successCount}个任务的状态`);
+            this.initData();
+          }
+          
+          const failCount = results.length - successCount;
+          if (failCount > 0) {
+            this.$message.warning(`${failCount}个任务状态修改失败`);
+          }
+        });
       });
     },
 
@@ -2208,71 +2403,117 @@ export default {
 
     // 提交任务
     submit() {
-      this.dialogFormVisible = false;
-
-      // 深拷贝配置对象，避免修改原始对象
-      const configJsonCopy = JSON.parse(JSON.stringify(this.form.configJson));
-      const settingJsonConfigCopy = JSON.parse(JSON.stringify(this.form.settingJsonConfig));
-
-      // 确保数据格式正确
-      if (configJsonCopy.dataSource && configJsonCopy.dataSource.argsJsonValue) {
-        configJsonCopy.dataSource.argsJsonValue = configJsonCopy.dataSource.argsJsonValue.map(item =>
-          typeof item === 'string' ? item : JSON.stringify(item)
-        );
+      // 表单验证
+      if (!this.validateTaskForm()) {
+        return;
       }
-
-      if (configJsonCopy.protocolDataConverter && configJsonCopy.protocolDataConverter.argsJsonValue) {
-        configJsonCopy.protocolDataConverter.argsJsonValue = configJsonCopy.protocolDataConverter.argsJsonValue.map(item =>
-          typeof item === 'string' ? item : JSON.stringify(item)
-        );
-      }
-
-      if (configJsonCopy.dataCheckers && configJsonCopy.dataCheckers.length > 0) {
-        configJsonCopy.dataCheckers.forEach(checker => {
-          if (checker.argsJsonValue) {
-            checker.argsJsonValue = checker.argsJsonValue.map(item =>
-              typeof item === 'string' ? item : JSON.stringify(item)
-            );
-          }
-        });
-      }
-
-      if (configJsonCopy.dataSink && configJsonCopy.dataSink.argsJsonValue) {
-        configJsonCopy.dataSink.argsJsonValue = configJsonCopy.dataSink.argsJsonValue.map(item =>
-          typeof item === 'string' ? item : JSON.stringify(item)
-        );
-      }
-
-      if (configJsonCopy.dataConverter && configJsonCopy.dataConverter.argsJsonValue) {
-        configJsonCopy.dataConverter.argsJsonValue = configJsonCopy.dataConverter.argsJsonValue.map(item =>
-          typeof item === 'string' ? item : JSON.stringify(item)
-        );
-      }
-
-      // 移除可能存在的非标准字段
-      if (configJsonCopy.selectedDataSourceConfigJsonTreeData) {
-        delete configJsonCopy.selectedDataSourceConfigJsonTreeData;
-      }
-
-      if (configJsonCopy.selectedDataSourceTclassInfoTreeData) {
-        delete configJsonCopy.selectedDataSourceTclassInfoTreeData;
-      }
-
-      const submitData = {
-        ...this.form,
-        configJson: JSON.stringify(configJsonCopy),
-        settingJsonConfig: JSON.stringify(settingJsonConfigCopy)
-      };
-
-      this.postRequest("mydataharbor/task/submit", submitData).then(res => {
-        if (res.code == 0) {
-          this.$message.info("任务提交成功！");
-          this.initData();
-          this.clearData();
-        } else {
-          this.$message.error(res.msg);
+      
+      this.$confirm("确认提交任务?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info"
+      }).then(() => {
+        this.dialogFormVisible = false;
+        this.tableLoading = true;
+        
+        // 深拷贝配置对象，避免修改原始对象
+        const configJsonCopy = JSON.parse(JSON.stringify(this.form.configJson));
+        const settingJsonConfigCopy = JSON.parse(JSON.stringify(this.form.settingJsonConfig));
+        
+        // 确保数据格式正确
+        if (configJsonCopy.dataSource && configJsonCopy.dataSource.argsJsonValue) {
+          configJsonCopy.dataSource.argsJsonValue = configJsonCopy.dataSource.argsJsonValue.map(item => 
+            typeof item === 'string' ? item : JSON.stringify(item)
+          );
         }
+        
+        if (configJsonCopy.protocolDataConverter && configJsonCopy.protocolDataConverter.argsJsonValue) {
+          configJsonCopy.protocolDataConverter.argsJsonValue = configJsonCopy.protocolDataConverter.argsJsonValue.map(item => 
+            typeof item === 'string' ? item : JSON.stringify(item)
+          );
+        }
+        
+        if (configJsonCopy.dataCheckers && configJsonCopy.dataCheckers.length > 0) {
+          configJsonCopy.dataCheckers.forEach(checker => {
+            if (checker.argsJsonValue) {
+              checker.argsJsonValue = checker.argsJsonValue.map(item => 
+                typeof item === 'string' ? item : JSON.stringify(item)
+              );
+            }
+          });
+        }
+        
+        if (configJsonCopy.dataSink && configJsonCopy.dataSink.argsJsonValue) {
+          configJsonCopy.dataSink.argsJsonValue = configJsonCopy.dataSink.argsJsonValue.map(item => 
+            typeof item === 'string' ? item : JSON.stringify(item)
+          );
+        }
+        
+        if (configJsonCopy.dataConverter && configJsonCopy.dataConverter.argsJsonValue) {
+          configJsonCopy.dataConverter.argsJsonValue = configJsonCopy.dataConverter.argsJsonValue.map(item => 
+            typeof item === 'string' ? item : JSON.stringify(item)
+          );
+        }
+        
+        // 移除可能存在的非标准字段
+        if (configJsonCopy.selectedDataSourceConfigJsonTreeData) {
+          delete configJsonCopy.selectedDataSourceConfigJsonTreeData;
+        }
+        
+        if (configJsonCopy.selectedDataSourceTclassInfoTreeData) {
+          delete configJsonCopy.selectedDataSourceTclassInfoTreeData;
+        }
+        
+        const submitData = {
+          ...this.form,
+          configJson: JSON.stringify(configJsonCopy),
+          settingJsonConfig: JSON.stringify(settingJsonConfigCopy)
+        };
+        
+        this.postRequest("mydataharbor/task/submit", submitData).then(res => {
+          if (res.code == 0) {
+            this.$message.success({
+              message: "任务提交成功！",
+              duration: 2000
+            });
+            this.initData();
+            this.clearData();
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.tableLoading = false;
+        }).catch(() => {
+          this.tableLoading = false;
+          this.$message.error("任务提交失败，请检查网络连接");
+        });
+      }).catch(() => {
+        // 用户取消提交
       });
+    },
+    
+    // 验证任务表单
+    validateTaskForm() {
+      if (!this.form.taskName) {
+        this.$message.warning("请输入任务名称");
+        return false;
+      }
+      
+      if (!this.form.pluginId) {
+        this.$message.warning("请选择插件ID");
+        return false;
+      }
+      
+      if (!this.form.mydataharborCreatorClazz) {
+        this.$message.warning("请选择创建器");
+        return false;
+      }
+      
+      if (!this.form.totalNumberOfPipeline || this.form.totalNumberOfPipeline <= 0) {
+        this.$message.warning("管道数必须大于0");
+        return false;
+      }
+      
+      return true;
     },
     cancel() {
       this.dialogFormVisible = false;
@@ -2280,6 +2521,7 @@ export default {
       this.dialogUpdateVisible = false;
       this.dialogStateVisible = false;
       this.dialogRecreateUpdateVisible = false;
+      this.formStepActive = 0;
       this.clearData();
     },
     // 选择插件
@@ -2673,11 +2915,12 @@ export default {
       this.form = JSON.parse(JSON.stringify(task));
       this.form.configJson = JSON.parse(task.configJson);
       this.form.settingJsonConfig = JSON.parse(task.settingJsonConfig);
-
+      
       // 生成新的任务ID，避免冲突
       this.form.taskId = "";
-
+      
       this.dialogFormVisible = true;
+      this.formStepActive = 0;
       // 先选择插件ID，这会清空创建器列表
       this.selectPluginId(task.pluginId);
 
@@ -2917,11 +3160,14 @@ export default {
     },
     // 分页处理
     initPageData() {
-      this.pageTotal = this.taskList.length;
-      for (let i = 0; i < this.pageTotal; i++) {
+      const dataSource = this.filteredTaskList || this.taskList;
+      this.pageTotal = dataSource.length;
+      this.totalPage = {};
+      
+      for (let i = 0; i < Math.ceil(this.pageTotal / this.pageSize); i++) {
         // 每一页都是一个数组 形如 [['第一页的数据'],['第二页的数据'],['第三页数据']]
         // 根据每页显示数量 将后台的数据分割到 每一页,假设pageSize为5， 则第一页是1-5条，即slice(0,5)，第二页是6-10条，即slice(5,10)...
-        this.totalPage[i + 1] = this.taskList.slice(
+        this.totalPage[i + 1] = dataSource.slice(
           this.pageSize * i,
           this.pageSize * (i + 1)
         );
@@ -3195,10 +3441,62 @@ export default {
       }
       this.taskConfigDefaultActiveModel = "json";
     },
+    // 处理下拉菜单命令
+    handleCommand(command, row) {
+      switch (command) {
+        case 'update':
+          this.taskUpdate(row);
+          break;
+        case 'recreate':
+          this.taskRecreateUpdate(row);
+          break;
+        case 'fork':
+          this.taskFork(row);
+          break;
+        case 'state':
+          this.taskStates(row);
+          break;
+        case 'start':
+          this.quickChangeState(row, 'started');
+          break;
+        case 'suspend':
+          this.quickChangeState(row, 'suspend');
+          break;
+        case 'delete':
+          this.taskDelete(row);
+          break;
+      }
+    },
+    
+    // 快速修改任务状态
+    quickChangeState(task, state) {
+      this.$confirm(`确定要将任务 "${task.taskName || task.taskId}" 的状态修改为${this.states[state]}吗？`, "确认信息", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.tableLoading = true;
+        this.postRequest(
+          `mydataharbor/task/manageTaskState?taskId=${task.taskId}&taskState=${state}`
+        ).then(res => {
+          if (res.code == 0) {
+            this.$message.success(`任务状态修改成功！`);
+            this.initData();
+          } else {
+            this.$message.error(res.msg);
+          }
+          this.tableLoading = false;
+        }).catch(() => {
+          this.tableLoading = false;
+          this.$message.error("状态修改失败，请检查网络连接");
+        });
+      });
+    },
+    
     recreateClose() {
       this.type = "";
     },
-
+    
     // 合并配置，保留原始值
     mergeConfigs(defaultConfig, originalConfig) {
       if (!originalConfig || typeof originalConfig !== 'object') {
