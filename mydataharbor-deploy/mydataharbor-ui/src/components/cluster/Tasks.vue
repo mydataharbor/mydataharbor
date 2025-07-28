@@ -1475,7 +1475,7 @@
 
 <script>
 import vueJsonEditor from "vue-json-editor";
-import { parseTime, formatTime } from "@/utils/index";
+import { parseTime } from "@/utils/index";
 
 export default {
   inject: ["reload"],
@@ -1703,11 +1703,6 @@ export default {
   },
   watch: {},
   mounted() {
-    this.$nextTick(() => {
-      this.$refs.main.scrollTop = this.$refs.content.scrollHeight;
-    });
-  },
-  mounted() {
     this.initData();
     this.getTasksByGroupName();
   },
@@ -1715,41 +1710,8 @@ export default {
     add() {
       this.dialogFormVisible = true;
       this.type = "add";
-      this.formStepActive = 0;
     },
     
-    // 表单向导下一步
-    nextStep() {
-      if (this.formStepActive === 0) {
-        // 验证基本信息
-        if (!this.form.taskName) {
-          this.$message.warning("请输入任务名称");
-          return;
-        }
-        
-        if (!this.form.pluginId) {
-          this.$message.warning("请选择插件ID");
-          return;
-        }
-        
-        if (!this.form.mydataharborCreatorClazz) {
-          this.$message.warning("请选择创建器");
-          return;
-        }
-        
-        if (!this.form.totalNumberOfPipeline || this.form.totalNumberOfPipeline <= 0) {
-          this.$message.warning("管道数必须大于0");
-          return;
-        }
-      }
-      
-      this.formStepActive++;
-    },
-    
-    // 表单向导上一步
-    prevStep() {
-      this.formStepActive--;
-    },
     initAllComponent() {
       this.initSelectedDataSource();
       this.initselectedProtocolDataConverter();
