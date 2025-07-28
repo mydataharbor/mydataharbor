@@ -867,7 +867,8 @@ public class GroupChangeListener implements NodeCacheListener {
     Map<String, PluginInfo> allPluginInfoMap = allPluginInfo.stream().collect(pluginInfoMapCollector);
     List<String> loadedPlugins = new ArrayList<>();
     for (PluginInfo installedPlugin : groupInfo.getInstalledPlugins()) {
-      if (allPluginInfoMap.get(installedPlugin.getPluginId()) == null) {
+        PluginInfo nowInstallPluginInfo = allPluginInfoMap.get(installedPlugin.getPluginId());
+        if (nowInstallPluginInfo == null) {
         //安装
           try {
               String loadedPlugin = pluginRemoteManager.loadPluginByRepository(installedPlugin.getPluginId(), installedPlugin.getVersion());
@@ -877,6 +878,18 @@ public class GroupChangeListener implements NodeCacheListener {
           }catch (Throwable e){
               log.error("加载插件失败",e);
           }
+      } else if(!nowInstallPluginInfo.getVersion().equals(installedPlugin.getVersion())){
+            //版本变更，先卸载再安装
+            pluginRemoteManager.uninstallPlugin(nowInstallPluginInfo.getPluginId());
+            //安装
+            try {
+                String loadedPlugin = pluginRemoteManager.loadPluginByRepository(installedPlugin.getPluginId(), installedPlugin.getVersion());
+                if (loadedPlugin != null) {
+                    loadedPlugins.add(loadedPlugin);
+                }
+            }catch (Throwable e){
+                log.error("加载插件失败",e);
+            }
       }
     }
     for (String loadedPlugin : loadedPlugins) {

@@ -851,7 +851,7 @@ public class NodeService implements INodeService, InitializingBean {
         //插件安装失败
         continue;
       }
-      installedPlugin.setDataSinkCreatorInfos(pluginInfo.getDataSinkCreatorInfos());
+      installedPlugin.setDataPipelineCreatorInfos(pluginInfo.getDataPipelineCreatorInfos());
     }
     return installedPlugins;
   }
@@ -966,43 +966,8 @@ public class NodeService implements INodeService, InitializingBean {
     } catch (Exception e) {
       throw new PluginLoadException("error:" + e.getMessage(), e);
     }
-    GroupInfo groupInfo;
-    PluginInfo pluginInfo;
-    try {
-      while (true) {
-        groupInfo = new GroupInfo();
-        pluginInfo = new PluginInfo();
-        try {
-          Stat stat = new Stat();
-          byte[] bytes = client.getData().storingStatIn(stat).forPath(groupPath);
-          if (bytes != null && bytes.length > 0) {
-            groupInfo = JsonUtil.deserialize(bytes, GroupInfo.class);
-          } else {
-            groupInfo.setGroupName(groupName);
-          }
-          pluginInfo = repoPluginDescriptor;
-          //判断插件是否已经安装
-          List<PluginInfo> installedPlugins = groupInfo.getInstalledPlugins();
-          for (PluginInfo installedPlugin : installedPlugins) {
-            if (installedPlugin.getPluginId().equals(pluginInfo.getPluginId())) {
-              throw new RuntimeException(pluginInfo.getPluginId() + "该插件已经安装！安装信息：" + installedPlugin.toString());
-            }
-          }
-          groupInfo.getInstalledPlugins().add(pluginInfo);
-          String groupInfoJson = JsonUtil.objectToJson(groupInfo);
-          client.setData().withVersion(stat.getVersion()).forPath(groupPath, groupInfoJson.getBytes());
-          break;
-        } catch (KeeperException.BadVersionException e) {
-          log.warn("乐观锁生效，重试...", e);
-        }
-      }
-    } catch (Exception e) {
-      log.error("error！");
-      throw new PluginLoadException("error:" + e.getMessage(), e);
-    }
-
-
-    return pluginInfo;
+    installPluginByReporsitory(repoPluginDescriptor.getPluginId(),repoPluginDescriptor.getVersion(),repoPluginDescriptor,groupName);
+    return repoPluginDescriptor;
   }
 
   @Override
@@ -1014,7 +979,7 @@ public class NodeService implements INodeService, InitializingBean {
     try {
       while (true) {
         groupInfo = new GroupInfo();
-        pluginInfo = new PluginInfo();
+        pluginInfo = repoPlugin;
         try {
           Stat stat = new Stat();
           byte[] bytes = client.getData().storingStatIn(stat).forPath(groupPath);
@@ -1023,15 +988,21 @@ public class NodeService implements INodeService, InitializingBean {
           } else {
             groupInfo.setGroupName(groupName);
           }
-          pluginInfo = repoPlugin;
           //判断插件是否已经安装
           List<PluginInfo> installedPlugins = groupInfo.getInstalledPlugins();
+          boolean updatePluginVersion = false;
           for (PluginInfo installedPlugin : installedPlugins) {
             if (installedPlugin.getPluginId().equals(pluginInfo.getPluginId())) {
-              throw new RuntimeException(pluginInfo.getPluginId() + "该插件已经安装！安装信息：" + installedPlugin.toString());
+              if(installedPlugin.getVersion().equals(pluginInfo.getVersion())) {
+                  throw new RuntimeException(pluginInfo.getPluginId() + "该插件已经安装！安装信息：" + installedPlugin.toString());
+              } else {
+                  updatePluginVersion = true;
+                  installedPlugin.setVersion(pluginInfo.getVersion());
+              }
             }
           }
-          groupInfo.getInstalledPlugins().add(pluginInfo);
+          if(!updatePluginVersion)
+            groupInfo.getInstalledPlugins().add(pluginInfo);
           String groupInfoJson = JsonUtil.objectToJson(groupInfo);
           client.setData().withVersion(stat.getVersion()).forPath(groupPath, groupInfoJson.getBytes());
           break;

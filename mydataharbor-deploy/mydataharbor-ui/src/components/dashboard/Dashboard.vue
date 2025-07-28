@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div >
-      <img :src="imgSrc" width="100%" height="100%" alt="" />
+    <div style="text-align: center;">
+      <img :src="imgSrc"   alt="" />
     </div>
   </div>
 </template>

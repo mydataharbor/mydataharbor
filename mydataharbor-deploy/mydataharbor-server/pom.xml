@@ -43,6 +43,7 @@
   </dependencies>
 
   <build>
+    <finalName>${artifactId}-${project.version}-app</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

@@ -691,6 +691,8 @@ import mydataharbor.plugin.api.task.TaskState;
 import mydataharbor.rpc.util.JsonUtil;
 import mydataharbor.util.PipelineStateUtil;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
@@ -702,154 +704,155 @@ import org.apache.zookeeper.data.Stat;
 @Slf4j
 public class ExecutorListener implements IExecutorListener {
 
-  private String taskId;
+    private String taskId;
 
-  private CuratorFramework client;
+    private CuratorFramework client;
 
-  private NodeInfo nodeInfo;
+    private NodeInfo nodeInfo;
 
-  public ExecutorListener(String taskId, CuratorFramework client, NodeInfo nodeInfo) {
-    this.taskId = taskId;
-    this.client = client;
-    this.nodeInfo = nodeInfo;
-  }
+    public ExecutorListener(String taskId, CuratorFramework client, NodeInfo nodeInfo) {
+        this.taskId = taskId;
+        this.client = client;
+        this.nodeInfo = nodeInfo;
+    }
 
-  @Override
-  public void onPipelineCreate(int begin, int change, Throwable throwable) {
-    if (client != null) {
-      //记录下创建异常
-      while (true) {
-        try {
-          Stat stat = new Stat();
-          byte[] bytes = client.getData().storingStatIn(stat).forPath(Constant.TASK_PATH_PARENT + taskId);
-          DistributedTask distributedTask = JsonUtil.deserialize(bytes, DistributedTask.class);
-          TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
-          TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(nodeInfo.getNodeName());
-          if (throwable != null) {
-            //创建失败
-            nodeAssignedInfo.setCreateException(throwable.getMessage());
-            for (int i = begin; i < change + begin; i++) {
-              nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create_error);
+    @Override
+    public void onPipelineCreate(int begin, int change, Throwable throwable) {
+        if (client != null) {
+            //记录下创建异常
+            while (true) {
+                try {
+                    Stat stat = new Stat();
+                    byte[] bytes = client.getData().storingStatIn(stat).forPath(Constant.TASK_PATH_PARENT + taskId);
+                    DistributedTask distributedTask = JsonUtil.deserialize(bytes, DistributedTask.class);
+                    TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
+                    TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(nodeInfo.getNodeName());
+                    if (throwable != null) {
+                        //创建失败
+                        nodeAssignedInfo.setCreateException(StringUtils.join(ExceptionUtils.getThrowables(throwable), " --> "));
+                        for (int i = begin; i < change + begin; i++) {
+                            nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create_error);
+                        }
+                    } else {
+                        //创建成功
+                        nodeAssignedInfo.setCreateException("");
+                        for (int i = begin; i < change + begin; i++) {
+                            nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create);
+                        }
+                    }
+                    client.setData().withVersion(stat.getVersion()).forPath(Constant.TASK_PATH_PARENT + taskId, JsonUtil.serialize(distributedTask));
+                    break;
+                } catch (KeeperException.BadVersionException badVersionException) {
+                    log.warn("乐观锁生效，重试..");
+                } catch (Exception exception) {
+                    log.error("更新状态发生异常！", exception);
+                    break;
+                }
             }
-          } else {
-            //创建成功
-            for (int i = begin; i < change + begin; i++) {
-              nodeAssignedInfo.getPipelineStates().put(taskId + "-" + (i + 1), PipelineState.create);
+            if (throwable == null)
+                nodeTaskNumChange(Long.valueOf(change));
+        }
+    }
+
+    @Override
+    public void onRun(AbstractDataExecutor executor, IDataPipeline pipeline) {
+        updateExecutorState(executor, PipelineState.running, null);
+    }
+
+    public void nodeTaskNumChange(Long change) {
+        if (client != null) {
+            while (true) {
+                try {
+                    String nodePath = Constant.NODE_PREFIX + "/" + Constant.NODE_NAME + "/" + nodeInfo.getGroup() + "/" + nodeInfo.getNodeName();
+                    Stat stat = new Stat();
+                    byte[] bytes = client.getData().storingStatIn(stat).forPath(nodePath);
+                    NodeInfo nodeInfo = JsonUtil.deserialize(bytes, NodeInfo.class);
+                    nodeInfo.getTaskNum().addAndGet(change);
+                    client.setData().withVersion(stat.getVersion()).forPath(nodePath, JsonUtil.serialize(nodeInfo));
+                    break;
+                } catch (KeeperException.BadVersionException badVersionException) {
+                    log.warn("乐观锁生效，重试..");
+                } catch (Exception e) {
+                    log.error("更新状态发生异常！", e);
+                    break;
+                }
             }
-          }
-          client.setData().withVersion(stat.getVersion()).forPath(Constant.TASK_PATH_PARENT + taskId, JsonUtil.serialize(distributedTask));
-          break;
-        } catch (KeeperException.BadVersionException badVersionException) {
-          log.warn("乐观锁生效，重试..");
-        } catch (Exception exception) {
-          log.error("更新状态发生异常！", exception);
-          break;
         }
-      }
-      if (throwable == null)
-        nodeTaskNumChange(Long.valueOf(change));
     }
-  }
 
-  @Override
-  public void onRun(AbstractDataExecutor executor, IDataPipeline pipeline) {
-    updateExecutorState(executor, PipelineState.running, null);
-  }
-
-  public void nodeTaskNumChange(Long change) {
-    if (client != null) {
-      while (true) {
-        try {
-          String nodePath = Constant.NODE_PREFIX + "/" + Constant.NODE_NAME + "/" + nodeInfo.getGroup() + "/" + nodeInfo.getNodeName();
-          Stat stat = new Stat();
-          byte[] bytes = client.getData().storingStatIn(stat).forPath(nodePath);
-          NodeInfo nodeInfo = JsonUtil.deserialize(bytes, NodeInfo.class);
-          nodeInfo.getTaskNum().addAndGet(change);
-          client.setData().withVersion(stat.getVersion()).forPath(nodePath, JsonUtil.serialize(nodeInfo));
-          break;
-        } catch (KeeperException.BadVersionException badVersionException) {
-          log.warn("乐观锁生效，重试..");
-        } catch (Exception e) {
-          log.error("更新状态发生异常！", e);
-          break;
-        }
-      }
-    }
-  }
-
-  private void updateExecutorState(AbstractDataExecutor executor, PipelineState pipelineState, Long writeTotal) {
-    if (client != null) {
-      //记录下创建异常
-      while (true) {
-        try {
-          Stat stat = new Stat();
-          byte[] bytes = client.getData().storingStatIn(stat).forPath(Constant.TASK_PATH_PARENT + taskId);
-          DistributedTask distributedTask = JsonUtil.deserialize(bytes, DistributedTask.class);
-          TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
-          TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(nodeInfo.getNodeName());
-          if(nodeAssignedInfo!=null) {
-              nodeAssignedInfo.getPipelineStates().put(executor.getName(), pipelineState);
-              if (writeTotal != null) {
-                  nodeAssignedInfo.getWriteTotal().put(executor.getName(), writeTotal);
-              }
-          }
-          boolean taskOver = false;
-          if (PipelineStateUtil.pipelineIsDone(pipelineState)) {
-            //将任务整体状态置为over
-            if (PipelineStateUtil.doesAssignedTaskAllDone(taskAssignedInfo)/*运行的任务全部结束*/&& distributedTask.getTotalNumberOfPipeline()!=0/*非人为把管道调整为0*/) {
-                distributedTask.setTaskState(TaskState.over);
-                taskOver = true;
-                log.info("task over 。。。。。。。。。。{}",distributedTask);
+    private void updateExecutorState(AbstractDataExecutor executor, PipelineState pipelineState, Long writeTotal) {
+        if (client != null) {
+            //记录下创建异常
+            while (true) {
+                try {
+                    Stat stat = new Stat();
+                    byte[] bytes = client.getData().storingStatIn(stat).forPath(Constant.TASK_PATH_PARENT + taskId);
+                    DistributedTask distributedTask = JsonUtil.deserialize(bytes, DistributedTask.class);
+                    TaskAssignedInfo taskAssignedInfo = distributedTask.getTaskAssignedInfo();
+                    TaskAssignedInfo.NodeAssignedInfo nodeAssignedInfo = taskAssignedInfo.getAssignedInfoMap().get(nodeInfo.getNodeName());
+                    if (nodeAssignedInfo != null) {
+                        nodeAssignedInfo.getPipelineStates().put(executor.getName(), pipelineState);
+                        if (writeTotal != null) {
+                            nodeAssignedInfo.getWriteTotal().put(executor.getName(), writeTotal);
+                        }
+                    }
+                    boolean taskOver = false;
+                    if (PipelineStateUtil.pipelineIsDone(pipelineState)) {
+                        //将任务整体状态置为over
+                        if (PipelineStateUtil.doesAssignedTaskAllDone(taskAssignedInfo)/*运行的任务全部结束*/ && distributedTask.getTotalNumberOfPipeline() != 0/*非人为把管道调整为0*/) {
+                            distributedTask.setTaskState(TaskState.over);
+                            taskOver = true;
+                            log.info("task over: {}", distributedTask);
+                        }
+                    }
+                    client.setData().withVersion(stat.getVersion()).forPath(Constant.TASK_PATH_PARENT + taskId, JsonUtil.serialize(distributedTask));
+                    executor.getTaskMonitor().setPipelineState(pipelineState);
+                    if (taskOver) {
+                        //任务结束
+                        onTaskOver(distributedTask);
+                    }
+                    break;
+                } catch (KeeperException.BadVersionException badVersionException) {
+                    log.warn("乐观锁生效，重试..");
+                } catch (Exception exception) {
+                    log.error("更新状态发生异常！", exception);
+                    break;
+                }
             }
-          }
-          client.setData().withVersion(stat.getVersion()).forPath(Constant.TASK_PATH_PARENT + taskId, JsonUtil.serialize(distributedTask));
-          executor.getTaskMonitor().setPipelineState(pipelineState);
-          if (taskOver) {
-            //任务结束
-            onTaskOver(distributedTask);
-          }
-          break;
-        } catch (KeeperException.BadVersionException badVersionException) {
-          log.warn("乐观锁生效，重试..");
-        } catch (Exception exception) {
-          log.error("更新状态发生异常！", exception);
-          break;
         }
-      }
     }
-  }
 
-  @Override
-  public void onSuspend(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal) {
-    updateExecutorState(executor, PipelineState.suspend, writeTotal);
-  }
-
-  @Override
-  public void onContinue(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal) {
-    updateExecutorState(executor, PipelineState.running, writeTotal);
-  }
-
-  @Override
-  public void onSucccessEnd(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun) {
-    if (isRun) {
-      updateExecutorState(executor, PipelineState.success_done, writeTotal);
-    } else {
-      updateExecutorState(executor, PipelineState.schedule_done, writeTotal);
+    @Override
+    public void onSuspend(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal) {
+        updateExecutorState(executor, PipelineState.suspend, writeTotal);
     }
-  }
 
-  @Override
-  public void onClose(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun) {
-    nodeTaskNumChange(-1L);
-  }
+    @Override
+    public void onContinue(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal) {
+        updateExecutorState(executor, PipelineState.running, writeTotal);
+    }
 
-  @Override
-  public void onExceptionEnd(AbstractDataExecutor executor, IDataPipeline pipeline, Throwable throwable, long writeTotal) {
-    updateExecutorState(executor, PipelineState.crash_done, writeTotal);
-  }
+    @Override
+    public void onSucccessEnd(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun) {
+        if (isRun) {
+            updateExecutorState(executor, PipelineState.success_done, writeTotal);
+        } else {
+            updateExecutorState(executor, PipelineState.schedule_done, writeTotal);
+        }
+    }
 
-  @Override
-  public void onTaskOver(Object distributedTask) {
+    @Override
+    public void onClose(AbstractDataExecutor executor, IDataPipeline pipeline, long writeTotal, boolean isRun) {
+        nodeTaskNumChange(-1L);
+    }
 
-  }
+    @Override
+    public void onExceptionEnd(AbstractDataExecutor executor, IDataPipeline pipeline, Throwable throwable, long writeTotal) {
+        updateExecutorState(executor, PipelineState.crash_done, writeTotal);
+    }
+
+    @Override
+    public void onTaskOver(Object distributedTask) {
+
+    }
 }

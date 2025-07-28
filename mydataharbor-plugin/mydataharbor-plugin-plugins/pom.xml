@@ -19,10 +19,10 @@
     <!-- Override below properties in each plugin's pom.xml -->
     <plugin.id>${project.artifactId}</plugin.id>
     <plugin.class/>
-    <plugin.version>1.1.0</plugin.version>
+    <plugin.version>${project.version}</plugin.version>
     <plugin.provider>MyDataHarbor(www.mydataharbor.com)</plugin.provider>
     <plugin.pluginDescription>${project.description}</plugin.pluginDescription>
-    <plugin.group></plugin.group>
+    <plugin.group>无分组</plugin.group>
     <plugin.group.logo></plugin.group.logo>
     <plugin.update.info></plugin.update.info>
     <plugin.dependencies/>
@@ -77,6 +77,7 @@
   <modules>
     <module>mydataharbor-system-plugin</module>
     <module>mydataharbor-test-plugin</module>
+    <module>mydataharbor-mysql2redis-demo-plugin</module>
   </modules>
 
   <dependencies>

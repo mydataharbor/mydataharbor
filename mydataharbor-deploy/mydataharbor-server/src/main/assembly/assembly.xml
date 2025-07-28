@@ -1,9 +1,10 @@
 <assembly>
   <id>bin</id>
   <formats>
+    <format>dir</format>
     <format>tar.gz</format>
   </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
+  <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>

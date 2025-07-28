@@ -1,8 +1,7 @@
-package mydataharbor.web.service.impl;
+package mydataharbor.web.service.impl.pluginRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import mydataharbor.web.entity.PluginGroup;
-import mydataharbor.web.entity.RepoPlugin;
 import mydataharbor.web.entity.reporsitory.AuthResponse;
 import mydataharbor.web.exception.NoAuthException;
 import mydataharbor.web.service.IPluginRepository;
@@ -37,14 +36,14 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
     List<PluginGroup> pluginGroups = doListPluginGroup();
     pluginGroups = pluginGroups == null ? new ArrayList<>() : pluginGroups;
     plugins.put(name(), pluginGroups);
-    if (getNext() != null) {
-      plugins.putAll(getNext().listPluginGroup());
+    if (next() != null) {
+      plugins.putAll(next().listPluginGroup());
     }
     return plugins;
   }
 
   /**
-   * 列出存储库支持的所有插件
+   * 列出当前存储库支持的所有插件
    *
    * @return
    */
@@ -61,21 +60,11 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
    */
   abstract InputStream doFetchPlugin(String pluginId, String version) throws NoAuthException, IOException;
 
-  public IPluginRepository getNext() {
+  @Override
+  public IPluginRepository next() {
     return next;
   }
 
-  @Override
-  public RepoPlugin query(String pluginId, String pluginVersion) {
-    RepoPlugin repoPlugin = doQuery(pluginId, pluginVersion);
-    /* else if (getNext() != null) {
-      return getNext().query(pluginId, pluginVersion);
-    }*/
-      return repoPlugin;
-  }
-
-
-  abstract RepoPlugin doQuery(String pluginId, String pluginVersion);
 
   @Override
   public InputStream fetchPlugin(String pluginId, String version) throws NoAuthException, IOException {
@@ -90,22 +79,6 @@ public abstract class AbstractPluginRepository implements IPluginRepository {
       return doFetchPlugin(pluginId, version);
     } catch (NoAuthException | IOException e) {
       throw e;
-      /*
-      log.error("当前存储器:{} 获插件:{}@{} 无法处理该插件下载请求，尝试使用next存储器获取", name(), pluginId, version);
-      if (getNext() != null) {
-        log.warn("next存储器为:{}", getNext().name());
-        if (!getNext().isAuth(pluginId, version)) {
-          AuthResponse authResponse = getNext().auth(pluginId, version);
-          if (!authResponse.isSuccess()) {
-            log.warn("存储器:{},授权{}@{}，失败，原因：{}！", getNext().name(), pluginId, version, authResponse);
-            throw new NoAuthException("存储器:" + getNext().name() + ",授权" + pluginId + "@" + version + "，失败，原因：" + authResponse.getMsg() + "！");
-          }
-        }
-        return getNext().fetchPlugin(pluginId, version);
-      } else {
-        log.warn("next存储器为空！");
-        throw e;
-      }*/
     }
   }
 

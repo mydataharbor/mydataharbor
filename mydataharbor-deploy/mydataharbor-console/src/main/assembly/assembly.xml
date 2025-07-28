@@ -7,10 +7,11 @@
   <id>bin</id>
   <!-- 打包的类型，如果有N个，将会打N个类型的包 -->
   <formats>
+    <format>dir</format>
     <format>tar.gz</format>
    <!-- <format>zip</format>-->
   </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
+  <includeBaseDirectory>false</includeBaseDirectory>
   <!--文件设置-->
   <fileSets>
     <!--

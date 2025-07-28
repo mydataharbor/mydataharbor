@@ -728,7 +728,7 @@ public class PluginInfo implements Serializable {
   /**
    * creator信息
    */
-  private List<DataSinkCreatorInfo> dataSinkCreatorInfos;
+  private List<DataPipelineCreatorInfo> dataPipelineCreatorInfos;
 
   public void fillByPluginDescriptor(PluginDescriptor pluginDescriptor) {
     this.setPluginId(pluginDescriptor.getPluginId());

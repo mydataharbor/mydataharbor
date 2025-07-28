@@ -32,3 +32,5 @@ dbdata/
 .flattened-pom.xml
 
 plugins
+
+mydataharbor-console-plugins

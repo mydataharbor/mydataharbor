@@ -788,7 +788,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
    */
   @Override
   public void run() {
-      TaskStorageThreadLocal.set(taskStorage);
+    TaskStorageThreadLocal.set(taskStorage);
     end = false;
     taskMonitor.setEnd(end);
     if (!suspend)
@@ -808,29 +808,22 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
       taskMonitor.setTotal(dataSource.total());
       while (run) {
         while (suspend) {
-          if (!run) {
-            //允许暂停时被结束
-            break;
-          }
+          if (!run) break;//允许暂停时被结束
           taskMonitor.setLastRunTime(System.currentTimeMillis());
           try {
-            Thread.sleep(500);
-          } catch (InterruptedException e) {
-            log.error("暂停被打断");
+              Thread.sleep(500);
+          }
+          catch (InterruptedException e) {
+              log.error("暂停被打断");
           }
         }
-        if (!run) {
-          break;
-        }
+        if (!run) break;
         long startTime = System.currentTimeMillis();
         try {
             Boolean isWrite = doRun(dataSource, protocolDataConverter, checker, dataConverter, sink);
-            if(isWrite)
-                taskMonitor.useTimeIncrease(System.currentTimeMillis() - startTime);
+            if(isWrite) taskMonitor.useTimeIncrease(System.currentTimeMillis() - startTime);
         } catch (TheEndException e) {
-          //数据拉取完毕
-          //跳出循环
-          break;
+            break;//数据拉取完毕 跳出循环
         } finally {
           taskMonitor.setLastRunTime(System.currentTimeMillis());
         }
@@ -849,11 +842,8 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
     } finally {
       end = true;
       taskMonitor.setEnd(end);
-      if (run)
-        safeListenerRun(this::close);
-      if (forkJoinPool != null) {
-        forkJoinPool.shutdown();
-      }
+      if (run) safeListenerRun(this::close);
+      if (forkJoinPool != null) forkJoinPool.shutdown();
       log.info("{}该线程结束！", getName());
     }
 
@@ -890,9 +880,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
           return false;
       }
     boolean empty = !tRecordsIterable.iterator().hasNext();
-    if (empty) {
-      return false;
-    }
+    if (empty) return false;
     taskMonitor.tRecordUseTimeIncrease(System.currentTimeMillis() - tRecordUseTimeStart);
     rollbackUnit = new ConcurrentHashMap<>();
     log.info("原始数据源数据：{}", tRecordsIterable);
@@ -1024,9 +1012,9 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
    */
   protected void doForEach(IDataSource<T, S> dataProvider, IProtocolDataConverter<T, P, S> protocolDataConverter, IProtocolDataChecker checker, IDataConverter<P, R, S> dataConverter, IDataSink<R, S> writer, List<P> protocolConvertSuccess, List<ErrorRecord<T, Object>> protocolConvertError, List<P> checkerSuccess, List<ErrorRecord<P, IProtocolDataChecker.CheckResult>> checkerError, List<R> dataConvertSuccess, List<ErrorRecord<P, Object>> dataConvertError, List<R> writeSuccess, List<ErrorRecord<R, IDataSink.WriterResult>> writeError, List<T> tRecordConvertSuccess, T tRecord) {
     //协议转换
-      long protocolConvertUseTimeStart = System.currentTimeMillis();
+    long protocolConvertUseTimeStart = System.currentTimeMillis();
     P protocolData = protocolConvert(protocolDataConverter, protocolConvertSuccess, protocolConvertError, tRecord);
-      taskMonitor.protocolConvertUseTimeIncrease(System.currentTimeMillis() - protocolConvertUseTimeStart);
+    taskMonitor.protocolConvertUseTimeIncrease(System.currentTimeMillis() - protocolConvertUseTimeStart);
     if (protocolData == null) {
       //协议转换失败
       return;
@@ -1184,12 +1172,14 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
   private List<R> dataConvert(IDataConverter<P, R, S> dataConverter, List<R> dataConvertSuccess, List<ErrorRecord<P, Object>> dataConvertError, P protocolData) {
     try {
       Object record = dataConverter.convert(protocolData, settingContext);
-      if (record instanceof List) {
-        dataConvertSuccess.addAll((List) record);
-        return (List) record;
+      if(record!=null) {
+          if (record instanceof List) {
+              dataConvertSuccess.addAll((List) record);
+              return (List) record;
+          }
+          dataConvertSuccess.add((R) record);
+          return Collections.singletonList((R) record);
       }
-      dataConvertSuccess.add((R) record);
-      return Collections.singletonList((R) record);
     } catch (Exception e) {
       log.error("数据转换异常！", e);
       dataConvertError.add(ErrorRecord.<P, Object>builder()
@@ -1225,7 +1215,8 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
   private P protocolConvert(IProtocolDataConverter<T, P, S> protocolDataConverter, List<P> protocolConvertSuccess, List<ErrorRecord<T, Object>> protocolConvertError, T tRecord) {
     try {
       P protocolData = protocolDataConverter.convert(tRecord, settingContext);
-      protocolConvertSuccess.add(protocolData);
+      if(protocolData!=null)
+          protocolConvertSuccess.add(protocolData);
       return protocolData;
     } catch (Exception e) {
       log.error("协议转换失败！", e);
@@ -1268,7 +1259,7 @@ public abstract class AbstractDataExecutor<T, P extends IProtocolData, R, S exte
     return taskMonitor;
   }
 
-    public void setTaskStorage(ITaskStorage taskStorage) {
+  public void setTaskStorage(ITaskStorage taskStorage) {
         this.taskStorage = taskStorage;
     }
 }
