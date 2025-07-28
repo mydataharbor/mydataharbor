@@ -25,7 +25,7 @@
     3、负载均衡和故障转移可以分开设置
   </description>
   <properties>
-    <revision>2.0.1</revision>
+    <revision>2.0.1-SNAPSHOT</revision>
     <mydataharbor.version>${revision}</mydataharbor.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
