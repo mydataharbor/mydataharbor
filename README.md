@@ -177,6 +177,14 @@ demo运行实例：http://demo.mydataharbor.com
 
 ## 更新日志
 
+### 2.0.1版本
+
+    1、优化pipeline可视化创建，通过UI的方式自由组合各组件创建pipeline，无需自定义DataPipelineCreator
+
+    2、插件可以调整位置解决依赖加载顺序问题，重复安装并且更新版本
+    
+    3、负载均衡和故障转移可以分开设置
+	
 ### 2.0.0版本
 
     1、新增 mydataharbor.ITaskStorage 接口，允许各组件在运行期持久化记录数据，并提供一个zookeeper的默认实现，每秒1次准实时同步，不影响性能。
@@ -189,10 +197,3 @@ demo运行实例：http://demo.mydataharbor.com
     
     5、鉴于1.x使用用户可能较少，由于修复了一些拼写错误，接口名称变了，不再向1.x兼容，建议大家把任务移到2.x上，请谅解
 
-### 2.0.1版本
-
-    1、优化pipeline可视化创建，通过UI的方式自由组合各组件创建pipeline，无需自定义DataPipelineCreator
-
-    2、插件可以调整位置解决依赖加载顺序问题，重复安装并且更新版本
-    
-    3、负载均衡和故障转移可以分开设置
